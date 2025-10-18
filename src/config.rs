@@ -1,0 +1,17 @@
+use anyhow::Result;
+use std::fs;
+
+use serde::Deserialize;
+
+#[derive(Deserialize)]
+pub struct Config {
+    pub hostname: String,
+}
+
+impl Config {
+    pub fn load_from_file() -> Result<Config> {
+        let config_str = fs::read_to_string("config.toml")?;
+        let config: Config = toml::from_str(&config_str)?;
+        Ok(config)
+    }
+}

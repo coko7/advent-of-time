@@ -1,0 +1,94 @@
+use std::fs;
+
+use anyhow::Result;
+use chrono::{Datelike, Local};
+use log::{debug, error, info};
+use rtfw_http::{
+    http::{HttpRequest, HttpResponse, HttpResponseBuilder, response_status_codes::HttpStatusCode},
+    router::RoutingData,
+};
+
+use crate::{routes, utils};
+
+pub fn get_day_index(request: &HttpRequest, routing_data: &RoutingData) -> Result<HttpResponse> {
+    return routes::catcher_get_404(request, routing_data);
+}
+
+pub fn get_single_day(request: &HttpRequest, routing_data: &RoutingData) -> Result<HttpResponse> {
+    let day: Result<Option<u32>> = routing_data.get_value("id");
+    if day.is_err() {
+        debug!("invalid day ID format: {day:?}");
+        return routes::catcher_get_404(request, routing_data);
+    }
+
+    let day = day.unwrap();
+    if day.is_none() {
+        debug!("no day ID provided");
+        return routes::catcher_get_404(request, routing_data);
+    }
+
+    let day = day.unwrap();
+    if !utils::is_day_valid(day) {
+        debug!("invalid day requested: {day}");
+        return routes::catcher_get_404(request, routing_data);
+    }
+
+    let body = load_day_view(day)?;
+    HttpResponseBuilder::new().set_html_body(&body).build()
+}
+
+pub fn get_day_picture(request: &HttpRequest, routing_data: &RoutingData) -> Result<HttpResponse> {
+    let day: Result<Option<u32>> = routing_data.get_value("id");
+    if day.is_err() {
+        debug!("invalid day ID format for img: {day:?}");
+        return HttpResponseBuilder::new()
+            .set_status(HttpStatusCode::NotFound)
+            .build();
+    }
+
+    let day = day.unwrap();
+    if day.is_none() {
+        debug!("no day ID provided for img");
+        return HttpResponseBuilder::new()
+            .set_status(HttpStatusCode::NotFound)
+            .build();
+    }
+
+    let day = day.unwrap();
+    if !utils::is_day_valid(day) {
+        debug!("invalid day requested for img: {day}");
+        return HttpResponseBuilder::new()
+            .set_status(HttpStatusCode::NotFound)
+            .build();
+    }
+
+    let picture_path = utils::get_day_img_path(day)?;
+    let mime_type = mime_guess::from_path(&picture_path).first_or_octet_stream();
+
+    error!("image needs to be cleared of its EXIF data before being returned to client");
+    if let Ok(bin_content) = fs::read(&picture_path) {
+        debug!("valid day img returned: {:?}", picture_path);
+        HttpResponseBuilder::new()
+            .set_raw_body(bin_content)
+            .set_content_type(mime_type.as_ref())
+            .build()
+    } else {
+        debug!("invalid day img requested: {:?}", picture_path);
+        return HttpResponseBuilder::new()
+            .set_status(HttpStatusCode::NotFound)
+            .build();
+    }
+}
+
+fn load_day_view(day: u32) -> Result<String> {
+    let day_img_src = format!("/day-pic/{day}");
+
+    let body = utils::load_view("day")?
+        .replace("{{PAGE_TITLE}}", &format!("Day {day}"))
+        .replace("{{DAY}}", &day.to_string())
+        .replace("{{DAY_IMG_SRC}}", &day_img_src)
+        .replace("{{GUESS_URL}}", &format!("/guess/{day}"))
+        .replace("{{DAY_IMG_ALT}}", &format!("Image for day {day}"));
+
+    Ok(body)
+}

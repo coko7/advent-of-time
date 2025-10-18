@@ -1,0 +1,297 @@
+:root {
+    --background-color: #1e1e2e;
+    --surface-color: #45475a;
+    --text-color: #cdd6f4;
+    --accent-color: #cba6f7;
+    --header-color: #fab387;
+    --sub-header-color: #f9e2af;
+    --important-color: #f38ba8;
+}
+
+@font-face {
+    font-family: "0xProto Nerd Font";
+    src: url("static/fonts/0xProto/0xProtoNerdFont-Regular.ttf") format("truetype");
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+* {
+    font-family: "0xProto Nerd Font";
+}
+
+main {
+    text-align: center;
+}
+
+main>.links {
+    display: flex;
+    flex-direction: row;
+    justify-items: center;
+    align-items: center;
+    align-content: center;
+}
+
+body {
+    background-color: var(--background-color);
+    color: var(--text-color);
+}
+
+div.days>ul {
+    display: flex;
+    flex-direction: row;
+}
+
+div.center {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+header {
+    text-align: center;
+}
+
+header>h1 {
+    color: var(--header-color);
+}
+
+header>h2 {
+    color: var(--sub-header-color);
+}
+
+a {
+    color: var(--accent-color);
+    padding: 0.1em;
+    border-radius: 1px;
+    text-decoration: none;
+    transition-duration: 0.1s;
+}
+
+a:hover {
+    color: var(--background-color);
+    background-color: var(--accent-color);
+
+}
+
+span.wheel {
+    font-size: 40px;
+    display: inline-block;
+    color: #C694FF;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+span.wheel:hover {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+#greeting {
+    text-align: center;
+    font-size: 2em;
+    font-style: italic;
+}
+
+a#link-go-home {
+    margin: 1em;
+    display: inline-block;
+    background-color: var(--background-color);
+    color: var(--accent-color);
+    font-weight: bold;
+    border: 2px dashed var(--accent-color);
+    cursor: pointer;
+    padding: 0.5em 2.5em;
+    transition: 0.1s all;
+    border-radius: 10px;
+    font-size: 1.2rem;
+}
+
+a#link-go-home:hover {
+    background-color: var(--accent-color);
+    color: var(--background-color);
+}
+
+button,
+input[type="file"]::file-selector-button,
+.file-upload-btn {
+    background-color: var(--accent-color);
+    color: var(--background-color);
+    font-weight: bold;
+    border: 2px solid var(--accent-color);
+    cursor: pointer;
+    padding: 1em;
+    transition: 0.1s all;
+    border-radius: 10px;
+    font-size: 1em;
+}
+
+button:disabled {
+    font-style: italic;
+    cursor: default;
+}
+
+button:hover:not(:disabled),
+input[type="file"]::file-selector-button:hover,
+.file-upload-btn:hover:not(:disabled) {
+    background-color: var(--background-color);
+    color: var(--accent-color);
+}
+
+textarea {
+    -webkit-user-select: none;
+    /* Safari and Chrome */
+    -moz-user-select: none;
+    /* Firefox */
+    -ms-user-select: none;
+    /* Internet Explorer/Edge */
+    user-select: none;
+    /* Standard syntax */
+    background-color: var(--surface-color);
+    color: var(--text-color);
+    border: none;
+    padding: 1em;
+    max-width: 800px;
+}
+
+textarea:focus {
+    outline: none;
+}
+
+ul {
+    list-style-type: none;
+}
+
+@media screen and (max-width: 650px) {
+    ul#file-list>li {
+        min-width: 350px !important;
+    }
+
+    ul#file-list>li>span.file-upload-date {
+        display: none;
+    }
+
+    textarea {
+        max-width: 350px;
+    }
+
+    img.image-404 {
+        max-width: 400px;
+    }
+}
+
+input[type="file"]::file-selector-button {
+    font-size: 1.2em;
+}
+
+ul#file-list {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    align-items: center;
+    padding-left: 0;
+}
+
+ul#file-list>li {
+    min-width: 600px;
+    max-width: 1200px;
+    margin: 0.5em 0;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    border: 2px solid var(--accent-color);
+    padding: 1em;
+    border-radius: 10px;
+}
+
+ul#file-list>li>span.file-name {
+    text-align: left;
+    flex-grow: 2;
+}
+
+ul#file-list>li>button {
+    width: auto;
+    padding: 0 0.5em;
+    margin: 0 0.25em;
+    border: none;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    font-size: 1.2em;
+}
+
+ul#file-list>li>button.delete-file:hover {
+    color: var(--important-color) !important;
+}
+
+ul#file-list>li>button:hover {
+    color: var(--accent-color) !important;
+}
+
+ul#file-list>li>span.file-upload-date {
+    justify-self: flex-end;
+}
+
+/* ul#file-list>li>a { */
+/*     display: flex; */
+/*     flex: 1 1 0px; */
+/*     border: 2px solid var(--accent-color); */
+/*     padding: 1em; */
+/*     border-radius: 10px; */
+/* } */
+
+p#status {
+    color: var(--header-color);
+}
+
+form#file-upload-form {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    max-width: 700px;
+    padding: 2em;
+    border-radius: 10px;
+    border: 2px dashed var(--header-color);
+}
+
+form#file-upload-form>input {
+    margin: 1em 0;
+}
+
+img.profile {
+    max-width: 400px;
+    border: 2px solid var(--accent-color);
+    border-radius: 10px;
+}
+
+div.user-info {
+    text-align: left;
+}
+
+div.user-info span {
+    color: var(--accent-color);
+}
+
+div.faq-section {
+    justify-content: center;
+    justify-items: center;
+    align-items: center;
+    text-align: left;
+}
+
+a.day-link {
+    display: inline-block;
+    width: 2em;
+    height: 2em;
+}
+
+a.day-link.disabled {
+    color: gray;
+    pointer-events: none;
+}

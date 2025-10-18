@@ -1,0 +1,18 @@
+[package]
+name = "advent_of_time"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+anyhow = "1.0.100"
+chrono = { version = "0.4.42", features = ["serde"] }
+env_logger = "0.11.8"
+log = "0.4.28"
+mime_guess = "2.0.5"
+rand = "0.9.2"
+regex = "1.12.2"
+reqwest = { version = "0.12.24", features = ["blocking"] }
+rtfw_http = { git = "https://github.com/RTFW-rs/rtfw-http-rs.git" }
+serde = "1.0.228"
+serde_json = "1.0.145"
+toml = "0.9.8"

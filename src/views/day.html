@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>AOT | {{PAGE_TITLE}}</title>
+        <link rel="stylesheet" type="text/css" href="/main.css">
+    </head>
+    <body>
+        <header>
+            <h1>{{PAGE_TITLE}}</h1>
+            <h2>Guess today's picture!</h2>
+        </header>
+
+        <div class="center">
+            <img width="500" src="{{DAY_IMG_SRC}}" alt="{{DAY_IMG_ALT}}">
+            <form id="guess-daily-picture">
+                <input type="hidden" name="day-token" value="{{DAY}}">
+
+                <p>
+                    <label for="time-guess">Your guess:</label>
+                    <input id="time-guess" name="time-guess" type="text">
+                </p>
+
+                <button type="submit">Submit</button>
+            </form>
+        </div>
+
+        <br/>
+        <a id="link-go-home" href="/">/home </a>
+
+        <script src="/scripts/day.js"></script>
+    </body>
+</html>
