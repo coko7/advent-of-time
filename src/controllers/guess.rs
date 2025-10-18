@@ -1,13 +1,8 @@
-use std::collections::HashMap;
-
 use anyhow::{Context, Result, bail};
 use chrono::{Datelike, Local, TimeZone};
 use log::{debug, info, trace};
 use rtfw_http::{
-    http::{
-        HttpRequest, HttpResponse, HttpResponseBuilder, request,
-        response_status_codes::HttpStatusCode,
-    },
+    http::{HttpRequest, HttpResponse, HttpResponseBuilder, response_status_codes::HttpStatusCode},
     router::RoutingData,
 };
 use serde::{Deserialize, Serialize};
@@ -34,7 +29,7 @@ fn bad_request_msg(message: &str) -> Result<HttpResponse> {
         .build()
 }
 
-pub fn post_guess(request: &HttpRequest, routing_data: &RoutingData) -> Result<HttpResponse> {
+pub fn post_guess(request: &HttpRequest, _routing_data: &RoutingData) -> Result<HttpResponse> {
     let body = match request.get_str_body() {
         Ok(body) => body,
         Err(e) => {
@@ -124,7 +119,7 @@ fn compute_score(day: u32, guess: (u32, u32)) -> Result<u32> {
     debug!("real time: {real_dt:?}");
 
     let diff = real_dt.signed_duration_since(guess_dt);
-    let diff_minutes = diff.num_minutes().abs() as u32;
+    let diff_minutes = diff.num_minutes().unsigned_abs();
     debug!("diff in minutes: {diff_minutes}");
 
     let points = utils::time_diff_to_points(diff_minutes);

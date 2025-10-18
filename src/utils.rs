@@ -1,40 +1,12 @@
-use anyhow::{Result, anyhow};
-use chrono::{DateTime, Datelike, Local, TimeZone, Utc};
-use log::{debug, error};
+use anyhow::Result;
+use chrono::{Datelike, Local, TimeZone, Utc};
+use log::error;
 use regex::Regex;
-use serde::{Deserialize, Serialize};
-use std::{
-    collections::HashMap,
-    ffi::OsString,
-    fs,
-    hash::Hash,
-    path::{Component, Path, PathBuf},
-};
+use std::{fs, path::PathBuf};
 
 use crate::models::aot_image_meta::AotImageMeta;
 
 const AOT_PICS_DIR: &str = "data/day-pics/";
-
-#[derive(Debug, Serialize, Deserialize)]
-pub(crate) struct User {
-    pub id: usize,
-    pub firstname: String,
-    pub lastname: String,
-    pub title: String,
-    pub image_url: String,
-    pub born: String,
-    pub died: Option<String>,
-}
-
-impl User {
-    pub fn name(&self) -> String {
-        format!("{} {}", self.firstname, self.lastname)
-    }
-}
-
-pub fn is_safe_relative_subpath(path: &Path) -> bool {
-    !path.is_absolute() && path.components().all(|comp| comp != Component::ParentDir)
-}
 
 pub fn get_aot_pics_dir() -> PathBuf {
     PathBuf::from(AOT_PICS_DIR)
@@ -60,21 +32,14 @@ pub fn markdown_to_html(content: &str) -> Result<String> {
     Ok(result)
 }
 
-pub fn sanitize_filename(filename: &str) -> Result<OsString> {
-    match Path::new(filename).file_name() {
-        Some(filename) => Ok(filename.to_owned()),
-        None => Err(anyhow!("failed to get filename")),
-    }
-}
-
 pub fn is_day_valid(day: u32) -> bool {
-    if day < 1 || day > 25 {
+    if !(1..=25).contains(&day) {
         return false;
     }
 
     let now = Local::now();
     let now_day = now.day();
-    let month = now.month();
+    let _month = now.month();
 
     // if month != 12 {
     //     return false;
@@ -84,7 +49,7 @@ pub fn is_day_valid(day: u32) -> bool {
         return false;
     }
 
-    return true;
+    true
 }
 
 pub fn get_day_img_path(day: u32) -> Result<PathBuf> {
@@ -98,38 +63,7 @@ pub fn load_view(name: &str) -> Result<String> {
     Ok(content)
 }
 
-pub fn sanitize_user_input(value: &str) -> String {
-    value.replace("<", "&lt;").replace(">", "&gt;")
-}
-
-pub fn get_files_in_directory(path: &PathBuf) -> Result<Vec<PathBuf>> {
-    let entries = fs::read_dir(path)?;
-    let mut files: Vec<_> = entries
-        .filter_map(|entry| {
-            let path = entry.ok()?.path();
-            if path.is_file() { Some(path) } else { None }
-        })
-        .collect();
-
-    // sort file list by create/modify date in reverse orde (newest first)
-    files.sort_by(|a, b| {
-        let a_meta = a.metadata().unwrap();
-        let b_meta = b.metadata().unwrap();
-
-        let a_time = a_meta
-            .created()
-            .unwrap_or_else(|_| a_meta.modified().unwrap());
-        let b_time = b_meta
-            .created()
-            .unwrap_or_else(|_| b_meta.modified().unwrap());
-
-        a_time.cmp(&b_time).reverse()
-    });
-
-    Ok(files)
-}
-
-pub fn time_diff_to_points(diff_minutes: u32) -> u32 {
+pub fn time_diff_to_points(diff_minutes: u64) -> u32 {
     match diff_minutes {
         0 => 25,
         1..15 => 19,
@@ -148,7 +82,7 @@ pub fn load_img_meta(day: u32) -> Result<AotImageMeta> {
     error!("NOT yet implemented");
     let dt = Utc.with_ymd_and_hms(2025, 12, day, 12, 38, 27).unwrap();
     Ok(AotImageMeta {
-        day: day,
+        day,
         taken_at: dt,
         location: Some("Stockholm".to_owned()),
     })

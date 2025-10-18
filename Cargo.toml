@@ -16,3 +16,4 @@ rtfw_http = { git = "https://github.com/RTFW-rs/rtfw-http-rs.git" }
 serde = "1.0.228"
 serde_json = "1.0.145"
 toml = "0.9.8"
+url = "2.5.7"

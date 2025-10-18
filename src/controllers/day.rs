@@ -1,18 +1,12 @@
-use std::fs;
-
 use anyhow::Result;
-use chrono::{Datelike, Local};
-use log::{debug, error, info};
+use log::{debug, error};
 use rtfw_http::{
     http::{HttpRequest, HttpResponse, HttpResponseBuilder, response_status_codes::HttpStatusCode},
     router::RoutingData,
 };
+use std::fs;
 
 use crate::{routes, utils};
-
-pub fn get_day_index(request: &HttpRequest, routing_data: &RoutingData) -> Result<HttpResponse> {
-    return routes::catcher_get_404(request, routing_data);
-}
 
 pub fn get_single_day(request: &HttpRequest, routing_data: &RoutingData) -> Result<HttpResponse> {
     let day: Result<Option<u32>> = routing_data.get_value("id");
@@ -37,7 +31,7 @@ pub fn get_single_day(request: &HttpRequest, routing_data: &RoutingData) -> Resu
     HttpResponseBuilder::new().set_html_body(&body).build()
 }
 
-pub fn get_day_picture(request: &HttpRequest, routing_data: &RoutingData) -> Result<HttpResponse> {
+pub fn get_day_picture(_request: &HttpRequest, routing_data: &RoutingData) -> Result<HttpResponse> {
     let day: Result<Option<u32>> = routing_data.get_value("id");
     if day.is_err() {
         debug!("invalid day ID format for img: {day:?}");
@@ -74,9 +68,9 @@ pub fn get_day_picture(request: &HttpRequest, routing_data: &RoutingData) -> Res
             .build()
     } else {
         debug!("invalid day img requested: {:?}", picture_path);
-        return HttpResponseBuilder::new()
+        HttpResponseBuilder::new()
             .set_status(HttpStatusCode::NotFound)
-            .build();
+            .build()
     }
 }
 

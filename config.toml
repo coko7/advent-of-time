@@ -1,1 +1,17 @@
 hostname = "127.0.0.1:7878"
+
+[oauth2.discord]
+enabled = false
+authorize_url = "https://discord.com/oauth2/authorize"
+token_url = "https://discord.com/api/oauth2/token"
+client_id = "1428761793399885904"
+redirect_uri = "http://127.0.0.1:7878/auth/oauth2-redirect"
+secret = "{{DISCORD_SECRET}}"
+
+[oauth2.microsoft]
+enabled = false
+authorize_url = ""
+token_url = ""
+client_id = ""
+redirect_uri = ""
+secret = ""

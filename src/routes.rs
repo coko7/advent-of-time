@@ -5,7 +5,7 @@ use rand::seq::IndexedRandom;
 use rtfw_http::http::response_status_codes::HttpStatusCode;
 use rtfw_http::http::{HttpRequest, HttpResponse, HttpResponseBuilder};
 use rtfw_http::router::RoutingData;
-use std::{fs, thread};
+use std::fs;
 
 use crate::utils;
 
@@ -40,7 +40,7 @@ fn generate_calendar_body() -> String {
     body
 }
 
-pub fn get_about(request: &HttpRequest, _routing_data: &RoutingData) -> Result<HttpResponse> {
+pub fn get_about(_request: &HttpRequest, _routing_data: &RoutingData) -> Result<HttpResponse> {
     let body = utils::load_view("about")?;
     HttpResponseBuilder::new().set_html_body(&body).build()
 }
