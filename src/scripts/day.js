@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", function () {
-  const statusElem = document.getElementById("status");
+  // const statusElem = document.getElementById("status");
   const formElem = document.querySelector("form");
   const guessElem = document.querySelector("input#time-guess");
   const dayToken = document.querySelector('input[name="day-token"]');
@@ -27,7 +27,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
       })
       .then((data) => {
-        const time = getTimeLabel();
+        // const time = getTimeLabel();
         const points = data.points;
         alert(`you got ${points} points`);
         globalThis.location.reload();

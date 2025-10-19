@@ -6,7 +6,7 @@ use rtfw_http::{
 };
 use std::fs;
 
-use crate::{routes, utils};
+use crate::{http_helpers, routes, utils};
 
 pub fn get_single_day(request: &HttpRequest, routing_data: &RoutingData) -> Result<HttpResponse> {
     let day: Result<Option<u32>> = routing_data.get_value("id");
@@ -27,7 +27,7 @@ pub fn get_single_day(request: &HttpRequest, routing_data: &RoutingData) -> Resu
         return routes::catcher_get_404(request, routing_data);
     }
 
-    let body = load_day_view(day)?;
+    let body = load_day_view(request, day)?;
     HttpResponseBuilder::new().set_html_body(&body).build()
 }
 
@@ -74,12 +74,36 @@ pub fn get_day_picture(_request: &HttpRequest, routing_data: &RoutingData) -> Re
     }
 }
 
-fn load_day_view(day: u32) -> Result<String> {
+fn load_day_view(request: &HttpRequest, day: u32) -> Result<String> {
     let day_img_src = format!("/day-pic/{day}");
+
+    let user = http_helpers::get_logged_in_user(request)?;
+    let dynamic_form = match user {
+        Some(user) => {
+            if user.has_guessed(day) {
+                let guess_data = user.guess_data.get(&day).unwrap();
+                format!("<p>Your points for this guess: {}</p>", guess_data.points)
+            } else {
+                r#"
+                <form id="guess-daily-picture">
+                <p>
+                    <label for="time-guess">Your guess:</label>
+                    <input id="time-guess" name="time-guess" type="text">
+                </p>
+                <button type="submit">Submit</button>
+            </form>
+        "#
+                .to_string()
+            }
+        }
+        None => "<p>Please <a href=\"/auth/login\">login</a> first in order submit your guess</p>"
+            .to_string(),
+    };
 
     let body = utils::load_view("day")?
         .replace("{{PAGE_TITLE}}", &format!("Day {day}"))
         .replace("{{DAY}}", &day.to_string())
+        .replace("{{LOGIN_DYNA_BLOCK}}", &dynamic_form)
         .replace("{{DAY_IMG_SRC}}", &day_img_src)
         .replace("{{GUESS_URL}}", &format!("/guess/{day}"))
         .replace("{{DAY_IMG_ALT}}", &format!("Image for day {day}"));

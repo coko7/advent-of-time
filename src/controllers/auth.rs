@@ -1,6 +1,6 @@
 use anyhow::{Context, Result};
 use chrono::Local;
-use log::{debug, error};
+use log::debug;
 use reqwest::header::{AUTHORIZATION, CONTENT_TYPE};
 use rtfw_http::{
     http::{
@@ -13,15 +13,53 @@ use std::{collections::HashMap, time::Duration};
 
 use crate::{
     config::Config,
+    database,
+    http_helpers::{self, redirect},
     models::{
         discord_user_response::DiscordUserResponse, oauth2_response::OAuth2Response, user::User,
     },
     utils,
 };
 
-pub fn get_login(_request: &HttpRequest, _routing_data: &RoutingData) -> Result<HttpResponse> {
+pub fn get_login(request: &HttpRequest, _routing_data: &RoutingData) -> Result<HttpResponse> {
+    if http_helpers::is_logged_in(request)? {
+        return redirect("/auth/me");
+    }
+
     let body = utils::load_view("login")?;
     HttpResponseBuilder::new().set_html_body(&body).build()
+}
+
+pub fn get_logout(request: &HttpRequest, _routing_data: &RoutingData) -> Result<HttpResponse> {
+    let mut user = match http_helpers::get_logged_in_user(request)? {
+        Some(user) => user,
+        None => return redirect("/auth/login"),
+    };
+
+    user.access_token_expire_at = Local::now().into();
+    user.access_token = String::new();
+    user.refresh_token = String::new();
+    database::update_user(user)?;
+
+    let clear_bearer_cookie = HttpCookie::new(http_helpers::BEARER_COOKIE, "")
+        .set_path(Some("/"))
+        .set_max_age(Some(0));
+
+    HttpResponseBuilder::new()
+        .set_status(HttpStatusCode::Found)
+        .set_cookie(clear_bearer_cookie)
+        .set_header("Location", "/")
+        .build()
+}
+
+pub fn get_me(request: &HttpRequest, _routing_data: &RoutingData) -> Result<HttpResponse> {
+    let user = match http_helpers::get_logged_in_user(request)? {
+        Some(user) => user,
+        None => return redirect("/auth/login"),
+    };
+
+    let json = serde_json::to_string(&user)?;
+    HttpResponseBuilder::new().set_json_body(&json)?.build()
 }
 
 pub fn get_oauth2_login(
@@ -82,12 +120,28 @@ pub fn get_oauth2_redirect(
     let body = response.text()?;
     let oauth2_res = serde_json::from_str::<OAuth2Response>(&body)?;
     let user = create_user_from_discord(&oauth2_res)?;
-    debug!("newly created user: {user:#?}");
-    error!("todo: save user to database");
+
+    match database::get_user_by_id(&user.id)? {
+        Some(mut existing_user) => {
+            debug!("existing user logged in: {existing_user:#?}");
+            existing_user.access_token = user.access_token;
+            existing_user.refresh_token = user.refresh_token;
+            existing_user.access_token_expire_at = user.access_token_expire_at;
+            database::update_user(existing_user)?;
+        }
+        None => {
+            debug!("newly created user: {user:#?}");
+            database::create_user(user)?;
+        }
+    }
+
+    let bearer_cookie = HttpCookie::new(http_helpers::BEARER_COOKIE, &oauth2_res.access_token)
+        .set_path(Some("/"))
+        .set_max_age(Some(oauth2_res.expires_in as i32));
 
     HttpResponseBuilder::new()
         .set_status(HttpStatusCode::Found)
-        .set_cookie(HttpCookie::new("discord-jwt", &oauth2_res.access_token))
+        .set_cookie(bearer_cookie)
         .set_header("Location", "/")
         .build()
 }
@@ -114,7 +168,8 @@ fn create_user_from_discord(oauth2_response: &OAuth2Response) -> Result<User> {
     let at_expires_at = now + Duration::from_secs(expires_in);
 
     Ok(User {
-        user_id: user_info.id,
+        id: user_info.id,
+        username: user_info.username,
         guess_data: HashMap::new(),
         access_token: oauth2_response.access_token.to_owned(),
         access_token_expire_at: at_expires_at.into(),

@@ -8,7 +8,12 @@ use rtfw_http::{
 use serde::{Deserialize, Serialize};
 use serde_json::json;
 
-use crate::utils;
+use crate::{
+    database,
+    http_helpers::{self, bad_request, bad_request_msg},
+    models::user::GuessData,
+    utils,
+};
 
 #[derive(Serialize, Deserialize)]
 pub struct SubmitGuessRequest {
@@ -16,20 +21,16 @@ pub struct SubmitGuessRequest {
     pub guess: String,
 }
 
-fn bad_request() -> Result<HttpResponse> {
-    HttpResponseBuilder::new()
-        .set_status(HttpStatusCode::BadRequest)
-        .build()
-}
-
-fn bad_request_msg(message: &str) -> Result<HttpResponse> {
-    HttpResponseBuilder::new()
-        .set_status(HttpStatusCode::BadRequest)
-        .set_html_body(message)
-        .build()
-}
-
 pub fn post_guess(request: &HttpRequest, _routing_data: &RoutingData) -> Result<HttpResponse> {
+    let mut user = match http_helpers::get_logged_in_user(request)? {
+        Some(user) => user,
+        None => {
+            return HttpResponseBuilder::new()
+                .set_status(HttpStatusCode::Unauthorized)
+                .build();
+        }
+    };
+
     let body = match request.get_str_body() {
         Ok(body) => body,
         Err(e) => {
@@ -54,10 +55,17 @@ pub fn post_guess(request: &HttpRequest, _routing_data: &RoutingData) -> Result<
         return bad_request();
     }
 
+    if user.has_guessed(day) {
+        return bad_request_msg("You have already guessed this day!");
+    }
+
     let guess_value = request_data.guess;
     match parse_guess_value(&guess_value) {
         Ok(guess) => {
             let score = compute_score(day, guess)?;
+            let guess_data = GuessData::new(guess, score, Local::now().into());
+            user.guess_data.insert(day, guess_data);
+            database::update_user(user)?;
 
             HttpResponseBuilder::new()
                 .set_json_body(&json!({"points": score}))?

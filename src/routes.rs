@@ -7,14 +7,27 @@ use rtfw_http::http::{HttpRequest, HttpResponse, HttpResponseBuilder};
 use rtfw_http::router::RoutingData;
 use std::fs;
 
-use crate::utils;
+use crate::{http_helpers, utils};
 
 pub fn get_index(request: &HttpRequest, _routing_data: &RoutingData) -> Result<HttpResponse> {
-    let name = request.query.get("name").map_or("World", |v| v);
+    let user = http_helpers::get_logged_in_user(request)?;
+    let login_section = if user.is_some() {
+        "<li> <a href=\"/auth/me\">Profile</a></li><li>󰍃 <a href=\"/auth/logout\">Logout</a></li>"
+            .to_string()
+    } else {
+        "<li>󰍂 <a href=\"/auth/login\">Login</a></li>".to_string()
+    };
+
+    let name = match user {
+        Some(user) => user.username,
+        None => "World".to_string(),
+    };
+
     let greet_msg = format!("Hello {}!", name);
 
     let body = utils::load_view("index")?
         .replace("{{GREET_MSG}}", &greet_msg)
+        .replace("{{LOGIN_DYNA_BLOCK}}", &login_section)
         .replace("{{AOT_CALENDAR}}", &generate_calendar_body());
     HttpResponseBuilder::new().set_html_body(&body).build()
 }

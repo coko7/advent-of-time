@@ -13,17 +13,9 @@
         </header>
 
         <div class="center">
+            <input type="hidden" name="day-token" value="{{DAY}}">
             <img width="500" src="{{DAY_IMG_SRC}}" alt="{{DAY_IMG_ALT}}">
-            <form id="guess-daily-picture">
-                <input type="hidden" name="day-token" value="{{DAY}}">
-
-                <p>
-                    <label for="time-guess">Your guess:</label>
-                    <input id="time-guess" name="time-guess" type="text">
-                </p>
-
-                <button type="submit">Submit</button>
-            </form>
+            {{LOGIN_DYNA_BLOCK}}
         </div>
 
         <br/>

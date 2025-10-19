@@ -3,19 +3,25 @@ use rtfw_http::{file_server::FileServer, http::HttpMethod, router::Router, web_s
 
 use config::Config;
 
+use crate::database::initialize_database;
+
 mod config;
 mod controllers;
+mod database;
+mod http_helpers;
 mod models;
 mod routes;
+mod security;
 mod utils;
 
 fn main() -> anyhow::Result<()> {
     env_logger::Builder::new()
-        .filter_module("advent_of_time", LevelFilter::Debug)
+        .filter_module("advent_of_time", LevelFilter::Trace)
         .filter_module("rtfw_http", LevelFilter::Warn)
         .init();
 
     let config = Config::load_from_file()?;
+    initialize_database()?;
 
     let file_server = FileServer::new()
         .map_file("/favicon.ico", "src/assets/favicon.ico")?
@@ -32,11 +38,13 @@ fn main() -> anyhow::Result<()> {
         .get("/about", routes::get_about)?
         // auth
         .get("/auth/login", controllers::auth::get_login)?
+        .get("/auth/logout", controllers::auth::get_logout)?
         .get("/auth/oauth2", controllers::auth::get_oauth2_login)?
         .get(
             "/auth/oauth2-redirect",
             controllers::auth::get_oauth2_redirect,
         )?
+        .get("/auth/me", controllers::auth::get_me)?
         // day
         .get("/day/:id", controllers::day::get_single_day)?
         .get("/day-pic/:id", controllers::day::get_day_picture)?
