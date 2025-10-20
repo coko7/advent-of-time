@@ -1,5 +1,4 @@
 use anyhow::Result;
-use chrono::{Datelike, Local};
 use log::debug;
 use rand::seq::IndexedRandom;
 use rtfw_http::http::response_status_codes::HttpStatusCode;
@@ -11,9 +10,12 @@ use crate::{http_helpers, utils};
 
 pub fn get_index(request: &HttpRequest, _routing_data: &RoutingData) -> Result<HttpResponse> {
     let user = http_helpers::get_logged_in_user(request)?;
-    let login_section = if user.is_some() {
-        "<li> <a href=\"/auth/me\">Profile</a></li><li>󰍃 <a href=\"/auth/logout\">Logout</a></li>"
-            .to_string()
+    let login_section = if let Some(user) = user.clone() {
+        format!(
+            "<li> <a href=\"/auth/me\">{}</a></li><li>󰍃 <a href=\"/auth/logout\">Logout</a></li>",
+            &user.username
+        )
+        .to_string()
     } else {
         "<li>󰍂 <a href=\"/auth/login\">Login</a></li>".to_string()
     };
@@ -34,8 +36,7 @@ pub fn get_index(request: &HttpRequest, _routing_data: &RoutingData) -> Result<H
 
 fn generate_calendar_body() -> String {
     let mut body = String::from("<div></p>");
-    let now = Local::now();
-    let today = now.day();
+    let today = utils::get_current_day();
     for day in 1..=25 {
         let day_link = if day <= today {
             format!("<a class=\"day-link\" href=\"/day/{day}\">{day}</a>")

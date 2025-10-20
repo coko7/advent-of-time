@@ -12,6 +12,7 @@ mime_guess = "2.0.5"
 rand = "0.9.2"
 regex = "1.12.2"
 reqwest = { version = "0.12.24", features = ["blocking"] }
+rexiv2 = "0.10.0"
 rtfw_http = { git = "https://github.com/RTFW-rs/rtfw-http-rs.git" }
 serde = "1.0.228"
 serde_json = "1.0.145"

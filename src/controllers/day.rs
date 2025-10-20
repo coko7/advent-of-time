@@ -57,6 +57,8 @@ pub fn get_day_picture(_request: &HttpRequest, routing_data: &RoutingData) -> Re
     }
 
     let picture_path = utils::get_day_img_path(day)?;
+    let time_component = utils::extract_time_from_image(&picture_path);
+    debug!("img meta: {time_component:#?}");
     let mime_type = mime_guess::from_path(&picture_path).first_or_octet_stream();
 
     error!("image needs to be cleared of its EXIF data before being returned to client");

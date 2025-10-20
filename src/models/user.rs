@@ -3,7 +3,7 @@ use std::collections::HashMap;
 use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 
-type Day = u32;
+use crate::utils::Day;
 
 #[derive(Debug, Deserialize, Serialize, Clone)]
 pub struct User {

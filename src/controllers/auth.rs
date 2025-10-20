@@ -58,8 +58,27 @@ pub fn get_me(request: &HttpRequest, _routing_data: &RoutingData) -> Result<Http
         None => return redirect("/auth/login"),
     };
 
-    let json = serde_json::to_string(&user)?;
-    HttpResponseBuilder::new().set_json_body(&json)?.build()
+    let mut guess_data_block = String::from("<ul>");
+    let current_day = utils::get_current_day();
+    let mut total_pts = 0;
+    for day in 1..=current_day {
+        let txt = match user.guess_data.get(&day) {
+            Some(guess_data) => {
+                let points = guess_data.points;
+                total_pts += points;
+                format!("<li>Day {day} => {points} ⭐</li>")
+            }
+            None => format!("<li>Day {day} => 0 ⚫</li>"),
+        };
+        guess_data_block.push_str(&txt);
+    }
+    guess_data_block.push_str("</ul>");
+    guess_data_block.push_str(&format!("<p>Total: {total_pts} ⭐</p>"));
+
+    let body = utils::load_view("profile")?
+        .replace("{{USERNAME}}", &user.username)
+        .replace("{{GUESS_DATA_BLOCK}}", &guess_data_block);
+    HttpResponseBuilder::new().set_html_body(&body).build()
 }
 
 pub fn get_oauth2_login(

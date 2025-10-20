@@ -1,12 +1,15 @@
 use anyhow::Result;
-use chrono::{Datelike, Local, TimeZone, Utc};
+use chrono::{Datelike, Local, NaiveDateTime, TimeZone, Timelike, Utc};
 use log::error;
 use regex::Regex;
+use rexiv2::Metadata;
 use std::{fs, path::PathBuf};
 
 use crate::models::aot_image_meta::AotImageMeta;
 
 const AOT_PICS_DIR: &str = "data/day-pics/";
+
+pub type Day = u32;
 
 pub fn get_aot_pics_dir() -> PathBuf {
     PathBuf::from(AOT_PICS_DIR)
@@ -57,6 +60,16 @@ pub fn get_day_img_path(day: u32) -> Result<PathBuf> {
     Ok(get_aot_pics_dir().join(picture_filename))
 }
 
+pub fn extract_time_from_image(img_path: &PathBuf) -> Result<(u32, u32)> {
+    rexiv2::initialize()?;
+    let metadata = Metadata::new_from_path(img_path)?;
+    println!("{:#?}", metadata.get_xmp_tags()?);
+    let raw_dt = metadata.get_tag_string("Exif.Photo.DateTimeOriginal")?;
+    println!("tag: {:#?}", raw_dt);
+    let datetime = NaiveDateTime::parse_from_str(&raw_dt, "%Y:%m:%d %H:%M:%S")?;
+    Ok((datetime.hour(), datetime.minute()))
+}
+
 pub fn load_view(name: &str) -> Result<String> {
     let view_path = format!("src/views/{}.html", name);
     let content = fs::read_to_string(view_path)?;
@@ -86,4 +99,9 @@ pub fn load_img_meta(day: u32) -> Result<AotImageMeta> {
         taken_at: dt,
         location: Some("Stockholm".to_owned()),
     })
+}
+
+pub fn get_current_day() -> Day {
+    let now = Local::now();
+    now.day()
 }
