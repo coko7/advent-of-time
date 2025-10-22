@@ -19,6 +19,10 @@ impl User {
     pub fn has_guessed(&self, day: Day) -> bool {
         self.guess_data.contains_key(&day)
     }
+
+    pub fn get_total_score(&self) -> u32 {
+        self.guess_data.values().map(|data| data.points).sum()
+    }
 }
 
 #[derive(Debug, Deserialize, Serialize, Clone)]

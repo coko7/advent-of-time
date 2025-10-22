@@ -26,6 +26,7 @@ fn main() -> anyhow::Result<()> {
     let file_server = FileServer::new()
         .map_file("/favicon.ico", "src/assets/favicon.ico")?
         .map_file("/main.css", "src/styles/main.css")?
+        .map_file("/leaderboard.css", "src/styles/leaderboard.css")?
         .map_dir("/static", "src/assets/")?
         .map_dir("/scripts", "src/scripts/")?;
 
@@ -45,6 +46,7 @@ fn main() -> anyhow::Result<()> {
             controllers::auth::get_oauth2_redirect,
         )?
         .get("/auth/me", controllers::auth::get_me)?
+        .get("/leaderboard", controllers::leaderboard::get_leaderboard)?
         // day
         .get("/day/:id", controllers::day::get_single_day)?
         .get("/day-pic/:id", controllers::day::get_day_picture)?
