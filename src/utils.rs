@@ -1,19 +1,10 @@
 use anyhow::Result;
-use chrono::{Datelike, Local, NaiveDateTime, TimeZone, Timelike, Utc};
-use log::error;
+use chrono::{Datelike, Local, NaiveDateTime, Timelike};
 use regex::Regex;
 use rexiv2::Metadata;
 use std::{fs, path::PathBuf};
 
-use crate::models::aot_image_meta::AotImageMeta;
-
-const AOT_PICS_DIR: &str = "data/day-pics/";
-
 pub type Day = u32;
-
-pub fn get_aot_pics_dir() -> PathBuf {
-    PathBuf::from(AOT_PICS_DIR)
-}
 
 pub fn markdown_to_html(content: &str) -> Result<String> {
     let link_regex = Regex::new(r"\[([^\]]+)\]\(([^)]+)\)")?;
@@ -55,11 +46,6 @@ pub fn is_day_valid(day: u32) -> bool {
     true
 }
 
-pub fn get_day_img_path(day: u32) -> Result<PathBuf> {
-    let picture_filename = format!("{day}.jpg");
-    Ok(get_aot_pics_dir().join(picture_filename))
-}
-
 pub fn extract_time_from_image(img_path: &PathBuf) -> Result<(u32, u32)> {
     rexiv2::initialize()?;
     let metadata = Metadata::new_from_path(img_path)?;
@@ -89,16 +75,6 @@ pub fn time_diff_to_points(diff_minutes: u64) -> u32 {
         420..600 => 2, // 10 hours
         _ => 1,        // more than 10 hours
     }
-}
-
-pub fn load_img_meta(day: u32) -> Result<AotImageMeta> {
-    error!("NOT yet implemented");
-    let dt = Utc.with_ymd_and_hms(2025, 12, day, 12, 38, 27).unwrap();
-    Ok(AotImageMeta {
-        day,
-        taken_at: dt,
-        location: Some("Stockholm".to_owned()),
-    })
 }
 
 pub fn get_current_day() -> Day {

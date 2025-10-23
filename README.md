@@ -1,7 +1,7 @@
 # 🎄 Advent Of Time
 
 This is the source code for the **Advent Of Time** webapp.
-The **Avdent Of Time** is an advent type of game that takes place in December.
+The **Advent Of Time** is an advent type of game that takes place in December.
 Every day there will be a different picture and your goal is to try to guess the exact time it was taken at.
 You get points based on how well your perform.
 

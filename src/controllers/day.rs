@@ -1,4 +1,4 @@
-use anyhow::Result;
+use anyhow::{Context, Result};
 use log::{debug, error};
 use rtfw_http::{
     http::{HttpRequest, HttpResponse, HttpResponseBuilder, response_status_codes::HttpStatusCode},
@@ -6,7 +6,9 @@ use rtfw_http::{
 };
 use std::fs;
 
-use crate::{http_helpers, routes, utils};
+use crate::{
+    database::picture_meta_repository::PictureMetaRepository, http_helpers, routes, utils,
+};
 
 pub fn get_single_day(request: &HttpRequest, routing_data: &RoutingData) -> Result<HttpResponse> {
     let day: Result<Option<u32>> = routing_data.get_value("id");
@@ -56,12 +58,13 @@ pub fn get_day_picture(_request: &HttpRequest, routing_data: &RoutingData) -> Re
             .build();
     }
 
-    let picture_path = utils::get_day_img_path(day)?;
-    let time_component = utils::extract_time_from_image(&picture_path);
-    debug!("img meta: {time_component:#?}");
+    error!("TODO: make sure to remove EXIF from those images");
+    let picture = PictureMetaRepository::get_picture(day)?.context("should exist")?;
+    let picture_path = picture.get_full_path();
+    // let time_component = utils::extract_time_from_image(&img.path);
+    // debug!("img meta: {time_component:#?}");
     let mime_type = mime_guess::from_path(&picture_path).first_or_octet_stream();
 
-    error!("image needs to be cleared of its EXIF data before being returned to client");
     if let Ok(bin_content) = fs::read(&picture_path) {
         debug!("valid day img returned: {:?}", picture_path);
         HttpResponseBuilder::new()
@@ -78,13 +81,21 @@ pub fn get_day_picture(_request: &HttpRequest, routing_data: &RoutingData) -> Re
 
 fn load_day_view(request: &HttpRequest, day: u32) -> Result<String> {
     let day_img_src = format!("/day-pic/{day}");
+    let picture_meta =
+        PictureMetaRepository::get_picture(day)?.context("picture should exist bruh")?;
 
     let user = http_helpers::get_logged_in_user(request)?;
     let dynamic_form = match user {
         Some(user) => {
             if user.has_guessed(day) {
                 let guess_data = user.guess_data.get(&day).unwrap();
-                format!("<p>Your points for this guess: {}</p>", guess_data.points)
+                format!(
+                    r#"
+                        <p>You guessed: {}:{}</p>
+                        <p>Your points for this guess: {}</p>
+                    "#,
+                    guess_data.hm.0, guess_data.hm.1, guess_data.points
+                )
             } else {
                 r#"
                 <form id="guess-daily-picture">
@@ -107,6 +118,7 @@ fn load_day_view(request: &HttpRequest, day: u32) -> Result<String> {
         .replace("{{DAY}}", &day.to_string())
         .replace("{{LOGIN_DYNA_BLOCK}}", &dynamic_form)
         .replace("{{DAY_IMG_SRC}}", &day_img_src)
+        .replace("{{DAY_ORIGINAL_DATE}}", &picture_meta.original_date)
         .replace("{{GUESS_URL}}", &format!("/guess/{day}"))
         .replace("{{DAY_IMG_ALT}}", &format!("Image for day {day}"));
 

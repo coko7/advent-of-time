@@ -13,7 +13,7 @@ use std::{collections::HashMap, time::Duration};
 
 use crate::{
     config::Config,
-    database,
+    database::user_repository::UserRepository,
     http_helpers::{self, redirect},
     models::{
         discord_user_response::DiscordUserResponse, oauth2_response::OAuth2Response, user::User,
@@ -39,7 +39,7 @@ pub fn get_logout(request: &HttpRequest, _routing_data: &RoutingData) -> Result<
     user.access_token_expire_at = Local::now().into();
     user.access_token = String::new();
     user.refresh_token = String::new();
-    database::update_user(user)?;
+    UserRepository::update_user(user)?;
 
     let clear_bearer_cookie = HttpCookie::new(http_helpers::BEARER_COOKIE, "")
         .set_path(Some("/"))
@@ -82,9 +82,16 @@ pub fn get_me(request: &HttpRequest, _routing_data: &RoutingData) -> Result<Http
 }
 
 pub fn get_oauth2_login(
-    _request: &HttpRequest,
+    request: &HttpRequest,
     _routing_data: &RoutingData,
 ) -> Result<HttpResponse> {
+    let provider = request.query.get("idp").context("IDP should be provided")?;
+    if provider != "discord" {
+        return HttpResponseBuilder::new()
+            .set_status(HttpStatusCode::NotImplemented)
+            .build();
+    }
+
     let config = Config::load_from_file()?;
     let discord_oauth2 = config.oauth2.discord;
 
@@ -140,17 +147,17 @@ pub fn get_oauth2_redirect(
     let oauth2_res = serde_json::from_str::<OAuth2Response>(&body)?;
     let user = create_user_from_discord(&oauth2_res)?;
 
-    match database::get_user_by_id(&user.id)? {
+    match UserRepository::get_user_by_id(&user.id)? {
         Some(mut existing_user) => {
             debug!("existing user logged in: {existing_user:#?}");
             existing_user.access_token = user.access_token;
             existing_user.refresh_token = user.refresh_token;
             existing_user.access_token_expire_at = user.access_token_expire_at;
-            database::update_user(existing_user)?;
+            UserRepository::update_user(existing_user)?;
         }
         None => {
             debug!("newly created user: {user:#?}");
-            database::create_user(user)?;
+            UserRepository::create_user(user)?;
         }
     }
 

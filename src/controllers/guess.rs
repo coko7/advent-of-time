@@ -9,7 +9,7 @@ use serde::{Deserialize, Serialize};
 use serde_json::json;
 
 use crate::{
-    database,
+    database::{picture_meta_repository::PictureMetaRepository, user_repository::UserRepository},
     http_helpers::{self, bad_request, bad_request_msg},
     models::user::GuessData,
     utils,
@@ -65,7 +65,7 @@ pub fn post_guess(request: &HttpRequest, _routing_data: &RoutingData) -> Result<
             let score = compute_score(day, guess)?;
             let guess_data = GuessData::new(guess, score, Local::now().into());
             user.guess_data.insert(day, guess_data);
-            database::update_user(user)?;
+            UserRepository::update_user(user)?;
 
             HttpResponseBuilder::new()
                 .set_json_body(&json!({"points": score}))?
@@ -108,10 +108,23 @@ fn parse_guess_value(guess: &str) -> Result<(u32, u32)> {
 
 fn compute_score(day: u32, guess: (u32, u32)) -> Result<u32> {
     info!("received guess for day {day}: {guess:?}");
-    let daily_img_meta = utils::load_img_meta(day)?;
-    assert!(daily_img_meta.taken_at.day() == day);
+    let daily_img_meta =
+        PictureMetaRepository::get_picture(day)?.context("HEY where is my picture???")?;
+    assert!(daily_img_meta.day() == day);
 
-    let real_dt = daily_img_meta.taken_at;
+    let now = Local::now();
+
+    let real_dt = Local
+        .with_ymd_and_hms(
+            now.year(),
+            now.month(),
+            day,
+            daily_img_meta.hours()?,
+            daily_img_meta.minutes()?,
+            0,
+        )
+        .unwrap();
+
     let guess_dt = Local
         .with_ymd_and_hms(
             real_dt.year(),

@@ -1,9 +1,10 @@
 use log::{LevelFilter, info};
 use rtfw_http::{file_server::FileServer, http::HttpMethod, router::Router, web_server::WebServer};
 
+use crate::database::{
+    picture_meta_repository::PictureMetaRepository, user_repository::UserRepository,
+};
 use config::Config;
-
-use crate::database::initialize_database;
 
 mod config;
 mod controllers;
@@ -21,7 +22,9 @@ fn main() -> anyhow::Result<()> {
         .init();
 
     let config = Config::load_from_file()?;
-    initialize_database()?;
+
+    UserRepository::initialize_database()?;
+    PictureMetaRepository::initialize_database()?;
 
     let file_server = FileServer::new()
         .map_file("/favicon.ico", "src/assets/favicon.ico")?

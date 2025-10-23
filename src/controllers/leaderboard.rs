@@ -6,7 +6,7 @@ use rtfw_http::{
     router::RoutingData,
 };
 
-use crate::{database, models::user::User, utils};
+use crate::{database::user_repository::UserRepository, models::user::User, utils};
 
 fn generate_leaderboard_table(users: &mut [User]) -> String {
     users.sort_by_key(|u| cmp::Reverse(u.get_total_score()));
@@ -47,7 +47,7 @@ pub fn get_leaderboard(
     _request: &HttpRequest,
     _routing_data: &RoutingData,
 ) -> Result<HttpResponse> {
-    let mut users = database::get_all_users()?;
+    let mut users = UserRepository::get_all_users()?;
     let leaderboard = generate_leaderboard_table(&mut users);
 
     let body = utils::load_view("leaderboard")?.replace("{{LEADERBOARD_BLOCK}}", &leaderboard);

@@ -26,12 +26,58 @@
             </div>
 
             <div class="faq-section">
-                <h2>🚀 How many Quantum computers are needed to host this?</h2>
+                <h2>💯 Scoring system</h2>
+                <p>
+                    Points are awarded based on how close your guess is compared to the real time the picture was taken. <br/>
+                    Here is how points are awarded:
+                    <table>
+                        <tr>
+                            <th>Delta</th>
+                            <th>Points</th>
+                        </tr>
+                        <tr>
+                            <td>0 (Perfect)</td>
+                            <td>25</td>
+                        </tr>
+                        <tr><td>&lt; 15 mins</td><td>19</td></tr>
+                        <tr><td>&lt; 30 mins</td><td>14</td></tr>
+                        <tr><td>&lt; 1 hour</td><td>10</td></tr>
+                        <tr><td>&lt; 2 hours</td><td>7</td></tr>
+                        <tr><td>&lt; 3 hours</td><td>5</td></tr>
+                        <tr><td>&lt; 5 hours</td><td>4</td></tr>
+                        <tr><td>&lt; 7 hours</td><td>3</td></tr>
+                        <tr><td>&lt; 10 hours</td><td>2</td></tr>
+                        <tr><td>&ge; 10 hours</td><td>1</td></tr>
+                        <tr><td>no guess</td><td>0</td></tr>
+                    </table>
+                    <br/>
+                <div>
+                    <span>ℹ️ Example:</span>
+                    <p>
+                        If the picture was taken at 15:30 and you guessed 16:45 (01:15 diff), you will get 7 points.<br/>
+                        Each daily guess will grant you points and the winner will be the person with the most points by December 24th 2022 at 23:59.
+                    </p>
+                </div>
+                <div>
+                    <span>⚠️ Important thing to note:</span>
+                    <p>
+                        If the actual time of the picture is 01:00 and you guessed 23:00 it will be considered a 21 hours difference (not 2 hours!).<br/>
+                        Keep that in mind before submitting your guesses.
+                    </p>
+                </div>
+                <p>
+                    Please note that if you do not submit a guess for a day, it will be considered as if you did not participate for this day and you will get 0 points. <br/>
+                    So, make sure to guess every single day if you want to have a chance to win.
+                </p>
+            </div>
+
+            <div class="faq-section">
+                <h2>🚀 How much Quantum computing power is required to run this site?</h2>
                 <p>
                     This is pure HTML, CSS <i>(and vanilla JavaScript)</i>.<br/>
                     No framework, no bullshit. Entirely served by a <a href="https://rust-lang.org/">rusty</a> web server.<br/>
-                    You can find the source code for this webapp <a href="https://github.com/Coko7/advent-of-time">here</a>. It's MIT-licensed.<br/>
-                    The webapp relies on a home-made <s><i>and insecure</i></s> implementation of HTTP 1.1: <a href="https://github.com/RTFW-rs/rtfw-http-rs">RTFW-http-rs</a><br/>
+                    You can find all the source code for this webapp <a href="https://github.com/Coko7/advent-of-time">here</a>. It's MIT-licensed.<br/>
+                    The webapp relies on a <b>home-made</b> <s><i>and insecure</i></s> implementation of HTTP 1.1: <a href="https://github.com/RTFW-rs/rtfw-http-rs">RTFW-http-rs</a><br/>
                     For the reverse-proxy, I picked <a href="https://caddyserver.com/">Caddy</a> because it is easy to configure and fast.<br/>
                     Finally, all of this, is being served from a <a href="https://www.raspberrypi.com/">Raspberry Pi</a>, sitting comfortably in a frenchman's apartment. 🇫🇷 <br/>
                 </p>
@@ -40,8 +86,11 @@
             <div class="faq-section">
                 <h2>💀 Can I crash this site?</h2>
                 <p>
-                    You can. But, I can't guarantee I will get it back up at all.<br/>
-                    If you want to experiment, self-host it yourself. It's all open-source, baby.
+                    It should be fairly easy. <br/>
+                    Especially given the fact that <a href="https://github.com/RTFW-rs/rtfw-http-rs">RTFW-http-rs</a> is most likely <i>(one of)</i> the most insecure HTTP implementation in existence. <br/>
+                    I would prefer if you did not try to take down this instance, though. <br>
+                    I can't guarantee I will get the site back up right away and it might ruin the experience for other players.<br/>
+                    If you want to experiment, feel free to try and self-host this yourself. It's all <a href="https://github.com/Coko7/advent-of-time">open-source</a>, baby.
                 </p>
             </div>
 

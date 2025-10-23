@@ -4,7 +4,7 @@ use rtfw_http::http::{
     HttpRequest, HttpResponse, HttpResponseBuilder, response_status_codes::HttpStatusCode,
 };
 
-use crate::{database, models::user::User, security};
+use crate::{database::user_repository::UserRepository, models::user::User, security};
 
 pub const BEARER_COOKIE: &str = "aot-bearer";
 
@@ -37,7 +37,7 @@ pub fn is_logged_in(request: &HttpRequest) -> Result<bool> {
     };
 
     trace!("cookie bearer: {bearer:?}");
-    let user = match database::get_user_by_bearer(&bearer.value)? {
+    let user = match UserRepository::get_user_by_bearer(&bearer.value)? {
         Some(user) => user,
         None => return Ok(false),
     };
@@ -52,7 +52,7 @@ pub fn get_logged_in_user(request: &HttpRequest) -> Result<Option<User>> {
         None => return Ok(None),
     };
 
-    let user = match database::get_user_by_bearer(&bearer.value)? {
+    let user = match UserRepository::get_user_by_bearer(&bearer.value)? {
         Some(user) => user,
         None => return Ok(None),
     };
