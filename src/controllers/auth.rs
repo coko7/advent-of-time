@@ -12,13 +12,12 @@ use rtfw_http::{
 use std::{collections::HashMap, time::Duration};
 
 use crate::{
-    config::Config,
     database::user_repository::UserRepository,
     http_helpers::{self, redirect},
     models::{
         discord_user_response::DiscordUserResponse, oauth2_response::OAuth2Response, user::User,
     },
-    utils,
+    oauth2, security, utils,
 };
 
 pub fn get_login(request: &HttpRequest, _routing_data: &RoutingData) -> Result<HttpResponse> {
@@ -86,66 +85,31 @@ pub fn get_oauth2_login(
     _routing_data: &RoutingData,
 ) -> Result<HttpResponse> {
     let provider = request.query.get("idp").context("IDP should be provided")?;
-    if provider != "discord" {
-        return HttpResponseBuilder::new()
-            .set_status(HttpStatusCode::NotImplemented)
-            .build();
-    }
+    let oauth2_config = security::get_oauth2_provider_config(provider)?;
 
-    let config = Config::load_from_file()?;
-    let discord_oauth2 = config.oauth2.discord;
-
-    let authorize_url = discord_oauth2.authorize_url;
-    let client_id = discord_oauth2.client_id;
-    let redirect_uri = discord_oauth2.redirect_uri;
-    let encoded_redirect_uri: String =
-        url::form_urlencoded::byte_serialize(redirect_uri.as_bytes()).collect();
-
-    let request = format!(
-        "{authorize_url}?client_id={client_id}&response_type=code&redirect_uri={encoded_redirect_uri}&scope=identify"
-    );
-
-    println!("{request}");
-    HttpResponseBuilder::new()
-        .set_status(HttpStatusCode::Found)
-        .set_header("Location", &request)
-        .build()
+    oauth2::redirect_to_authorize(oauth2_config)
 }
 
-pub fn get_oauth2_redirect(
+pub fn get_microsoft_oauth2_redirect(
+    _request: &HttpRequest,
+    _routing_data: &RoutingData,
+) -> Result<HttpResponse> {
+    todo!("not implemented yet")
+}
+
+pub fn get_discord_oauth2_redirect(
     request: &HttpRequest,
     _routing_data: &RoutingData,
 ) -> Result<HttpResponse> {
-    let config = Config::load_from_file()?;
-    let discord_oauth2 = config.oauth2.discord;
-    let token_url = discord_oauth2.token_url;
-    let client_id = discord_oauth2.client_id;
-    let redirect_uri = discord_oauth2.redirect_uri;
-
+    let oauth2_config = security::get_oauth2_provider_config("discord")?;
     let code = request
         .query
         .get("code")
         .context("should have a code")?
         .to_owned();
-    let secret = discord_oauth2.secret;
 
-    let client = reqwest::blocking::Client::new();
-    let mut params = HashMap::new();
-    params.insert("client_id", client_id);
-    params.insert("client_secret", secret);
-    params.insert("grant_type", "authorization_code".to_owned());
-    params.insert("code", code);
-    params.insert("redirect_uri", redirect_uri);
-
-    let response = client
-        .post(token_url)
-        .form(&params) // sends application/x-www-form-urlencoded data
-        .send()?;
-
-    println!("Status: {}", response.status());
-    let body = response.text()?;
-    let oauth2_res = serde_json::from_str::<OAuth2Response>(&body)?;
-    let user = create_user_from_discord(&oauth2_res)?;
+    let oauth2_response = oauth2::exchange_token(&code, oauth2_config)?;
+    let user = create_user_from_discord(&oauth2_response)?;
 
     match UserRepository::get_user_by_id(&user.id)? {
         Some(mut existing_user) => {
@@ -161,9 +125,9 @@ pub fn get_oauth2_redirect(
         }
     }
 
-    let bearer_cookie = HttpCookie::new(http_helpers::BEARER_COOKIE, &oauth2_res.access_token)
+    let bearer_cookie = HttpCookie::new(http_helpers::BEARER_COOKIE, &oauth2_response.access_token)
         .set_path(Some("/"))
-        .set_max_age(Some(oauth2_res.expires_in as i32));
+        .set_max_age(Some(oauth2_response.expires_in as i32));
 
     HttpResponseBuilder::new()
         .set_status(HttpStatusCode::Found)

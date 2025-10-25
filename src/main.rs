@@ -11,6 +11,7 @@ mod controllers;
 mod database;
 mod http_helpers;
 mod models;
+mod oauth2;
 mod routes;
 mod security;
 mod utils;
@@ -45,8 +46,12 @@ fn main() -> anyhow::Result<()> {
         .get("/auth/logout", controllers::auth::get_logout)?
         .get("/auth/oauth2", controllers::auth::get_oauth2_login)?
         .get(
-            "/auth/oauth2-redirect",
-            controllers::auth::get_oauth2_redirect,
+            "/auth/oauth2-redirect/discord",
+            controllers::auth::get_discord_oauth2_redirect,
+        )?
+        .get(
+            "/auth/oauth2-redirect/microsoft",
+            controllers::auth::get_microsoft_oauth2_redirect,
         )?
         .get("/auth/me", controllers::auth::get_me)?
         .get("/leaderboard", controllers::leaderboard::get_leaderboard)?
