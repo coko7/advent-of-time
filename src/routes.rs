@@ -12,12 +12,12 @@ pub fn get_index(request: &HttpRequest, _routing_data: &RoutingData) -> Result<H
     let user = http_helpers::get_logged_in_user(request)?;
     let login_section = if let Some(user) = user.clone() {
         format!(
-            "<li> <a href=\"/auth/me\">{}</a></li><li>󰍃 <a href=\"/auth/logout\">Logout</a></li>",
+            "<li><a href=\"/auth/me\"> {}</a></li><li><a href=\"/auth/logout\">󰍃 Logout</a></li>",
             &user.username
         )
         .to_string()
     } else {
-        "<li>󰍂 <a href=\"/auth/login\">Login</a></li>".to_string()
+        "<li><a href=\"/auth/login\">󰍂 Login</a></li>".to_string()
     };
 
     let name = match user {
