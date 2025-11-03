@@ -10,10 +10,9 @@ use crate::{http_helpers, utils};
 
 pub fn get_index(request: &HttpRequest, _routing_data: &RoutingData) -> Result<HttpResponse> {
     let user = http_helpers::get_logged_in_user(request)?;
-    let login_section = if let Some(user) = user.clone() {
+    let login_section = if user.is_some() {
         format!(
-            "<li><a href=\"/auth/me\"> {}</a></li><li><a href=\"/auth/logout\">󰍃 Logout</a></li>",
-            &user.username
+            "<li><a href=\"/auth/me\"> Profile</a></li><li><a href=\"/auth/logout\">󰍃 Logout</a></li>"
         )
         .to_string()
     } else {
