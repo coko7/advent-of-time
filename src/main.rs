@@ -65,6 +65,8 @@ fn main() -> anyhow::Result<()> {
         .set_file_server(file_server);
 
     info!("ROUTER: {:#?}", router);
+    info!("server listening on: {}", config.hostname);
+
     let server = WebServer::new(&config.hostname, router)?;
     server.run()
 }

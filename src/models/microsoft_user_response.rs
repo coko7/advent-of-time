@@ -11,23 +11,21 @@ use crate::{
 };
 
 #[derive(Deserialize, Debug)]
-pub struct DiscordUserResponse {
-    pub id: String,
-    pub username: String,
-    pub discriminator: String,
-    pub avatar: Option<String>,
-    pub bot: Option<bool>,
-    pub system: Option<bool>,
-    pub mfa_enabled: Option<bool>,
-    pub locale: Option<String>,
-    pub verified: Option<bool>,
-    pub email: Option<String>,
-    pub flags: Option<u64>,
-    pub premium_type: Option<u8>,
-    pub public_flags: Option<u64>,
+#[serde(rename_all = "camelCase")]
+pub struct MicrosoftUserResponse {
+    id: String,
+    display_name: Option<String>,
+    given_name: Option<String>,
+    surname: Option<String>,
+    user_principal_name: Option<String>,
+    mail: Option<String>,
+    job_title: Option<String>,
+    mobile_phone: Option<String>,
+    office_location: Option<String>,
+    preferred_language: Option<String>,
 }
 
-impl DiscordUserResponse {
+impl MicrosoftUserResponse {
     pub fn create_app_user(oauth2_response: &OAuth2Response) -> Result<User> {
         let user_info = Self::fetch_user_info(&oauth2_response.access_token)?;
         debug!("{user_info:#?}");
@@ -42,7 +40,7 @@ impl DiscordUserResponse {
         Ok(User {
             id: user_info.id,
             username,
-            oauth_username: user_info.username,
+            oauth_username: user_info.user_principal_name.unwrap(),
             guess_data: HashMap::new(),
             access_token: oauth2_response.access_token.to_owned(),
             access_token_expire_at: at_expires_at.into(),
@@ -53,7 +51,7 @@ impl DiscordUserResponse {
     fn fetch_user_info(access_token: &str) -> Result<Self> {
         let client = reqwest::blocking::Client::new();
         let response = client
-            .get("https://discord.com/api/v10/users/@me")
+            .get("https://graph.microsoft.com/v1.0/me")
             .header(AUTHORIZATION, format!("Bearer {}", access_token))
             .header(CONTENT_TYPE, "application/json")
             .send()?;

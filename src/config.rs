@@ -30,5 +30,6 @@ pub struct OAuth2Config {
     pub token_url: String,
     pub client_id: String,
     pub redirect_uri: String,
+    pub scope: String,
     pub secret: String,
 }

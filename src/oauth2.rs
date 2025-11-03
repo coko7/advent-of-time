@@ -9,11 +9,12 @@ pub fn redirect_to_authorize(config: OAuth2Config) -> Result<HttpResponse> {
     let authorize_url = config.authorize_url;
     let client_id = config.client_id;
     let redirect_uri = config.redirect_uri;
+    let scope = config.scope;
     let encoded_redirect_uri: String =
         url::form_urlencoded::byte_serialize(redirect_uri.as_bytes()).collect();
 
     let authorize_request = format!(
-        "{authorize_url}?client_id={client_id}&response_type=code&redirect_uri={encoded_redirect_uri}&scope=identify"
+        "{authorize_url}?client_id={client_id}&response_type=code&redirect_uri={encoded_redirect_uri}&scope={scope}"
     );
 
     debug!("{authorize_request}");

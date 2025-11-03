@@ -1,7 +1,6 @@
 use anyhow::{Context, Result};
 use chrono::Local;
 use log::debug;
-use reqwest::header::{AUTHORIZATION, CONTENT_TYPE};
 use rtfw_http::{
     http::{
         HttpCookie, HttpRequest, HttpResponse, HttpResponseBuilder,
@@ -9,13 +8,12 @@ use rtfw_http::{
     },
     router::RoutingData,
 };
-use std::{collections::HashMap, time::Duration};
 
 use crate::{
     database::user_repository::UserRepository,
     http_helpers::{self, redirect},
     models::{
-        discord_user_response::DiscordUserResponse, oauth2_response::OAuth2Response, user::User,
+        discord_user_response::DiscordUserResponse, microsoft_user_response::MicrosoftUserResponse,
     },
     oauth2, security, utils,
 };
@@ -91,17 +89,10 @@ pub fn get_oauth2_login(
 }
 
 pub fn get_microsoft_oauth2_redirect(
-    _request: &HttpRequest,
-    _routing_data: &RoutingData,
-) -> Result<HttpResponse> {
-    todo!("not implemented yet")
-}
-
-pub fn get_discord_oauth2_redirect(
     request: &HttpRequest,
     _routing_data: &RoutingData,
 ) -> Result<HttpResponse> {
-    let oauth2_config = security::get_oauth2_provider_config("discord")?;
+    let oauth2_config = security::get_oauth2_provider_config("microsoft")?;
     let code = request
         .query
         .get("code")
@@ -109,7 +100,7 @@ pub fn get_discord_oauth2_redirect(
         .to_owned();
 
     let oauth2_response = oauth2::exchange_token(&code, oauth2_config)?;
-    let user = create_user_from_discord(&oauth2_response)?;
+    let user = MicrosoftUserResponse::create_app_user(&oauth2_response)?;
 
     match UserRepository::get_user_by_id(&user.id)? {
         Some(mut existing_user) => {
@@ -136,39 +127,43 @@ pub fn get_discord_oauth2_redirect(
         .build()
 }
 
-fn fetch_discord_user_info(access_token: &str) -> Result<DiscordUserResponse> {
-    let client = reqwest::blocking::Client::new();
-    let response = client
-        .get("https://discord.com/api/v10/users/@me")
-        .header(AUTHORIZATION, format!("Bearer {}", access_token))
-        .header(CONTENT_TYPE, "application/json")
-        .send()?;
+pub fn get_discord_oauth2_redirect(
+    request: &HttpRequest,
+    _routing_data: &RoutingData,
+) -> Result<HttpResponse> {
+    let oauth2_config = security::get_oauth2_provider_config("discord")?;
+    let code = request
+        .query
+        .get("code")
+        .context("should have a code")?
+        .to_owned();
 
-    let res = response.text()?;
-    let res = serde_json::from_str::<DiscordUserResponse>(&res)?;
-    Ok(res)
-}
+    let oauth2_response = oauth2::exchange_token(&code, oauth2_config)?;
+    let user = DiscordUserResponse::create_app_user(&oauth2_response)?;
 
-fn create_user_from_discord(oauth2_response: &OAuth2Response) -> Result<User> {
-    let user_info = fetch_discord_user_info(&oauth2_response.access_token)?;
-    debug!("{user_info:#?}");
+    match UserRepository::get_user_by_id(&user.id)? {
+        Some(mut existing_user) => {
+            debug!("existing user logged in: {existing_user:#?}");
+            existing_user.access_token = user.access_token;
+            existing_user.refresh_token = user.refresh_token;
+            existing_user.access_token_expire_at = user.access_token_expire_at;
+            UserRepository::update_user(existing_user)?;
+        }
+        None => {
+            debug!("newly created user: {user:#?}");
+            UserRepository::create_user(user)?;
+        }
+    }
 
-    let now = Local::now();
-    let expires_in = oauth2_response.expires_in - 30; // invalidate 30 seconds early
-    let at_expires_at = now + Duration::from_secs(expires_in);
+    let bearer_cookie = HttpCookie::new(http_helpers::BEARER_COOKIE, &oauth2_response.access_token)
+        .set_path(Some("/"))
+        .set_max_age(Some(oauth2_response.expires_in as i32));
 
-    let unique_hash = utils::str_to_u64seed(&user_info.id);
-    let username = utils::generate_username(unique_hash)?;
-
-    Ok(User {
-        id: user_info.id,
-        username,
-        oauth_username: user_info.username,
-        guess_data: HashMap::new(),
-        access_token: oauth2_response.access_token.to_owned(),
-        access_token_expire_at: at_expires_at.into(),
-        refresh_token: oauth2_response.refresh_token.to_owned(),
-    })
+    HttpResponseBuilder::new()
+        .set_status(HttpStatusCode::Found)
+        .set_cookie(bearer_cookie)
+        .set_header("Location", "/")
+        .build()
 }
 
 // pub fn post_login(request: &HttpRequest, _routing_data: &RoutingData) -> Result<HttpResponse> {
