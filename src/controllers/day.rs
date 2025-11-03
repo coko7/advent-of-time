@@ -101,7 +101,7 @@ fn load_day_view(request: &HttpRequest, day: u32) -> Result<String> {
                 <form id="guess-daily-picture">
                 <p>
                     <label for="time-guess">Your guess:</label>
-                    <input id="time-guess" name="time-guess" type="text">
+                    <input id="time-guess" type="time" name="time-guess" type="text">
                 </p>
                 <button type="submit">Submit</button>
             </form>

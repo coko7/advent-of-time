@@ -90,7 +90,7 @@ fn parse_guess_value(guess: &str) -> Result<(u32, u32)> {
     }
 
     let parts = guess
-        .split_once('h')
+        .split_once(':')
         .context("guess value should contain 'h'")?;
     let hour: u32 = parts.0.parse()?;
     let minutes: u32 = parts.1.parse()?;

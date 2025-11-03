@@ -307,7 +307,9 @@ a.day-link {
 }
 
 a.day-link.disabled {
+    background-color: transparent;
     color: gray;
+    opacity: 0.25;
     pointer-events: none;
 }
 
