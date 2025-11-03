@@ -1,10 +1,42 @@
-use anyhow::Result;
+use anyhow::{Context, Result};
 use chrono::{Datelike, Local, NaiveDateTime, Timelike};
+use rand::{SeedableRng, rngs::StdRng, seq::IndexedRandom};
 use regex::Regex;
 use rexiv2::Metadata;
+use std::collections::hash_map::DefaultHasher;
+use std::hash::{Hash, Hasher};
 use std::{fs, path::PathBuf};
 
 pub type Day = u32;
+
+const DICO_NOUNS_PATH: &str = "data/dictionaries/nouns.txt";
+const DICO_ADJECTIVES_PATH: &str = "data/dictionaries/adjectives.txt";
+
+pub fn str_to_u64seed(value: &str) -> u64 {
+    let mut hasher = DefaultHasher::new();
+    value.hash(&mut hasher);
+    hasher.finish()
+}
+
+pub fn generate_username(seed: u64) -> Result<String> {
+    let mut rng = StdRng::seed_from_u64(seed);
+
+    let nouns = fs::read_to_string(DICO_NOUNS_PATH)?;
+    let nouns = nouns.lines().collect::<Vec<_>>();
+
+    let adjectives = fs::read_to_string(DICO_ADJECTIVES_PATH)?;
+    let adjectives = adjectives.lines().collect::<Vec<_>>();
+
+    let rnd_noun = nouns
+        .choose(&mut rng)
+        .context("nouns list should not be empty")?;
+    let rnd_adj = adjectives
+        .choose(&mut rng)
+        .context("adjectives list should not be empty")?;
+
+    let username = format!("{rnd_adj}-{rnd_noun}");
+    Ok(username)
+}
 
 pub fn markdown_to_html(content: &str) -> Result<String> {
     let link_regex = Regex::new(r"\[([^\]]+)\]\(([^)]+)\)")?;
@@ -80,4 +112,21 @@ pub fn time_diff_to_points(diff_minutes: u64) -> u32 {
 pub fn get_current_day() -> Day {
     let now = Local::now();
     now.day()
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_str_to_u64seed() {
+        let hash = str_to_u64seed("hello world!");
+        assert_eq!(16348622334315420128, hash);
+    }
+
+    #[test]
+    fn test_generate_username() {
+        let username = generate_username(42).unwrap();
+        assert_eq!("many-bun", username);
+    }
 }

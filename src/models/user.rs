@@ -9,6 +9,7 @@ use crate::utils::Day;
 pub struct User {
     pub id: String,
     pub username: String,
+    pub oauth_username: String,
     pub guess_data: HashMap<Day, GuessData>,
     pub access_token: String,
     pub access_token_expire_at: DateTime<Utc>,

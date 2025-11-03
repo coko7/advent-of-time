@@ -157,9 +157,13 @@ fn create_user_from_discord(oauth2_response: &OAuth2Response) -> Result<User> {
     let expires_in = oauth2_response.expires_in - 30; // invalidate 30 seconds early
     let at_expires_at = now + Duration::from_secs(expires_in);
 
+    let unique_hash = utils::str_to_u64seed(&user_info.id);
+    let username = utils::generate_username(unique_hash)?;
+
     Ok(User {
         id: user_info.id,
-        username: user_info.username,
+        username,
+        oauth_username: user_info.username,
         guess_data: HashMap::new(),
         access_token: oauth2_response.access_token.to_owned(),
         access_token_expire_at: at_expires_at.into(),

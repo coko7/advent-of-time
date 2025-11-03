@@ -1,8 +1,7 @@
-use std::collections::HashMap;
-
 use anyhow::Result;
 use log::debug;
 use rtfw_http::http::{HttpResponse, HttpResponseBuilder, response_status_codes::HttpStatusCode};
+use std::collections::HashMap;
 
 use crate::{config::OAuth2Config, models::oauth2_response::OAuth2Response};
 
