@@ -18,17 +18,28 @@
             Please disable your AdBlocker or conflicting extension.
         </code>
 
-        <p id="greeting">{{GREET_MSG}}</p>
+        <p id="greeting">{{greetMsg}}</p>
 
         <main>
             <ul class="navbar">
                 <li><a href="/about"> About</a></li>
-                {{LOGIN_DYNA_BLOCK}}
+                {{#if authenticated}}
+                    <li><a href="/auth/me"> Profile</a></li>
+                    <li><a href="/auth/logout">󰍃 Logout</a></li>
+                {{else}}
+                    <li><a href="/auth/login">󰍂 Login</a></li>
+                {{/if}}
                 <li><a href="/leaderboard"> Leaderboard</a></li>
             </ul>
 
             <div class="days">
-                {{AOT_CALENDAR}}
+                {{#each days}}
+                    {{#if this.released}}
+                        <a class="day-link" href="/day/{{this.day}}">{{this.day}}</a>
+                    {{else}}
+                        <a class="day-link disabled" href="/day/{{this.day}}">{{this.day}}</a>
+                    {{/if}}
+                {{/each}}
             </div>
         </main>
 

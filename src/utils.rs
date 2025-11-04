@@ -1,8 +1,10 @@
 use anyhow::{Context, Result};
 use chrono::{Datelike, Local, NaiveDateTime, Timelike};
+use handlebars::Handlebars;
 use rand::{SeedableRng, rngs::StdRng, seq::IndexedRandom};
 use regex::Regex;
 use rexiv2::Metadata;
+use serde::Serialize;
 use std::collections::hash_map::DefaultHasher;
 use std::hash::{Hash, Hasher};
 use std::{fs, path::PathBuf};
@@ -89,9 +91,21 @@ pub fn extract_time_from_image(img_path: &PathBuf) -> Result<(u32, u32)> {
 }
 
 pub fn load_view(name: &str) -> Result<String> {
-    let view_path = format!("src/views/{}.html", name);
-    let content = fs::read_to_string(view_path)?;
-    Ok(content)
+    let view_path = PathBuf::from(format!("src/views/{}.html", name));
+    if view_path.exists() {
+        return Ok(fs::read_to_string(view_path)?);
+    }
+
+    let view_path = PathBuf::from(format!("src/views/{}.hbs", name));
+    Ok(fs::read_to_string(view_path)?)
+}
+
+pub fn render_view<T: Serialize>(name: &str, data: &T) -> Result<String> {
+    let raw_view = load_view(name)?;
+    let mut handlebars = Handlebars::new();
+    handlebars.register_template_string(name, raw_view)?;
+    let rendered = handlebars.render(name, &data)?;
+    Ok(rendered)
 }
 
 pub fn time_diff_to_points(diff_minutes: u64) -> u32 {

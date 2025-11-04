@@ -4,10 +4,14 @@ use rtfw_http::{
     http::{HttpRequest, HttpResponse, HttpResponseBuilder, response_status_codes::HttpStatusCode},
     router::RoutingData,
 };
+use serde::Serialize;
+use serde_json::json;
 use std::fs;
 
 use crate::{
-    database::picture_meta_repository::PictureMetaRepository, http_helpers, routes, utils,
+    database::picture_meta_repository::PictureMetaRepository,
+    http_helpers, routes,
+    utils::{self, Day},
 };
 
 pub fn get_single_day(request: &HttpRequest, routing_data: &RoutingData) -> Result<HttpResponse> {
@@ -79,48 +83,53 @@ pub fn get_day_picture(_request: &HttpRequest, routing_data: &RoutingData) -> Re
     }
 }
 
+#[derive(Serialize, Debug)]
+#[serde(rename_all = "camelCase")]
+pub struct DayDto {
+    pub id: Day,
+    pub img_src: String,
+    pub img_alt: String,
+    pub original_date: String,
+    pub guess_data: Option<GuessDataDto>,
+}
+
+#[derive(Serialize, Debug)]
+#[serde(rename_all = "camelCase")]
+pub struct GuessDataDto {
+    pub time_submitted: String,
+    pub points: u32,
+}
+
 fn load_day_view(request: &HttpRequest, day: u32) -> Result<String> {
     let day_img_src = format!("/day-pic/{day}");
     let picture_meta =
         PictureMetaRepository::get_picture(day)?.context("picture should exist bruh")?;
 
     let user = http_helpers::get_logged_in_user(request)?;
-    let dynamic_form = match user {
-        Some(user) => {
-            if user.has_guessed(day) {
-                let guess_data = user.guess_data.get(&day).unwrap();
-                format!(
-                    r#"
-                        <p>You guessed: {}:{}</p>
-                        <p>Your points for this guess: {}</p>
-                    "#,
-                    guess_data.hm.0, guess_data.hm.1, guess_data.points
-                )
-            } else {
-                r#"
-                <form id="guess-daily-picture">
-                <p>
-                    <label for="time-guess">Your guess:</label>
-                    <input id="time-guess" type="time" name="time-guess" type="text">
-                </p>
-                <button type="submit">Submit</button>
-            </form>
-        "#
-                .to_string()
-            }
+    let authenticated = user.is_some();
+    let guess_data = match user {
+        Some(user) if user.has_guessed(day) => {
+            let guess_data = user.guess_data.get(&day).unwrap();
+            Some(GuessDataDto {
+                time_submitted: format!("{}:{}", guess_data.hm.0, guess_data.hm.1),
+                points: guess_data.points,
+            })
         }
-        None => "<p>Please <a href=\"/auth/login\">login</a> first in order submit your guess</p>"
-            .to_string(),
+        _ => None,
     };
 
-    let body = utils::load_view("day")?
-        .replace("{{PAGE_TITLE}}", &format!("Day {day}"))
-        .replace("{{DAY}}", &day.to_string())
-        .replace("{{LOGIN_DYNA_BLOCK}}", &dynamic_form)
-        .replace("{{DAY_IMG_SRC}}", &day_img_src)
-        .replace("{{DAY_ORIGINAL_DATE}}", &picture_meta.original_date)
-        .replace("{{GUESS_URL}}", &format!("/guess/{day}"))
-        .replace("{{DAY_IMG_ALT}}", &format!("Image for day {day}"));
+    let data = json!({
+        "title": &format!("Day {day}"),
+        "authenticated": authenticated,
+        "day": DayDto {
+            id: day,
+            img_src: day_img_src,
+            img_alt: format!("Image for day {day}"),
+            original_date: picture_meta.original_date,
+            guess_data,
+        }
+    });
 
-    Ok(body)
+    let rendered = utils::render_view("day", &data)?;
+    Ok(rendered)
 }
