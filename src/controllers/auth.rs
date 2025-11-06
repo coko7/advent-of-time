@@ -8,14 +8,18 @@ use rtfw_http::{
     },
     router::RoutingData,
 };
+use serde::Serialize;
+use serde_json::json;
 
 use crate::{
     database::user_repository::UserRepository,
     http_helpers::{self, redirect},
     models::{
         discord_user_response::DiscordUserResponse, microsoft_user_response::MicrosoftUserResponse,
+        user::User,
     },
-    oauth2, security, utils,
+    oauth2, security,
+    utils::{self, Day},
 };
 
 pub fn get_login(request: &HttpRequest, _routing_data: &RoutingData) -> Result<HttpResponse> {
@@ -55,27 +59,38 @@ pub fn get_me(request: &HttpRequest, _routing_data: &RoutingData) -> Result<Http
         None => return redirect("/auth/login"),
     };
 
-    let mut guess_data_block = String::from("<ul>");
-    let current_day = utils::get_current_day();
-    let mut total_pts = 0;
-    for day in 1..=current_day {
-        let txt = match user.guess_data.get(&day) {
-            Some(guess_data) => {
-                let points = guess_data.points;
-                total_pts += points;
-                format!("<li>Day {day} => {points} ⭐</li>")
-            }
-            None => format!("<li>Day {day} => 0 ⚫</li>"),
-        };
-        guess_data_block.push_str(&txt);
-    }
-    guess_data_block.push_str("</ul>");
-    guess_data_block.push_str(&format!("<p>Total: {total_pts} ⭐</p>"));
+    let data = json!({
+        "username": &user.username,
+        "days": get_user_guess_days(&user),
+        "total_score": user.get_total_score(),
+    });
+    let rendered = utils::render_view("profile", &data)?;
+    HttpResponseBuilder::new().set_html_body(&rendered).build()
+}
 
-    let body = utils::load_view("profile")?
-        .replace("{{USERNAME}}", &user.username)
-        .replace("{{GUESS_DATA_BLOCK}}", &guess_data_block);
-    HttpResponseBuilder::new().set_html_body(&body).build()
+#[derive(Debug, Serialize)]
+struct UserGuessDay {
+    pub day: Day,
+    pub guessed: bool,
+    pub points: u32,
+}
+
+pub fn get_user_guess_days(user: &User) -> Vec<UserGuessDay> {
+    let current_day = utils::get_current_day();
+    (1..=current_day)
+        .map(|d| match user.guess_data.get(&d) {
+            Some(guess) => UserGuessDay {
+                day: d,
+                guessed: true,
+                points: guess.points,
+            },
+            None => UserGuessDay {
+                day: d,
+                guessed: false,
+                points: 0,
+            },
+        })
+        .collect::<Vec<_>>()
 }
 
 pub fn get_oauth2_login(
