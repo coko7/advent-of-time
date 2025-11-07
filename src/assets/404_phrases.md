@@ -3,11 +3,11 @@
 6. 28. 496. 8128.
 AAAAAAAAAAAAAA. that ur reaction?
 [Aaron Swartz](https://en.wikipedia.org/wiki/Aaron_Swartz) was an Internet [hacktivist](https://en.wikipedia.org/wiki/Hacktivism) who thought for free and open access to information
-Actually, PowerShell is not so bad...
+Actually, [PowerShell](https://learnxinyminutes.com/powershell) is not so bad...
 Alacri*tty*, ki*tty*, ghos*tty*. Ever noticed the `tty` at the end of each?
 [Alan Turing](https://en.wikipedia.org/wiki/Alan_Turing) was a brilliant mathematician who played a big part in cracking the [Enigma machine](https://en.wikipedia.org/wiki/Enigma_machine)
 [AlternativeTo](https://alternativeto.net) is a great site to find alternatives to software you use
-Always thought JS stood for *Just Shit* (jk)
+Always thought JS stood for *Just Shit* 💩
 An interesting fact about the [Scoville scale](https://en.wikipedia.org/wiki/Scoville_scale): Toxins and peppers are scored using the same unit
 Another day, another memory leek 🥦 (its broccoli, i know)
 [Big Sky Software](https://bigsky.software/)
@@ -20,27 +20,29 @@ Bill Joy created vi in 1976, Bram Moolenar released Vim in 1991 and NeoVim start
 🐝 bzzz bzzz bzzzzzzzzzzz
 [Candy Box 2](https://candybox2.github.io/) is a really great idle game 🍬
 [Careware](https://en.wikipedia.org/wiki/Careware) refers to software licensed in a way that benefits a charity
-[Celeste](https://www.celestegame.com/) is the best (platformer) game 🍓
+[Celeste](https://www.celestegame.com/) is (objectively) the best (platformer) game 🍓
 [Charles Babbage](https://en.wikipedia.org/wiki/Charles_Babbage) invented the [Difference engine](https://en.wikipedia.org/wiki/Difference_engine) in the 1820s
+Now, watch [this](https://youtu.be/72y2EC5fkcE) *(it's programming porn if you ask me)*
+Checkout [Sebastian Lague](https://www.youtube.com/channel/UCmtyQOKKmrMVaKuRXz02jbQ) on YouTube!
 Checkout [ThePrimeagen](https://www.twitch.tv/theprimeagen) on Twitch!
-Check out the [Turing Complete game](https://store.steampowered.com/app/1444480/Turing_Complete/) on Steam
+Check out the [Turing Complete game](https://store.steampowered.com/app/1444480/Turing_Complete/) on Steam!
 check this out: [https://en.wikipedia.org/wiki/Hyperoperation](https://en.wikipedia.org/wiki/Hyperoperation)
 [COBOL](https://en.wikipedia.org/wiki/COBOL) is a programming language invented by [Grace Hopper](https://en.wikipedia.org/wiki/Grace_Hopper) in 1960 and was primarly made for salesmen
 [Conway's Game of Life](https://youtu.be/eMn43As24Bo) only has four basic rules but that's enough to make it Turing Complete
 [Cooklang](https://cooklang.org/) is a very nice way to store your cooking recipes 🍳
-Craving for some pizza right now 🍕
+Craving for some pizza right now 🍕 *(what about you?)*
 [dav1d](https://code.videolan.org/videolan/dav1d) is an AV1 decoder by [VideoLAN](https://www.videolan.org/) with over 210,000 lines of assembly written by hand!
-Did I write all of these myself? Of course I did. What do you think I do with my life? Touch grass or somethin'? I am a programmer, I live in a cave.
-Did you know that 20 moves is all you need to solve any Rubik's cube scramble? Its called [God's Number](https://ruwix.com/the-rubiks-cube/gods-number/)
-Did you know that Minecraft's redstone is Turing Complete? That means you can theoretically make Minecraft inside of Minecraft
+Did I write all of these myself? Of course I did. <br/>What do you think I do with my life? Touch grass or somethin'? <br/>I am a programmer, I live in a cave.
+20 moves is all you need to solve any Rubik's cube scramble? Its called [God's Number](https://ruwix.com/the-rubiks-cube/gods-number/)
+Minecraft's redstone is Turing Complete? It means you can theoretically make Minecraft inside of Minecraft 🤯
 "Directory" and "Folder" refer to the same thing but make sure you use the right one depending on who you hang out with
 Does it make sense to support Auth before HTTPs?
 Do you believe me if I tell you I have been writing these messages for the past hour?
-Do you know about *Hoorse*? The talking horse 🐴
-Do you know about the fast inverse square root and its famous **wtf** comment?
-Do you know that the longest rainfall on Earth lasted for 2 MILLION YEARS? Its called the Carnian pluvial episode ☔
-Dynamic routing is not as easy as I thought
-[Edsger Wybe Dijkstra](https://en.wikipedia.org/wiki/Edsger_W._Dijkstra) is just the GOAT
+**Hoorse** is a talking horse 🐴
+[The Truth About The Fast Inverse Square on N64](https://youtu.be/tmb6bLbxd08)
+Do you know that the longest rainfall on Earth lasted for ***2 MILLION YEARS?*** Its called the Carnian pluvial episode ☔
+Dynamic routing is not as easy as I thought...
+[Edsger Wybe Dijkstra](https://en.wikipedia.org/wiki/Edsger_W._Dijkstra) was a Dutch computer scientist famous for creating the shortest path algorithm and pioneering structured programming
 [Edward Snowden](https://en.wikipedia.org/wiki/Edward_Snowden) is a former [NSA](https://en.wikipedia.org/wiki/National_Security_Agency) member and a [whistleblower](https://en.wikipedia.org/wiki/Whistleblowing) who leaked information about global surveillance programs.
 Elephants 🐘
 Ever had a TTS engine read you an RFC? Did this with [5246](https://www.rfc-editor.org/rfc/rfc5246), dumb idea, i gotta say
@@ -51,57 +53,62 @@ For password managers, I would recommend either [Bitwarden](https://bitwarden.co
 [Fortran](https://en.wikipedia.org/wiki/Fortran) is an early programming language designed in 1957 by [John Backus](https://en.wikipedia.org/wiki/John_Backus)
 [FOSDEM](https://fosdem.org) is the biggest open-source conference on Earth 🌍
 Four O Four, Not Found
+Quatre Zéro Quatre, c'est la misère, t'es du-per
 [frame.work](https://frame.work/) laptops are really nice 💻
-French tacos is the superior version of tacos 🌮
+Offending Mexicans Any% => *"French tacos is the superior version of tacos 🌮"*
 Fucking [Boltzmann brain](https://en.wikipedia.org/wiki/Boltzmann_brain) 🧠
-[fzf](https://github.com/junegunn/fzf) is one of the greatest CLIs ever. You should check out [gum](https://github.com/charmbracelet/gum) too 🍭
-🌳 Gaimon is the best Anime MC
-GET /404 HTTP/1.1 (that you?)
+[fzf](https://github.com/junegunn/fzf) is one of the greatest CLIs ever.
+You should check out [gum](https://github.com/charmbracelet/gum) 🍭
+🌳 Gaimon is the best anime protaganist
+GET /404 HTTP/1.1 *(that you?)*
+GET /404 HTTP/0.9 *(don't try it. I need to bring HTTP/0.9 support back up first...)*
+GET /404 HTTP/2.0 *(WOHH! Slow down now. This site does not support HTTP/2.0. Maybe the reverse proxy is smart enough to handle this tho)*
 [GNU](https://en.wikipedia.org/wiki/GNU) is a recursive acronym that stands for **GNU's Not Unix**
 go back go back, its ded here 💀
 🐝 gone
 Go outside and touch grass already!
-Gurfr zrffntrf ner trggvat dhvgr obevat, yrgf fcvpr vg 🌶️
+Gurfr zrffntrf ner trggvat dhvgr obevat, yrgf fcvpr guvatf hc n ovg 🌶️
 <h1>🖕</h1>
 <h1>WHAT? H1 out of nowhere??? Yes, it was HTML all along</h1>
-[Hacknet](https://store.steampowered.com/app/365450/Hacknet/) was one of the first `programming-related` games I've played
+[Hacknet](https://store.steampowered.com/app/365450/Hacknet/) was one of the first `programming-related` games I've played. You should check it out
 Hardware keys are the best for 2FA. Checkout [Yubico](https://www.yubico.com/) 🔑
 Hashing and encryption are two different concepts. You should never encrypt passwords, you should hash them!
 Have you ever tasted Salmon Lasagna? You should give it a try
-Honestly, [Bash](https://www.gnu.org/software/bash/manual/bash.html)' syntax sucks but it's so good for scripting
+Honestly, [Bash](https://www.gnu.org/software/bash/manual/bash.html)' syntax sucks but it's really good for scripting
 how do you like the site? Exploring every page, I see
 How many custom messages do I have in store you ask? ***Billions***
 How many different phrases have I wrote? Shouldn't be too hard for you to figure that out...
 How many times will your refresh this? Or is it the first time we meet? I don't know. I am [stateless](https://en.wikipedia.org/wiki/Stateless_protocol).
 I am running out of custom messages...
 I cannot picture life without the constant thirst for learning
-I could also go for some [Raclette 🧀](https://en.wikipedia.org/wiki/Raclette) right now
+I could also go for some [Raclette 🧀](https://en.wikipedia.org/wiki/Raclette) right now. You into cheese?
 If all programming langs are [Turing Complete](https://en.wikipedia.org/wiki/Turing_completeness), why do we have so many?
+If you think a single programming language is all the world needs: Try cutting down a tree with a kitchen knife.
 If you are looking for the button to go back, it's at the bottom ⬇️
 If you think you know everything about the [Dunning-Kruger effect](https://en.wikipedia.org/wiki/Dunning%E2%80%93Kruger_effect) then you dont know the first thing about it
 If you use binary to count with your fingers, you could go up to 32 on a single hand. With both hands, it would be 1024. And with both feet: 1,048,576
-If you want to listen to the entire Vim user manual: [youtu.be/rT-fbLFOCy0](https://youtu.be/rT-fbLFOCy0)
-I hope the image is loading for you, coz its just gold
+Listen to the entire Vim user manual here: [youtu.be/rT-fbLFOCy0](https://youtu.be/rT-fbLFOCy0)
+I hope the image is loading for you, coz its just gold 🥇
 I know you are reading this
 I love this emoji: <span style="font-size: 4em;">🌌</span>
-Imagine being an Anti-Virus and crashing the very computers you are installed on (cf. [ClownStrike](https://clownstrike.lol/))
+Imagine being an [Anti-Virus](https://clownstrike.lol/) and crashing the very computers you are installed on
 [imgflip](https://imgflip.com/) is the best place to quickly whip out your best memes
 I once designed my own encryption algorithm, I thought it was super strong, then I learned about [Kerckhoffs's principle](https://en.wikipedia.org/wiki/Kerckhoffs's_principle)
 i really should do something other than writing 404 messages
-I really want to use [htmx](https://htmx.org/) in one of my future projects
+I really want to try [htmx](https://htmx.org/) in one of my future projects
 Is WireShark called WireShark because 🦈 sharks tend to crunch undersea network cables? Just realized that...
 It only takes [45 paper folds](https://neal.fun/paper/) to get to the moon
 It's easy to understand that x^0 = 1 when you realize that x^0 = x^1 / x = x / x = 1
 [It's FOSS](https://itsfoss.com) is a nice website to stay up to date with the latest Linux and open-source software news (it even has some games and puzzles)
-I use [Arch Linux](https://archlinux.org/) because of the AUR and coz its so damn awesome to be able to use the latest software features
+I use [Arch Linux](https://archlinux.org/) because of the AUR and coz its so damn awesome to be able to use the latest software
 I used to think of programming languages like tools but I think they are closer to being raw materials
 I use [Hyprland](https://hyprland.org/) btw
-i use [neovim](https://neovim.io/) BY THE WAY
+i use [neovim](https://neovim.io/) BY-THE-WAY
 I've spent too much time on this CSS
 [Jean-Baptiste Kempf](https://fr.wikipedia.org/wiki/Jean-Baptiste_Kempf) is a French computer engineer and the president of [VideoLAN](https://www.videolan.org/)
 [John Carmack](https://en.wikipedia.org/wiki/John_Carmack) is the legend who made **DOOM**
 [John von Neumann](https://en.wikipedia.org/wiki/John_von_Neumann) played a big part in computer architecture designs and the architecture he came up with is [still used today](https://en.wikipedia.org/wiki/Von_Neumann_architecture)
-just wait 'till this shit natively supports [TLS 1.2](https://www.rfc-editor.org/rfc/rfc5246)
+just wait 'till this shit natively supports [TLS 1.2](https://www.rfc-editor.org/rfc/rfc5246) *(never?)*
 Ken Thompson and Dennis Ritchie played a very big part in the creation of [Unix](https://en.wikipedia.org/wiki/Unix)
 [Learn X in Y minutes](https://learnxinyminutes.com/) is a very cool website to quickly get started with any programming language/tool
 [Linus Torvalds](https://en.wikipedia.org/wiki/Linus_Torvalds) is the creator of Linux and Git, he is also the creator of the [Fuck You Nvidia meme](https://youtu.be/OF_5EKNX0Eg)
@@ -113,6 +120,7 @@ More, more, and more nonsense
 🌵 moss head
 no page, nothing, just a tumbleweed
 nothin ther 4 sur
+Technically, all of this was first written in [The Library of Babel](https://libraryofbabel.info/)
 Not sure if your password is strong enough? Check out [zxcvbn](https://github.com/dropbox/zxcvbn)
 Oh... Did you really think you could find out all of the messages simply by refreshing? <br/> What if I told you this was a [normal distribution](https://en.wikipedia.org/wiki/Normal_distribution)?
 okay, been fun, now i get bak 2 work 👋
@@ -164,6 +172,7 @@ There are [hundreds](https://distrowatch.com/dwres.php?resource=popularity) of d
 There is a Vim addons for every IDE and editor apart from `nano`...
 There's No Place Like [127.0.0.1](http://127.0.0.1)
 These awesome cat images are provided to you thanks to [http.cat](https://http.cat/)
+There's [http.cat](https://http.cat/), [httpcats.com](https://httpcats.com) and [http.dog](https://http.dog)
 The source code for the 1969, [Apollo-11](https://en.wikipedia.org/wiki/Apollo_11) mission, is freely available on [GitHub](https://github.com/chrislgarry/Apollo-11)
 The thing you smell each time it rains is called [Petrichor](https://en.wikipedia.org/wiki/Petrichor)
 The [travelling salesman problem](https://en.wikipedia.org/wiki/Travelling_salesman_problem) is considered to be [NP-complete](https://en.wikipedia.org/wiki/NP-completeness).

@@ -1,55 +1,42 @@
-use std::cmp;
-
 use anyhow::Result;
 use rtfw_http::{
     http::{HttpRequest, HttpResponse, HttpResponseBuilder},
     router::RoutingData,
 };
+use serde::Serialize;
+use serde_json::json;
 
 use crate::{database::user_repository::UserRepository, models::user::User, utils};
 
-fn generate_leaderboard_table(users: &mut [User]) -> String {
-    users.sort_by_key(|u| cmp::Reverse(u.get_total_score()));
-    let mut res = String::from(
-        r#"
-                <table>
-                    <tr>
-                        <th>User</th>
-                        <th>Guesses</th>
-                        <th>Score</th>
-                    </tr>
-        "#,
-    );
+#[derive(Debug, Serialize)]
+struct LeaderboardUserEntry {
+    pub username: String,
+    pub guesses: usize,
+    pub score: u32,
+}
 
-    let total_days = cmp::min(utils::get_current_day(), 25);
-    for user in users {
-        let username = user.username.clone();
-        let guesses = user.guess_data.len();
-        let score = user.get_total_score();
-
-        let line = format!(
-            r#"
-            <tr>
-                <td>{username}</td>
-                <td>{guesses} / {total_days}</td>
-                <td>{score} ⭐</td>
-            </tr>
-        "#
-        );
-        res.push_str(&line);
-    }
-
-    res.push_str("</table>");
-    res
+pub fn get_leaderboard_users(users: &[User]) -> Vec<LeaderboardUserEntry> {
+    users
+        .iter()
+        .map(|u| LeaderboardUserEntry {
+            username: u.username.to_owned(),
+            guesses: u.guess_data.len(),
+            score: u.get_total_score(),
+        })
+        .collect::<Vec<_>>()
 }
 
 pub fn get_leaderboard(
     _request: &HttpRequest,
     _routing_data: &RoutingData,
 ) -> Result<HttpResponse> {
-    let mut users = UserRepository::get_all_users()?;
-    let leaderboard = generate_leaderboard_table(&mut users);
+    let users = UserRepository::get_all_users()?;
 
-    let body = utils::load_view("leaderboard")?.replace("{{LEADERBOARD_BLOCK}}", &leaderboard);
-    HttpResponseBuilder::new().set_html_body(&body).build()
+    let total_days = utils::get_current_day();
+    let data = json!({
+        "total_days": total_days,
+        "users": get_leaderboard_users(&users)
+    });
+    let rendered = utils::render_view("leaderboard", &data)?;
+    HttpResponseBuilder::new().set_html_body(&rendered).build()
 }

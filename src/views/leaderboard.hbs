@@ -13,7 +13,21 @@
         </header>
 
         <div class="center">
-            {{LEADERBOARD_BLOCK}}
+            <table>
+                <tr>
+                    <th>User</th>
+                    <th>Guesses</th>
+                    <th>Score</th>
+                </tr>
+
+                {{#each users}}
+                    <tr>
+                        <td>{{this.username}}</td>
+                        <td>{{this.guesses}} / {{@root.total_days}}</td>
+                        <td>{{this.score}} ⭐</td>
+                    </tr>
+                {{/each}}
+            </table>
         </div>
 
         <br/>
