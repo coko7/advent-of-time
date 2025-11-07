@@ -12,21 +12,17 @@
         </header>
 
         <div class="center">
-                <table>
-                    <tr>
-                        <th>User</th>
-                        <th>Guesses</th>
-                        <th>Score</th>
-                    </tr>
-                    {{#each days}}
-                        {{#if this.guessed}}
-                            <li>Day {{this.day}} => {{this.points}} ⭐</li>
-                        {{else}}
-                            <li>Day {{this.day}} => 0 ⚫</li>
-                        {{/if}}
-                    {{/each}}
-                </table>
+            <h3>User: {{username}}</h3>
+            <ul>
+                {{#each days}}
+                    {{#if this.guessed}}
+                        <li>Day {{this.day}} => {{this.points}} ⭐</li>
+                    {{else}}
+                        <li>Day {{this.day}} => 0 ⚫</li>
+                    {{/if}}
+                {{/each}}
             </ul>
+            <p>Total: {{total_score}} ⭐</p>
         </div>
 
         <br/>
