@@ -47,11 +47,6 @@ body {
     color: var(--text-color);
 }
 
-div.days>ul {
-    display: flex;
-    flex-direction: row;
-}
-
 div.center {
     display: flex;
     flex-direction: column;
@@ -314,16 +309,21 @@ a.day-link.disabled {
 }
 
 .days {
+    margin: auto;
+    justify-content: center;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
     margin-top: 8em;
-}
-
-.days p {
-    margin: 0;
+    /* 5 boxes + 4 gaps */
+    width: calc(6 * 60px);
 }
 
 .days a {
+    flex: 0 0 30px;
+    /* display: inline-block; */
     line-height: 30px;
-    display: inline-block;
+    text-align: center;
     padding: 1em;
     border: 1px solid var(--accent-color);
 }

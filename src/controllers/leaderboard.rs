@@ -5,6 +5,7 @@ use rtfw_http::{
 };
 use serde::Serialize;
 use serde_json::json;
+use std::cmp;
 
 use crate::{database::user_repository::UserRepository, models::user::User, utils};
 
@@ -30,7 +31,8 @@ pub fn get_leaderboard(
     _request: &HttpRequest,
     _routing_data: &RoutingData,
 ) -> Result<HttpResponse> {
-    let users = UserRepository::get_all_users()?;
+    let mut users = UserRepository::get_all_users()?;
+    users.sort_by_key(|u| cmp::Reverse(u.get_total_score()));
 
     let total_days = utils::get_current_day();
     let data = json!({
