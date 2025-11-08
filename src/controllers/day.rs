@@ -96,7 +96,7 @@ pub struct DayDto {
 #[derive(Serialize, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct GuessDataDto {
-    pub time_submitted: String,
+    pub time: String,
     pub points: u32,
 }
 
@@ -111,7 +111,7 @@ fn load_day_view(request: &HttpRequest, day: u32) -> Result<String> {
         Some(user) if user.has_guessed(day) => {
             let guess_data = user.guess_data.get(&day).unwrap();
             Some(GuessDataDto {
-                time_submitted: format!("{}:{}", guess_data.hm.0, guess_data.hm.1),
+                time: guess_data.time(),
                 points: guess_data.points,
             })
         }

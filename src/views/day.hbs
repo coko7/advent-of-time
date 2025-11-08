@@ -18,8 +18,9 @@
             <p>Original date: {{day.originalDate}}</p>
             {{#if authenticated}}
                 {{#if day.guessData}}
-                    <p>You guessed: {{day.guessData.timeSubmitted}}</p>
-                    <p>Your points for this guess: {{day.guessData.points}}</p>
+                    <p>You guessed: {{day.guessData.time}}</p>
+                    <p>Your points for this guess: {{day.guessData.points}} ⭐ </p>
+                    <p><a href="/auth/me"> Check progress </a></p>
                 {{else}}
                     <form id="guess-daily-picture">
                         <p>
@@ -32,6 +33,8 @@
             {{else}}
                 <p>Please <a href="/auth/login">login</a> first in order submit your guess</p>
             {{/if}}
+
+            <p><a href="/about#faq-score-system"> Check point system </a></p>
         </div>
 
         <a id="link-go-home" href="/">/home </a>

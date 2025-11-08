@@ -5,6 +5,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>AOT | Profile</title>
         <link rel="stylesheet" type="text/css" href="/main.css">
+        <link rel="stylesheet" type="text/css" href="/profile.css">
     </head>
     <body style="text-align: center">
         <header>
@@ -13,16 +14,28 @@
 
         <div class="center">
             <h3>User: {{username}}</h3>
-            <ul>
+            <table>
+
+                <tr>
+                    <th>Day</th>
+                    <th>Guess</th>
+                    <th>Points</th>
+                </tr>
+
                 {{#each days}}
-                    {{#if this.guessed}}
-                        <li>Day {{this.day}} => {{this.points}} ⭐</li>
-                    {{else}}
-                        <li>Day {{this.day}} => 0 ⚫</li>
-                    {{/if}}
+                    <tr>
+                        <td><a href="/day/{{this.day}}">Day {{this.day}}</a></td>
+                        {{#if this.guessed}}
+                            <td>{{this.time}}</td>
+                            <td>{{this.points}} ⭐</td>
+                        {{else}}
+                            <td>-</td>
+                            <td>0 ⚫</td>
+                        {{/if}}
+                    </tr>
                 {{/each}}
-            </ul>
-            <p>Total: {{total_score}} ⭐</p>
+            </table>
+            <p>Score: {{total_score}} ⭐</p>
         </div>
 
         <br/>

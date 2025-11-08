@@ -72,6 +72,7 @@ pub fn get_me(request: &HttpRequest, _routing_data: &RoutingData) -> Result<Http
 struct UserGuessDay {
     pub day: Day,
     pub guessed: bool,
+    pub time: String,
     pub points: u32,
 }
 
@@ -82,11 +83,13 @@ pub fn get_user_guess_days(user: &User) -> Vec<UserGuessDay> {
             Some(guess) => UserGuessDay {
                 day: d,
                 guessed: true,
+                time: guess.time(),
                 points: guess.points,
             },
             None => UserGuessDay {
                 day: d,
                 guessed: false,
+                time: String::new(),
                 points: 0,
             },
         })

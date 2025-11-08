@@ -44,4 +44,8 @@ impl GuessData {
             points,
         }
     }
+
+    pub fn time(&self) -> String {
+        format!("{:02}:{:02}", self.hm.0, self.hm.1)
+    }
 }
