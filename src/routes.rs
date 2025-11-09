@@ -1,4 +1,5 @@
 use anyhow::Result;
+use chrono::Utc;
 use log::debug;
 use rand::seq::IndexedRandom;
 use rtfw_http::http::response_status_codes::HttpStatusCode;
@@ -37,11 +38,11 @@ pub struct CalendarEntry {
 }
 
 fn get_calendar_entries() -> Vec<CalendarEntry> {
-    let today = utils::get_current_day();
+    let utc_now = Utc::now();
     (1..=25)
         .map(|day| CalendarEntry {
             day,
-            released: day <= today,
+            released: utils::is_picture_released(utc_now, day),
         })
         .collect()
 }

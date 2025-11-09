@@ -30,6 +30,7 @@ fn main() -> anyhow::Result<()> {
     let file_server = FileServer::new()
         .map_file("/favicon.ico", "src/assets/favicon.ico")?
         .map_file("/main.css", "src/styles/main.css")?
+        .map_file("/about.css", "src/styles/about.css")?
         .map_file("/leaderboard.css", "src/styles/leaderboard.css")?
         .map_file("/profile.css", "src/styles/profile.css")?
         .map_dir("/static", "src/assets/")?

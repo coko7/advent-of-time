@@ -1,9 +1,9 @@
-use std::collections::HashMap;
-
+use anyhow::Result;
 use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
+use std::{collections::HashMap, time::Duration};
 
-use crate::utils::Day;
+use crate::{models::oauth2_response::OAuth2Response, utils::Day};
 
 #[derive(Debug, Deserialize, Serialize, Clone)]
 pub struct User {
@@ -12,8 +12,9 @@ pub struct User {
     pub oauth_username: String,
     pub guess_data: HashMap<Day, GuessData>,
     pub access_token: String,
-    pub access_token_expire_at: DateTime<Utc>,
+    pub access_token_expire_at: Option<DateTime<Utc>>,
     pub refresh_token: String,
+    pub oauth_provider: String,
 }
 
 impl User {
@@ -23,6 +24,24 @@ impl User {
 
     pub fn get_total_score(&self) -> u32 {
         self.guess_data.values().map(|data| data.points).sum()
+    }
+
+    pub fn set_auth(&mut self, oauth2_response: &OAuth2Response) -> Result<()> {
+        let now = Utc::now();
+        let expires_in = oauth2_response.expires_in - 30; // invalidate 30 seconds early
+        let at_expires_at = now + Duration::from_secs(expires_in);
+
+        self.access_token_expire_at = Some(at_expires_at);
+        self.access_token = oauth2_response.access_token.to_owned();
+        self.refresh_token = oauth2_response.refresh_token.to_owned();
+        Ok(())
+    }
+
+    pub fn clear_auth(&mut self) -> Result<()> {
+        self.access_token_expire_at = None;
+        self.access_token = String::new();
+        self.refresh_token = String::new();
+        Ok(())
     }
 }
 

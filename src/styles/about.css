@@ -1,0 +1,30 @@
+:root {
+    --background-color: #1e1e2e;
+    --surface-color: #45475a;
+    --text-color: #cdd6f4;
+    --accent-color: #cba6f7;
+    --header-color: #fab387;
+    --sub-header-color: #f9e2af;
+    --important-color: #f38ba8;
+}
+
+table {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+}
+
+td,
+th {
+    border: 1px solid var(--surface-color);
+    text-align: left;
+    padding: 8px;
+}
+
+th {
+    /* text-align: center; */
+    color: var(--accent-color);
+}
+
+tr:nth-child(even) {
+    /* background-color: var(--sub-header-color); */
+}

@@ -1,5 +1,5 @@
 use anyhow::{Context, Result, bail};
-use chrono::{Datelike, Local, TimeZone};
+use chrono::{Datelike, Local, TimeZone, Utc};
 use log::{debug, info, trace};
 use rtfw_http::{
     http::{HttpRequest, HttpResponse, HttpResponseBuilder, response_status_codes::HttpStatusCode},
@@ -63,7 +63,7 @@ pub fn post_guess(request: &HttpRequest, _routing_data: &RoutingData) -> Result<
     match parse_guess_value(&guess_value) {
         Ok(guess) => {
             let score = compute_score(day, guess)?;
-            let guess_data = GuessData::new(guess, score, Local::now().into());
+            let guess_data = GuessData::new(guess, score, Utc::now());
             user.guess_data.insert(day, guess_data);
             UserRepository::update_user(user)?;
 
@@ -112,7 +112,7 @@ fn compute_score(day: u32, guess: (u32, u32)) -> Result<u32> {
         PictureMetaRepository::get_picture(day)?.context("HEY where is my picture???")?;
     assert!(daily_img_meta.day() == day);
 
-    let now = Local::now();
+    let now = Utc::now();
 
     let real_dt = Local
         .with_ymd_and_hms(

@@ -1,5 +1,5 @@
 use anyhow::{Context, Result};
-use chrono::{Datelike, Local, NaiveDateTime, Timelike};
+use chrono::{DateTime, Datelike, FixedOffset, NaiveDateTime, Timelike, Utc};
 use handlebars::Handlebars;
 use rand::{SeedableRng, rngs::StdRng, seq::IndexedRandom};
 use regex::Regex;
@@ -65,7 +65,7 @@ pub fn is_day_valid(day: u32) -> bool {
         return false;
     }
 
-    let now = Local::now();
+    let now = Utc::now();
     let now_day = now.day();
     let _month = now.month();
 
@@ -124,12 +124,31 @@ pub fn time_diff_to_points(diff_minutes: u64) -> u32 {
 }
 
 pub fn get_current_day() -> Day {
-    let now = Local::now();
+    let now = Utc::now();
     now.day()
+}
+
+pub fn is_picture_released(utc_now: DateTime<Utc>, picture_day: Day) -> bool {
+    if picture_day > utc_now.day() {
+        false
+    } else if picture_day < utc_now.day() {
+        true
+    } else {
+        is_time_after_6_am_cet(utc_now)
+    }
+}
+
+fn is_time_after_6_am_cet(time: DateTime<Utc>) -> bool {
+    // Define CET timezone offset (+01:00)
+    let cet_offset = FixedOffset::east_opt(3600).unwrap();
+    let cet_now: DateTime<FixedOffset> = time.with_timezone(&cet_offset);
+    cet_now.hour() >= 6
 }
 
 #[cfg(test)]
 mod tests {
+    use chrono::TimeZone;
+
     use super::*;
 
     #[test]
@@ -142,5 +161,47 @@ mod tests {
     fn test_generate_username() {
         let username = generate_username(42).unwrap();
         assert_eq!("many-bun", username);
+    }
+
+    #[test]
+    fn test_time_after_6_am_cet_false() {
+        // 4:45:32 UTC is 5:45:32 CET
+        let utc_time = Utc.with_ymd_and_hms(2025, 12, 15, 4, 45, 32).unwrap();
+        assert!(!is_time_after_6_am_cet(utc_time))
+    }
+
+    #[test]
+    fn test_time_after_6_am_cet_true() {
+        // 5:01:00 UTC is 6:01:00 CET
+        let utc_time = Utc.with_ymd_and_hms(2025, 12, 15, 5, 1, 0).unwrap();
+        assert!(is_time_after_6_am_cet(utc_time))
+    }
+
+    #[test]
+    fn test_is_picture_released_past_late_true() {
+        let utc_time = Utc.with_ymd_and_hms(2025, 12, 15, 18, 0, 0).unwrap();
+        let day = 10;
+        assert!(is_picture_released(utc_time, day))
+    }
+
+    #[test]
+    fn test_is_picture_released_past_early_true() {
+        let utc_time = Utc.with_ymd_and_hms(2025, 12, 15, 3, 0, 0).unwrap();
+        let day = 10;
+        assert!(is_picture_released(utc_time, day))
+    }
+
+    #[test]
+    fn test_is_picture_released_future_late_false() {
+        let utc_time = Utc.with_ymd_and_hms(2025, 12, 15, 18, 0, 0).unwrap();
+        let day = 20;
+        assert!(!is_picture_released(utc_time, day))
+    }
+
+    #[test]
+    fn test_is_picture_released_future_early_false() {
+        let utc_time = Utc.with_ymd_and_hms(2025, 12, 15, 3, 0, 0).unwrap();
+        let day = 20;
+        assert!(!is_picture_released(utc_time, day))
     }
 }

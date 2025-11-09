@@ -15,7 +15,11 @@
         <div class="center">
             <input type="hidden" name="day-token" value="{{day.id}}">
             <img width="500" src="{{day.imgSrc}}" alt="{{day.imgAlt}}">
-            <p>Original date: {{day.originalDate}}</p>
+            <div class="hints">
+                <p>Original date: {{day.originalDate}}</p>
+                <p>Location hint: {{day.locationHint}}</p>
+            </div>
+
             {{#if authenticated}}
                 {{#if day.guessData}}
                     <p>You guessed: {{day.guessData.time}}</p>

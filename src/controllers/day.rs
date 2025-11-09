@@ -90,6 +90,7 @@ pub struct DayDto {
     pub img_src: String,
     pub img_alt: String,
     pub original_date: String,
+    pub location_hint: Option<String>,
     pub guess_data: Option<GuessDataDto>,
 }
 
@@ -126,6 +127,7 @@ fn load_day_view(request: &HttpRequest, day: u32) -> Result<String> {
             img_src: day_img_src,
             img_alt: format!("Image for day {day}"),
             original_date: picture_meta.original_date,
+            location_hint: picture_meta.location,
             guess_data,
         }
     });

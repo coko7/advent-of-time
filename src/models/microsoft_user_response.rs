@@ -1,9 +1,8 @@
 use anyhow::Result;
-use chrono::Local;
 use log::debug;
 use reqwest::header::{AUTHORIZATION, CONTENT_TYPE};
 use serde::Deserialize;
-use std::{collections::HashMap, time::Duration};
+use std::collections::HashMap;
 
 use crate::{
     models::{oauth2_response::OAuth2Response, user::User},
@@ -30,22 +29,22 @@ impl MicrosoftUserResponse {
         let user_info = Self::fetch_user_info(&oauth2_response.access_token)?;
         debug!("{user_info:#?}");
 
-        let now = Local::now();
-        let expires_in = oauth2_response.expires_in - 30; // invalidate 30 seconds early
-        let at_expires_at = now + Duration::from_secs(expires_in);
-
         let unique_hash = utils::str_to_u64seed(&user_info.id);
         let username = utils::generate_username(unique_hash)?;
 
-        Ok(User {
+        let mut user = User {
             id: user_info.id,
             username,
             oauth_username: user_info.user_principal_name.unwrap(),
             guess_data: HashMap::new(),
-            access_token: oauth2_response.access_token.to_owned(),
-            access_token_expire_at: at_expires_at.into(),
-            refresh_token: oauth2_response.refresh_token.to_owned(),
-        })
+            access_token: String::new(),
+            access_token_expire_at: None,
+            refresh_token: String::new(),
+            oauth_provider: "microsoft".to_string(),
+        };
+        user.set_auth(oauth2_response)?;
+
+        Ok(user)
     }
 
     fn fetch_user_info(access_token: &str) -> Result<Self> {
