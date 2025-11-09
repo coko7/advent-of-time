@@ -3,7 +3,6 @@ use chrono::{DateTime, Datelike, FixedOffset, NaiveDateTime, Timelike, Utc};
 use handlebars::Handlebars;
 use rand::{SeedableRng, rngs::StdRng, seq::IndexedRandom};
 use regex::Regex;
-use rexiv2::Metadata;
 use serde::Serialize;
 use std::collections::hash_map::DefaultHasher;
 use std::hash::{Hash, Hasher};
@@ -80,15 +79,15 @@ pub fn is_day_valid(day: u32) -> bool {
     true
 }
 
-pub fn extract_time_from_image(img_path: &PathBuf) -> Result<(u32, u32)> {
-    rexiv2::initialize()?;
-    let metadata = Metadata::new_from_path(img_path)?;
-    println!("{:#?}", metadata.get_xmp_tags()?);
-    let raw_dt = metadata.get_tag_string("Exif.Photo.DateTimeOriginal")?;
-    println!("tag: {:#?}", raw_dt);
-    let datetime = NaiveDateTime::parse_from_str(&raw_dt, "%Y:%m:%d %H:%M:%S")?;
-    Ok((datetime.hour(), datetime.minute()))
-}
+// pub fn extract_time_from_image(img_path: &PathBuf) -> Result<(u32, u32)> {
+//     rexiv2::initialize()?;
+//     let metadata = Metadata::new_from_path(img_path)?;
+//     println!("{:#?}", metadata.get_xmp_tags()?);
+//     let raw_dt = metadata.get_tag_string("Exif.Photo.DateTimeOriginal")?;
+//     println!("tag: {:#?}", raw_dt);
+//     let datetime = NaiveDateTime::parse_from_str(&raw_dt, "%Y:%m:%d %H:%M:%S")?;
+//     Ok((datetime.hour(), datetime.minute()))
+// }
 
 pub fn load_view(name: &str) -> Result<String> {
     let view_path = PathBuf::from(format!("src/views/{}.html", name));
