@@ -1,5 +1,5 @@
 use anyhow::{Context, Result, bail};
-use chrono::{Datelike, Local, TimeZone, Utc};
+use chrono::Utc;
 use log::{debug, info, trace};
 use rtfw_http::{
     http::{HttpRequest, HttpResponse, HttpResponseBuilder, response_status_codes::HttpStatusCode},
@@ -112,38 +112,16 @@ fn compute_score(day: u32, guess: (u32, u32)) -> Result<u32> {
         PictureMetaRepository::get_picture(day)?.context("HEY where is my picture???")?;
     assert!(daily_img_meta.day() == day);
 
-    let now = Utc::now();
+    let real_time_mins = daily_img_meta.hours()? * 60 + daily_img_meta.minutes()?;
+    let guess_time_mins = guess.0 * 60 + guess.1;
 
-    let real_dt = Local
-        .with_ymd_and_hms(
-            now.year(),
-            now.month(),
-            day,
-            daily_img_meta.hours()?,
-            daily_img_meta.minutes()?,
-            0,
-        )
-        .unwrap();
+    debug!("guessed time: {:02}:{:02}", guess.0, guess.1);
+    debug!("real time: {}", daily_img_meta.time_taken);
 
-    let guess_dt = Local
-        .with_ymd_and_hms(
-            real_dt.year(),
-            real_dt.month(),
-            real_dt.day(),
-            guess.0,
-            guess.1,
-            0,
-        )
-        .unwrap();
+    let diff_mins = (real_time_mins).abs_diff(guess_time_mins);
+    debug!("diff in minutes: {diff_mins}");
 
-    debug!("guessed time: {guess_dt:?}");
-    debug!("real time: {real_dt:?}");
-
-    let diff = real_dt.signed_duration_since(guess_dt);
-    let diff_minutes = diff.num_minutes().unsigned_abs();
-    debug!("diff in minutes: {diff_minutes}");
-
-    let points = utils::time_diff_to_points(diff_minutes);
+    let points = utils::time_diff_to_points(diff_mins);
     debug!("points: {points}");
     Ok(points)
 }

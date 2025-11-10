@@ -1,6 +1,7 @@
 use anyhow::{Context, Result};
-use chrono::{DateTime, Datelike, FixedOffset, NaiveDateTime, Timelike, Utc};
+use chrono::{DateTime, Datelike, FixedOffset, Timelike, Utc};
 use handlebars::Handlebars;
+use log::warn;
 use rand::{SeedableRng, rngs::StdRng, seq::IndexedRandom};
 use regex::Regex;
 use serde::Serialize;
@@ -9,6 +10,9 @@ use std::hash::{Hash, Hasher};
 use std::{fs, path::PathBuf};
 
 pub type Day = u32;
+
+const MAX_POINT_REWARD: f64 = 2025.0;
+const SCORE_FORMULA_EXPONENT: f64 = 0.75;
 
 const DICO_NOUNS_PATH: &str = "data/dictionaries/nouns.txt";
 const DICO_ADJECTIVES_PATH: &str = "data/dictionaries/adjectives.txt";
@@ -68,6 +72,7 @@ pub fn is_day_valid(day: u32) -> bool {
     let now_day = now.day();
     let _month = now.month();
 
+    warn!("make sure to re-enable the december check");
     // if month != 12 {
     //     return false;
     // }
@@ -107,19 +112,27 @@ pub fn render_view<T: Serialize>(name: &str, data: &T) -> Result<String> {
     Ok(rendered)
 }
 
-pub fn time_diff_to_points(diff_minutes: u64) -> u32 {
-    match diff_minutes {
-        0 => 25,
-        1..15 => 19,
-        15..30 => 14,
-        30..60 => 10,
-        60..120 => 7,  // 2 hours
-        120..180 => 5, // 3 hours
-        180..300 => 4, // 5 hours
-        300..420 => 3, // 7 hours
-        420..600 => 2, // 10 hours
-        _ => 1,        // more than 10 hours
-    }
+pub fn time_diff_to_points(diff_minutes: u32) -> u32 {
+    let ratio = diff_minutes as f64 / (24.0 * 60.0);
+    let result = MAX_POINT_REWARD * (1.0 - ratio.powf(SCORE_FORMULA_EXPONENT));
+    result.max(0.0) as u32 // Clamp negative points to zero
+}
+
+pub fn guess_order_to_bonus(order: u32) -> u32 {
+    let bonus = MAX_POINT_REWARD
+        * match order {
+            0 => 0.21,
+            1 => 0.13,
+            2 => 0.08,
+            3 => 0.05,
+            4 => 0.03,
+            5 => 0.02,
+            6 => 0.01,
+            7 => 0.01,
+            _ => 0.0,
+        };
+
+    bonus as u32
 }
 
 pub fn get_current_day() -> Day {
@@ -202,5 +215,25 @@ mod tests {
         let utc_time = Utc.with_ymd_and_hms(2025, 12, 15, 3, 0, 0).unwrap();
         let day = 20;
         assert!(!is_picture_released(utc_time, day))
+    }
+
+    #[test]
+    fn test_time_diff_to_points_perfect_gives_max_reward() {
+        assert_eq!(MAX_POINT_REWARD as u32, time_diff_to_points(0))
+    }
+
+    #[test]
+    fn test_time_diff_to_points_worst_gives_nothing() {
+        assert_eq!(0, time_diff_to_points(24 * 60))
+    }
+
+    #[test]
+    fn test_time_diff_to_points_avg_gives_ok_reward() {
+        assert_eq!(820, time_diff_to_points(12 * 60))
+    }
+
+    #[test]
+    fn test_time_diff_to_points_about_section() {
+        assert_eq!(1804, time_diff_to_points(75))
     }
 }

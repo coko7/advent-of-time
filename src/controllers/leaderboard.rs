@@ -16,7 +16,7 @@ struct LeaderboardUserEntry {
     pub score: u32,
 }
 
-pub fn get_leaderboard_users(users: &[User]) -> Vec<LeaderboardUserEntry> {
+fn get_leaderboard_users(users: &[User]) -> Vec<LeaderboardUserEntry> {
     users
         .iter()
         .map(|u| LeaderboardUserEntry {

@@ -39,40 +39,20 @@
                     The site just takes the raw time (HH:mm) you submit, <b>there is no time conversion going on.</b> <br/>
                     Once you have made a guess, you cannot undo it, it's locked forever so think carefully before submitting. <br/>
                     Once your guess has been locked, you will receive points based on how close you are to the time when the picture was taken. <br/>
-                    To learn more about how points are awarded, please refer to the <a href="#faq-score-system">💯 Scoring system</a> section.
+                    To learn more about how points are awarded, please refer to the <a href="#faq-point-system">💯 Point system</a> section.
                 </p>
             </div>
 
-            <div class="faq-section" id="faq-score-system">
-                <h2>💯 Scoring system</h2>
+            <div class="faq-section" id="faq-point-system">
+                <h2>💯 Point system</h2>
                 <p>
                     Points are awarded based on how close your guess is compared to the real time the picture was taken. <br/>
-                    Here is how points are awarded:
-                    <table>
-                        <tr>
-                            <th>Delta</th>
-                            <th>Points</th>
-                        </tr>
-                        <tr>
-                            <td>0 (Perfect)</td>
-                            <td>25</td>
-                        </tr>
-                        <tr><td>&lt; 15 mins</td><td>19</td></tr>
-                        <tr><td>&lt; 30 mins</td><td>14</td></tr>
-                        <tr><td>&lt; 1 hour</td><td>10</td></tr>
-                        <tr><td>&lt; 2 hours</td><td>7</td></tr>
-                        <tr><td>&lt; 3 hours</td><td>5</td></tr>
-                        <tr><td>&lt; 5 hours</td><td>4</td></tr>
-                        <tr><td>&lt; 7 hours</td><td>3</td></tr>
-                        <tr><td>&lt; 10 hours</td><td>2</td></tr>
-                        <tr><td>&ge; 10 hours</td><td>1</td></tr>
-                        <tr><td>no guess</td><td>0</td></tr>
-                    </table>
-                    <br/>
+                    The followin formula is used to calculate points: <br/><br/>
+                    <code>2025 * (1 - (diff / 24 * 60)^0.75)</code> where diff is the delta in minutes.
                 <div>
                     <span><b>ℹ️ Example:</b></span>
                     <p>
-                        If the picture was taken at 15:30 and you guessed 16:45 (01:15 diff), you will get 7 points.<br/>
+                        If the picture was taken at 15:30 and you guessed 16:45 (01:15 diff), you will get 1804 points.<br/>
                         Each daily guess will grant you points and the winner will be the person with the most points by December 24th 2022 at 23:59.
                     </p>
                 </div>

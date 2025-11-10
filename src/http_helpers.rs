@@ -8,10 +8,7 @@ use rtfw_http::http::{
 
 use crate::{
     database::user_repository::UserRepository,
-    models::{
-        oauth2_response::{self, OAuth2Response},
-        user::User,
-    },
+    models::{oauth2_response::OAuth2Response, user::User},
     oauth2, security,
 };
 

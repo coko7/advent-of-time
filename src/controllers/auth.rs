@@ -67,7 +67,7 @@ struct UserGuessDay {
     pub points: u32,
 }
 
-pub fn get_user_guess_days(user: &User) -> Vec<UserGuessDay> {
+fn get_user_guess_days(user: &User) -> Vec<UserGuessDay> {
     let current_day = utils::get_current_day();
     (1..=current_day)
         .map(|d| match user.guess_data.get(&d) {
