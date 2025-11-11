@@ -28,3 +28,14 @@ th {
 tr:nth-child(even) {
     /* background-color: var(--sub-header-color); */
 }
+
+ul {
+    list-style-type: disc;
+}
+
+#score-formula {
+    border: none;
+    max-width: 500px;
+    width: 100%;
+    height: auto;
+}

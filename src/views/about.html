@@ -47,26 +47,22 @@
                 <h2>💯 Point system</h2>
                 <p>
                     Points are awarded based on how close your guess is compared to the real time the picture was taken. <br/>
-                    The followin formula is used to calculate points: <br/><br/>
-                    <code>2025 * (1 - (diff / 24 * 60)^0.75)</code> where diff is the delta in minutes.
-                <div>
-                    <span><b>ℹ️ Example:</b></span>
-                    <p>
-                        If the picture was taken at 15:30 and you guessed 16:45 (01:15 diff), you will get 1804 points.<br/>
-                        Each daily guess will grant you points and the winner will be the person with the most points by December 24th 2022 at 23:59.
-                    </p>
-                </div>
+                    The following formula is used to calculate points:
+                <p/>
+                <p><img id="score-formula" src="/static/images/score_formula.svg" /></p>
+                <p>Where:</p>
+                <ul>
+                    <li><b>max_points:</b> the maximum number a points you can receive for a guess</li>
+                    <li><b>diff:</b> difference in minutes between real time and guessed time</li>
+                    <li><b>exponent:</b> a magic number to make things less linear</li>
+                </ul>
                 <div>
                     <span><b>⚠️ Important thing to note:</b></span>
                     <p>
-                        If the actual time of the picture is 01:00 and you guessed 23:00 it will be considered a 21 hours difference (not 2 hours!).<br/>
+                        If the actual time of the picture is 01:00 and you guessed 23:00 it will be considered a 22 hours difference (not 2 hours!).<br/>
                         Keep that in mind before submitting your guesses.
                     </p>
                 </div>
-                <p>
-                    Please note that if you do not submit a guess for a day, it will be considered as if you did not participate for this day and you will get 0 points. <br/>
-                    So, make sure to guess every single day if you want to have a chance to win.
-                </p>
             </div>
 
             <div class="faq-section">
