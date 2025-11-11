@@ -1,9 +1,13 @@
-use anyhow::Result;
+use anyhow::{Context, Result, ensure};
 use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 use std::{collections::HashMap, time::Duration};
 
-use crate::{models::oauth2_response::OAuth2Response, utils::Day};
+use crate::{
+    database::picture_meta_repository::PictureMetaRepository,
+    models::oauth2_response::OAuth2Response,
+    utils::{self, Day},
+};
 
 #[derive(Debug, Deserialize, Serialize, Clone)]
 pub struct User {
@@ -22,8 +26,24 @@ impl User {
         self.guess_data.contains_key(&day)
     }
 
-    pub fn get_total_score(&self) -> u32 {
-        self.guess_data.values().map(|data| data.points).sum()
+    pub fn get_total_score(&self) -> Result<u32> {
+        self.guess_data
+            .keys()
+            .try_fold(0, |acc, &day| Ok(acc + self.get_points(day)?))
+    }
+
+    pub fn get_points(&self, day: Day) -> Result<u32> {
+        match self.guess_data.get(&day) {
+            Some(data) => {
+                // info!("received guess for day {day}: {guess:?}");
+                let picture = PictureMetaRepository::get_picture(day)?
+                    .context("picture should exist for guessed day")?;
+                ensure!(picture.day() == day);
+                utils::compute_score(&picture, data.hm)
+            }
+
+            None => Ok(0),
+        }
     }
 
     pub fn set_auth(&mut self, oauth2_response: &OAuth2Response) -> Result<()> {
@@ -55,16 +75,13 @@ pub struct GuessData {
     pub taken_at: DateTime<Utc>,
     /// The hours/minutes keypair submitted by the user
     pub hm: (u32, u32),
-    /// Points associated to this guess (computed field)
-    pub points: u32,
 }
 
 impl GuessData {
-    pub fn new(guess_hm: (u32, u32), points: u32, taken_at: DateTime<Utc>) -> GuessData {
+    pub fn new(guess_hm: (u32, u32), taken_at: DateTime<Utc>) -> GuessData {
         GuessData {
             taken_at,
             hm: guess_hm,
-            points,
         }
     }
 

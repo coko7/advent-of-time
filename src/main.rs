@@ -22,7 +22,7 @@ fn main() -> anyhow::Result<()> {
         .filter_module("rtfw_http", LevelFilter::Warn)
         .init();
 
-    let config = Config::load_from_file()?;
+    let config = Config::get()?;
 
     UserRepository::initialize_database()?;
     PictureMetaRepository::initialize_database()?;

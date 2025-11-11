@@ -14,7 +14,7 @@ use crate::{
         discord_user_response::DiscordUserResponse, github_user_response::GitHubUserResponse,
         microsoft_user_response::MicrosoftUserResponse, user::User,
     },
-    oauth2, security,
+    oauth2, routes, security,
     utils::{self, Day},
 };
 
@@ -53,7 +53,7 @@ pub fn get_me(request: &HttpRequest, _routing_data: &RoutingData) -> Result<Http
     let data = json!({
         "username": &user.username,
         "days": get_user_guess_days(&user),
-        "total_score": user.get_total_score(),
+        "total_score": user.get_total_score()?,
     });
     let rendered = utils::render_view("profile", &data)?;
     HttpResponseBuilder::new().set_html_body(&rendered).build()
@@ -70,31 +70,34 @@ struct UserGuessDay {
 fn get_user_guess_days(user: &User) -> Vec<UserGuessDay> {
     let current_day = utils::get_current_day();
     (1..=current_day)
-        .map(|d| match user.guess_data.get(&d) {
-            Some(guess) => UserGuessDay {
-                day: d,
-                guessed: true,
-                time: guess.time(),
-                points: guess.points,
-            },
-            None => UserGuessDay {
-                day: d,
-                guessed: false,
-                time: String::new(),
-                points: 0,
-            },
+        .map(|d| {
+            user.guess_data.get(&d).map_or(
+                UserGuessDay {
+                    day: d,
+                    guessed: false,
+                    time: String::new(),
+                    points: 0,
+                },
+                |guess| UserGuessDay {
+                    day: d,
+                    guessed: true,
+                    time: guess.time(),
+                    points: user.get_points(d).unwrap(),
+                },
+            )
         })
-        .collect::<Vec<_>>()
+        .collect()
 }
 
-pub fn get_oauth2_login(
-    request: &HttpRequest,
-    _routing_data: &RoutingData,
-) -> Result<HttpResponse> {
+pub fn get_oauth2_login(request: &HttpRequest, routing_data: &RoutingData) -> Result<HttpResponse> {
     let provider = request.query.get("idp").context("IDP should be provided")?;
     let oauth2_config = security::get_oauth2_provider_config(provider)?;
 
-    oauth2::redirect_to_authorize(oauth2_config)
+    if oauth2_config.enabled {
+        oauth2::redirect_to_authorize(oauth2_config)
+    } else {
+        routes::catcher_get_404(request, routing_data)
+    }
 }
 
 pub fn get_github_oauth2_redirect(

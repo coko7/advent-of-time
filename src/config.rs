@@ -1,20 +1,26 @@
 use anyhow::Result;
-use std::fs;
-
 use serde::Deserialize;
+
+pub const CONFIG_RAW: &str = include_str!("../config.toml");
 
 #[derive(Deserialize)]
 pub struct Config {
     pub hostname: String,
     pub oauth2: OAuth2Providers,
+    pub score: ScoreConfig,
 }
 
 impl Config {
-    pub fn load_from_file() -> Result<Config> {
-        let config_str = fs::read_to_string("config.toml")?;
-        let config: Config = toml::from_str(&config_str)?;
+    pub fn get() -> Result<Config> {
+        let config: Config = toml::from_str(&CONFIG_RAW)?;
         Ok(config)
     }
+}
+
+#[derive(Deserialize, Debug)]
+pub struct ScoreConfig {
+    pub max_reward: f64,
+    pub exponent: f64,
 }
 
 #[derive(Deserialize, Debug)]

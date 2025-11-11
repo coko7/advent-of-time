@@ -13,7 +13,7 @@ pub fn has_access_token_expired(user: &User) -> Result<bool> {
 }
 
 pub fn get_oauth2_provider_config(provider_name: &str) -> Result<OAuth2Config> {
-    let config = Config::load_from_file()?;
+    let config = Config::get()?;
     Ok(match provider_name {
         "discord" => config.oauth2.discord,
         "microsoft" => config.oauth2.microsoft,

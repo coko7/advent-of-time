@@ -10,6 +10,7 @@ use crate::{
 };
 
 #[derive(Deserialize, Debug)]
+#[allow(dead_code)]
 pub struct DiscordUserResponse {
     pub id: String,
     pub username: String,

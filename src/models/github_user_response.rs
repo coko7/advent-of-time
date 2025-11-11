@@ -11,6 +11,7 @@ use crate::{
 };
 
 #[derive(Deserialize, Debug)]
+#[allow(dead_code)]
 pub struct GitHubUserResponse {
     pub login: String,
     pub id: u64,
@@ -55,6 +56,7 @@ pub struct GitHubUserResponse {
 }
 
 #[derive(Debug, Deserialize)]
+#[allow(dead_code)]
 pub struct Plan {
     pub name: String,
     pub space: u64,

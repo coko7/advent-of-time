@@ -1,7 +1,7 @@
 use anyhow::{Context, Result};
 use chrono::{DateTime, Datelike, FixedOffset, Timelike, Utc};
 use handlebars::Handlebars;
-use log::warn;
+use log::{debug, warn};
 use rand::{SeedableRng, rngs::StdRng, seq::IndexedRandom};
 use regex::Regex;
 use serde::Serialize;
@@ -9,10 +9,10 @@ use std::collections::hash_map::DefaultHasher;
 use std::hash::{Hash, Hasher};
 use std::{fs, path::PathBuf};
 
-pub type Day = u32;
+use crate::config::Config;
+use crate::models::picture::Picture;
 
-const MAX_POINT_REWARD: f64 = 2025.0;
-const SCORE_FORMULA_EXPONENT: f64 = 0.75;
+pub type Day = u32;
 
 const DICO_NOUNS_PATH: &str = "data/dictionaries/nouns.txt";
 const DICO_ADJECTIVES_PATH: &str = "data/dictionaries/adjectives.txt";
@@ -113,13 +113,15 @@ pub fn render_view<T: Serialize>(name: &str, data: &T) -> Result<String> {
 }
 
 pub fn time_diff_to_points(diff_minutes: u32) -> u32 {
+    let config = Config::get().unwrap().score;
     let ratio = diff_minutes as f64 / (24.0 * 60.0);
-    let result = MAX_POINT_REWARD * (1.0 - ratio.powf(SCORE_FORMULA_EXPONENT));
+    let result = config.max_reward * (1.0 - ratio.powf(config.exponent));
     result.max(0.0) as u32 // Clamp negative points to zero
 }
 
 pub fn guess_order_to_bonus(order: u32) -> u32 {
-    let bonus = MAX_POINT_REWARD
+    let config = Config::get().unwrap().score;
+    let bonus = config.max_reward
         * match order {
             0 => 0.21,
             1 => 0.13,
@@ -155,6 +157,21 @@ fn is_time_after_6_am_cet(time: DateTime<Utc>) -> bool {
     let cet_offset = FixedOffset::east_opt(3600).unwrap();
     let cet_now: DateTime<FixedOffset> = time.with_timezone(&cet_offset);
     cet_now.hour() >= 6
+}
+
+pub fn compute_score(picture: &Picture, guess: (u32, u32)) -> Result<u32> {
+    let real_time_mins = picture.hours()? * 60 + picture.minutes()?;
+    let guess_time_mins = guess.0 * 60 + guess.1;
+
+    debug!("guessed time: {:02}:{:02}", guess.0, guess.1);
+    debug!("real time: {}", picture.time_taken);
+
+    let diff_mins = (real_time_mins).abs_diff(guess_time_mins);
+    debug!("diff in minutes: {diff_mins}");
+
+    let points = time_diff_to_points(diff_mins);
+    debug!("points: {points}");
+    Ok(points)
 }
 
 #[cfg(test)]
@@ -219,7 +236,8 @@ mod tests {
 
     #[test]
     fn test_time_diff_to_points_perfect_gives_max_reward() {
-        assert_eq!(MAX_POINT_REWARD as u32, time_diff_to_points(0))
+        let config = Config::get().unwrap().score;
+        assert_eq!(config.max_reward as u32, time_diff_to_points(0))
     }
 
     #[test]

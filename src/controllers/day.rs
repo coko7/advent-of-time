@@ -113,7 +113,7 @@ fn load_day_view(request: &HttpRequest, day: u32) -> Result<String> {
             let guess_data = user.guess_data.get(&day).unwrap();
             Some(GuessDataDto {
                 time: guess_data.time(),
-                points: guess_data.points,
+                points: user.get_points(day)?,
             })
         }
         _ => None,

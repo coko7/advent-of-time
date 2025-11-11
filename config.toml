@@ -1,5 +1,9 @@
 hostname = "localhost:7878"
 
+[score]
+max_reward = 2025
+exponent = 0.5
+
 [oauth2.discord]
 enabled = true
 authorize_url = "https://discord.com/oauth2/authorize"

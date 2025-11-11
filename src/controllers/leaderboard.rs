@@ -22,7 +22,7 @@ fn get_leaderboard_users(users: &[User]) -> Vec<LeaderboardUserEntry> {
         .map(|u| LeaderboardUserEntry {
             username: u.username.to_owned(),
             guesses: u.guess_data.len(),
-            score: u.get_total_score(),
+            score: u.get_total_score().unwrap(),
         })
         .collect::<Vec<_>>()
 }
@@ -32,7 +32,7 @@ pub fn get_leaderboard(
     _routing_data: &RoutingData,
 ) -> Result<HttpResponse> {
     let mut users = UserRepository::get_all_users()?;
-    users.sort_by_key(|u| cmp::Reverse(u.get_total_score()));
+    users.sort_by_key(|u| cmp::Reverse(u.get_total_score().unwrap()));
 
     let total_days = utils::get_current_day();
     let data = json!({

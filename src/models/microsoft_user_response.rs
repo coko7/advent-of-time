@@ -11,6 +11,7 @@ use crate::{
 
 #[derive(Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
+#[allow(dead_code)]
 pub struct MicrosoftUserResponse {
     id: String,
     display_name: Option<String>,

@@ -1,6 +1,6 @@
-use anyhow::{Context, Result, bail};
+use anyhow::{Context, Result, bail, ensure};
 use chrono::Utc;
-use log::{debug, info, trace};
+use log::{debug, trace};
 use rtfw_http::{
     http::{HttpRequest, HttpResponse, HttpResponseBuilder, response_status_codes::HttpStatusCode},
     router::RoutingData,
@@ -62,8 +62,13 @@ pub fn post_guess(request: &HttpRequest, _routing_data: &RoutingData) -> Result<
     let guess_value = request_data.guess;
     match parse_guess_value(&guess_value) {
         Ok(guess) => {
-            let score = compute_score(day, guess)?;
-            let guess_data = GuessData::new(guess, score, Utc::now());
+            // info!("received guess for day {day}: {guess:?}");
+            let picture = PictureMetaRepository::get_picture(day)?
+                .context("picture should exist this guessed day")?;
+
+            ensure!(picture.day() == day);
+            let score = utils::compute_score(&picture, guess)?;
+            let guess_data = GuessData::new(guess, Utc::now());
             user.guess_data.insert(day, guess_data);
             UserRepository::update_user(user)?;
 
@@ -104,24 +109,4 @@ fn parse_guess_value(guess: &str) -> Result<(u32, u32)> {
     }
 
     Ok((hour, minutes))
-}
-
-fn compute_score(day: u32, guess: (u32, u32)) -> Result<u32> {
-    info!("received guess for day {day}: {guess:?}");
-    let daily_img_meta =
-        PictureMetaRepository::get_picture(day)?.context("HEY where is my picture???")?;
-    assert!(daily_img_meta.day() == day);
-
-    let real_time_mins = daily_img_meta.hours()? * 60 + daily_img_meta.minutes()?;
-    let guess_time_mins = guess.0 * 60 + guess.1;
-
-    debug!("guessed time: {:02}:{:02}", guess.0, guess.1);
-    debug!("real time: {}", daily_img_meta.time_taken);
-
-    let diff_mins = (real_time_mins).abs_diff(guess_time_mins);
-    debug!("diff in minutes: {diff_mins}");
-
-    let points = utils::time_diff_to_points(diff_mins);
-    debug!("points: {points}");
-    Ok(points)
 }
