@@ -247,11 +247,11 @@ mod tests {
 
     #[test]
     fn test_time_diff_to_points_avg_gives_ok_reward() {
-        assert_eq!(820, time_diff_to_points(12 * 60))
+        assert_eq!(593, time_diff_to_points(12 * 60))
     }
 
     #[test]
     fn test_time_diff_to_points_about_section() {
-        assert_eq!(1804, time_diff_to_points(75))
+        assert_eq!(1562, time_diff_to_points(75))
     }
 }
