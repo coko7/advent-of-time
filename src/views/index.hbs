@@ -35,7 +35,11 @@
             <div class="days">
                 {{#each days}}
                     {{#if this.released}}
-                        <a class="day-link" href="/day/{{this.day}}">{{this.day}}</a>
+                        {{#if this.guessed}}
+                            <a class="day-link guessed" href="/day/{{this.day}}">⭐</a>
+                        {{else}}
+                            <a class="day-link" href="/day/{{this.day}}">{{this.day}}</a>
+                        {{/if}}
                     {{else}}
                         <a class="day-link disabled" href="/day/{{this.day}}">{{this.day}}</a>
                     {{/if}}

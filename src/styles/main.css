@@ -138,6 +138,11 @@ input[type="file"]::file-selector-button,
     font-size: 1em;
 }
 
+.day-link.guessed {
+    color: var(--sub-header-color);
+    border: 1px solid var(--sub-header-color);
+}
+
 button:disabled {
     font-style: italic;
     cursor: default;

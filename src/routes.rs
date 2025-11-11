@@ -9,14 +9,15 @@ use serde::Serialize;
 use serde_json::json;
 use std::fs;
 
+use crate::models::user::User;
 use crate::utils::Day;
 use crate::{http_helpers, utils};
 
 pub fn get_index(request: &HttpRequest, _routing_data: &RoutingData) -> Result<HttpResponse> {
     let user = http_helpers::get_logged_in_user(request)?;
     let authenticated = user.is_some();
-    let name = match user {
-        Some(user) => user.username,
+    let name = match &user {
+        Some(user) => user.username.to_owned(),
         None => "World".to_string(),
     };
 
@@ -25,7 +26,7 @@ pub fn get_index(request: &HttpRequest, _routing_data: &RoutingData) -> Result<H
     let data = json!({
         "authenticated": authenticated,
         "greetMsg": greet_msg,
-        "days": get_calendar_entries(),
+        "days": get_calendar_entries(user.as_ref()),
     });
     let rendered = utils::render_view("index", &data)?;
     HttpResponseBuilder::new().set_html_body(&rendered).build()
@@ -35,13 +36,19 @@ pub fn get_index(request: &HttpRequest, _routing_data: &RoutingData) -> Result<H
 pub struct CalendarEntry {
     pub day: Day,
     pub released: bool,
+    pub guessed: bool,
 }
 
-fn get_calendar_entries() -> Vec<CalendarEntry> {
+fn get_calendar_entries(user: Option<&User>) -> Vec<CalendarEntry> {
     let utc_now = Utc::now();
     (1..=25)
         .map(|day| CalendarEntry {
             day,
+            guessed: if let Some(user) = user {
+                user.has_guessed(day)
+            } else {
+                false
+            },
             released: utils::is_picture_released(utc_now, day),
         })
         .collect()

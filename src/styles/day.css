@@ -1,0 +1,30 @@
+:root {
+    --background-color: #1e1e2e;
+    --surface-color: #45475a;
+    --text-color: #cdd6f4;
+    --accent-color: #cba6f7;
+    --header-color: #fab387;
+    --sub-header-color: #f9e2af;
+    --important-color: #f38ba8;
+}
+
+.hints,
+.my-guess {
+    display: flex;
+    flex-direction: row;
+}
+
+.hints>p,
+.my-guess>p {
+    margin: 1em 0.5em;
+    padding: 0.5em 1em;
+    border-radius: 20px;
+}
+
+.hints>p {
+    border: 2px solid var(--accent-color);
+}
+
+.my-guess>p {
+    border: 2px solid var(--sub-header-color);
+}

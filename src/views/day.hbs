@@ -5,6 +5,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>AOT | {{title}}</title>
         <link rel="stylesheet" type="text/css" href="/main.css">
+        <link rel="stylesheet" type="text/css" href="/day.css">
     </head>
     <body style="text-align: center">
         <header>
@@ -16,14 +17,16 @@
             <input type="hidden" name="day-token" value="{{day.id}}">
             <img width="500" src="{{day.imgSrc}}" alt="{{day.imgAlt}}">
             <div class="hints">
-                <p>Original date: {{day.originalDate}}</p>
-                <p>Location hint: {{day.locationHint}}</p>
+                <p title="Exact date of when this picture was taken"> {{day.originalDate}}</p>
+                <p title="Location depicted in the picture"> {{day.locationHint}}</p>
             </div>
 
             {{#if authenticated}}
                 {{#if day.guessData}}
-                    <p>You guessed: {{day.guessData.time}}</p>
-                    <p>Your points for this guess: {{day.guessData.points}} ⭐ </p>
+                    <div class="my-guess">
+                        <p title="Your guess"> {{day.guessData.time}}</p>
+                        <p title="Your points"> {{day.guessData.points}}</p>
+                    </div>
                     <p><a href="/auth/me"> Check progress </a></p>
                 {{else}}
                     <form id="guess-daily-picture">
