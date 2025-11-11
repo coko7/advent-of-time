@@ -41,11 +41,14 @@ pub fn exchange_token(code: &str, config: OAuth2Config) -> Result<OAuth2Response
     let response = client
         .post(token_url)
         .form(&params) // sends application/x-www-form-urlencoded data
+        .header("Accept", "application/json")
         .send()?;
 
     debug!("exchange token response status: {}", response.status());
     let body = response.text()?;
+    debug!("wow: {body:?}");
     let oauth2_response = serde_json::from_str::<OAuth2Response>(&body)?;
+    debug!("hello?? {oauth2_response:?}");
     Ok(oauth2_response)
 }
 

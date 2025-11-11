@@ -39,7 +39,7 @@ impl MicrosoftUserResponse {
             guess_data: HashMap::new(),
             access_token: String::new(),
             access_token_expire_at: None,
-            refresh_token: String::new(),
+            refresh_token: None,
             oauth_provider: "microsoft".to_string(),
         };
         user.set_auth(oauth2_response)?;

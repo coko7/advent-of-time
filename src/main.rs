@@ -55,6 +55,10 @@ fn main() -> anyhow::Result<()> {
             "/auth/oauth2-redirect/microsoft",
             controllers::auth::get_microsoft_oauth2_redirect,
         )?
+        .get(
+            "/auth/oauth2-redirect/github",
+            controllers::auth::get_github_oauth2_redirect,
+        )?
         .get("/auth/me", controllers::auth::get_me)?
         .get("/leaderboard", controllers::leaderboard::get_leaderboard)?
         // day

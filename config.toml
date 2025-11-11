@@ -9,6 +9,15 @@ redirect_uri = "https://localhost:12345/auth/oauth2-redirect/discord"
 secret = "{{DISCORD_SECRET}}"
 scope = "identify"
 
+[oauth2.github]
+enabled = true
+authorize_url = "https://github.com/login/oauth/authorize"
+token_url = "https://github.com/login/oauth/access_token"
+client_id = "{{GITHUB_CLIENT_ID}}"
+redirect_uri = "https://localhost:12345/auth/oauth2-redirect/github"
+secret = "{{GITHUB_SECRET}}"
+scope = "user"
+
 [oauth2.microsoft]
 enabled = true
 authorize_url = "https://login.microsoftonline.com/common/oauth2/v2.0/authorize"

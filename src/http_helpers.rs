@@ -38,7 +38,13 @@ pub fn create_bearer_cookie(oauth2_response: &OAuth2Response) -> HttpCookie {
     HttpCookie::new(BEARER_COOKIE, &oauth2_response.access_token)
         .set_path(Some("/"))
         .set_http_only(true)
-        .set_max_age(Some(oauth2_response.expires_in as i32))
+        .set_max_age(oauth2_response.expires_in.and_then(|num| {
+            if num <= i32::MAX as u64 {
+                Some(num as i32)
+            } else {
+                None
+            }
+        }))
 }
 
 pub fn create_clear_bearer_cookie() -> HttpCookie {
@@ -64,7 +70,7 @@ pub fn is_logged_in(request: &HttpRequest) -> Result<bool> {
     };
 
     trace!("logged in user: {user:?}");
-    Ok(!security::has_access_token_expired(&user))
+    Ok(!security::has_access_token_expired(&user)?)
 }
 
 pub fn get_logged_in_user(request: &HttpRequest) -> Result<Option<User>> {
@@ -80,11 +86,16 @@ pub fn get_logged_in_user(request: &HttpRequest) -> Result<Option<User>> {
 
     // WARNING: Probably not how things should be done but it's okay for this app
     // TODO: Handle the refresh flow in a more secure manner
-    if security::has_access_token_expired(&user) {
-        let oauth2_config = security::get_oauth2_provider_config(&user.oauth_provider)?;
-        let oauth2_res = oauth2::refresh_token(&user.refresh_token, oauth2_config)?;
-        user.set_auth(&oauth2_res)?;
+
+    // if no refresh token exists, then we consider access token never expires
+    if user.access_token_expire_at.is_none() || !security::has_access_token_expired(&user)? {
+        return Ok(Some(user));
     }
+
+    let refresh_token = user.refresh_token.to_owned().unwrap();
+    let oauth2_config = security::get_oauth2_provider_config(&user.oauth_provider)?;
+    let oauth2_res = oauth2::refresh_token(&refresh_token, oauth2_config)?;
+    user.set_auth(&oauth2_res)?;
 
     Ok(Some(user))
 }

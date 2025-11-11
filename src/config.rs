@@ -21,6 +21,7 @@ impl Config {
 pub struct OAuth2Providers {
     pub discord: OAuth2Config,
     pub microsoft: OAuth2Config,
+    pub github: OAuth2Config,
 }
 
 #[derive(Deserialize, Debug)]

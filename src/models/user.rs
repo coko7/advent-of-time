@@ -13,7 +13,7 @@ pub struct User {
     pub guess_data: HashMap<Day, GuessData>,
     pub access_token: String,
     pub access_token_expire_at: Option<DateTime<Utc>>,
-    pub refresh_token: String,
+    pub refresh_token: Option<String>,
     pub oauth_provider: String,
 }
 
@@ -28,10 +28,14 @@ impl User {
 
     pub fn set_auth(&mut self, oauth2_response: &OAuth2Response) -> Result<()> {
         let now = Utc::now();
-        let expires_in = oauth2_response.expires_in - 30; // invalidate 30 seconds early
-        let at_expires_at = now + Duration::from_secs(expires_in);
+        let at_expires_at = if let Some(expires_in) = oauth2_response.expires_in {
+            let expires_in = expires_in - 30; // invalidate 30 seconds early
+            Some(now + Duration::from_secs(expires_in))
+        } else {
+            None
+        };
 
-        self.access_token_expire_at = Some(at_expires_at);
+        self.access_token_expire_at = at_expires_at;
         self.access_token = oauth2_response.access_token.to_owned();
         self.refresh_token = oauth2_response.refresh_token.to_owned();
         Ok(())
@@ -40,7 +44,7 @@ impl User {
     pub fn clear_auth(&mut self) -> Result<()> {
         self.access_token_expire_at = None;
         self.access_token = String::new();
-        self.refresh_token = String::new();
+        self.refresh_token = None;
         Ok(())
     }
 }
