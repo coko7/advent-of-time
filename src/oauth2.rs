@@ -5,11 +5,11 @@ use std::collections::HashMap;
 
 use crate::{config::OAuth2Config, models::oauth2_response::OAuth2Response};
 
-pub fn redirect_to_authorize(config: OAuth2Config) -> Result<HttpResponse> {
-    let authorize_url = config.authorize_url;
-    let client_id = config.client_id;
-    let redirect_uri = config.redirect_uri;
-    let scope = config.scope;
+pub fn redirect_to_authorize(config: &OAuth2Config) -> Result<HttpResponse> {
+    let authorize_url = config.authorize_url.to_owned();
+    let client_id = config.client_id.to_owned();
+    let redirect_uri = config.redirect_uri.to_owned();
+    let scope = config.scope.to_owned();
     let encoded_redirect_uri: String =
         url::form_urlencoded::byte_serialize(redirect_uri.as_bytes()).collect();
 
@@ -24,11 +24,11 @@ pub fn redirect_to_authorize(config: OAuth2Config) -> Result<HttpResponse> {
         .build()
 }
 
-pub fn exchange_token(code: &str, config: OAuth2Config) -> Result<OAuth2Response> {
-    let token_url = config.token_url;
-    let client_id = config.client_id;
-    let redirect_uri = config.redirect_uri;
-    let secret = config.secret;
+pub fn exchange_token(code: &str, config: &OAuth2Config) -> Result<OAuth2Response> {
+    let token_url = config.token_url.to_owned();
+    let client_id = config.client_id.to_owned();
+    let redirect_uri = config.redirect_uri.to_owned();
+    let secret = config.secret.to_owned();
 
     let mut params = HashMap::new();
     params.insert("client_id", client_id);
@@ -52,11 +52,11 @@ pub fn exchange_token(code: &str, config: OAuth2Config) -> Result<OAuth2Response
     Ok(oauth2_response)
 }
 
-pub fn refresh_token(refresh_token: &str, config: OAuth2Config) -> Result<OAuth2Response> {
-    let token_url = config.token_url;
-    let client_id = config.client_id;
-    let redirect_uri = config.redirect_uri;
-    let secret = config.secret;
+pub fn refresh_token(refresh_token: &str, config: &OAuth2Config) -> Result<OAuth2Response> {
+    let token_url = config.token_url.to_owned();
+    let client_id = config.client_id.to_owned();
+    let redirect_uri = config.redirect_uri.to_owned();
+    let secret = config.secret.to_owned();
 
     let mut params = HashMap::new();
     params.insert("client_id", client_id);

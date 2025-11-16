@@ -16,7 +16,7 @@
             <div class="faq-section">
                 <h2>📷 The Game</h2>
                 <p>
-                    The <b>Advent of Time</b> <i>"Guess what time it is in Stockholm"</i> game takes place from 01/12/2025 to 25/12/2025. <br/>
+                    The <b>Advent of Time</b> <i>"Guess what time it is in Stockholm"</i> game takes place from the 1st to the 25th of December. <br/>
                     Every day, a new picture will be unlocked. The picture will depict a location in Sweden. <br/>
                     Your goal is to guess the exact time of the day the picture was taken (HH:mm). <br/>
                     The closer your guess is to the actual time in the picture, the more points you will get. <br/>
@@ -49,11 +49,13 @@
                     Points are awarded based on how close your guess is compared to the real time the picture was taken. <br/>
                     The following formula is used to calculate points:
                 <p/>
+                <!-- LaTeX: $$\text{points} = \text{max_points} \times \left( 1 - \left( \frac{\text{diff}}{\text{divider}} \right)^{\text{exponent}} \right)$$-->
                 <p><img id="score-formula" src="/static/images/score_formula.svg" /></p>
                 <p>Where:</p>
                 <ul>
                     <li><b>max_points:</b> the maximum number a points you can receive for a guess</li>
                     <li><b>diff:</b> difference in minutes between real time and guessed time</li>
+                    <li><b>divider:</b> likely the total number of minutes in a day</li>
                     <li><b>exponent:</b> a magic number to make things less linear</li>
                 </ul>
                 <div>
@@ -78,7 +80,7 @@
                     You can find all the source code for this webapp <a href="https://github.com/Coko7/advent-of-time">here</a>. It's MIT-licensed.<br/>
                     The web server is a <b>home-made</b> <s><i>and insecure</i></s> implementation of HTTP 1.1: <a href="https://github.com/RTFW-rs/rtfw-http-rs">RTFW-http-rs</a><br/>
                     For the reverse-proxy, I picked <a href="https://caddyserver.com/">Caddy</a> because it is easy to configure and fast.<br/>
-                    Finally, all of this, is being served from a <a href="https://www.raspberrypi.com/">Raspberry Pi</a>, sitting comfortably in a frenchman's apartment. 🇫🇷 <br/>
+                    Finally, all of this, is being served from a <a href="https://www.raspberrypi.com/">Raspberry Pi</a>, sitting comfortably in a frenchman's apartment. 🇫🇷<br/>
                 </p>
             </div>
 

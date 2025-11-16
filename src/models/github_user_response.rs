@@ -1,12 +1,14 @@
-use anyhow::{Result, bail};
+use anyhow::Result;
 use chrono::{DateTime, Utc};
 use log::debug;
-use reqwest::header::{AUTHORIZATION, CONTENT_TYPE, USER_AGENT};
 use serde::Deserialize;
 use std::collections::HashMap;
 
 use crate::{
-    models::{oauth2_response::OAuth2Response, user::User},
+    config::Config,
+    models::{
+        oauth_user_info_handler::OAuthUserInfoHandler, oauth2_response::OAuth2Response, user::User,
+    },
     utils,
 };
 
@@ -64,9 +66,16 @@ pub struct Plan {
     pub collaborators: u64,
 }
 
-impl GitHubUserResponse {
-    pub fn create_app_user(oauth2_response: &OAuth2Response) -> Result<User> {
-        let user_info = Self::fetch_user_info(&oauth2_response.access_token)?;
+pub struct GitHubUserInfoHandler;
+
+impl OAuthUserInfoHandler<GitHubUserResponse> for GitHubUserInfoHandler {
+    fn user_info_url(&self) -> Result<String> {
+        let config = Config::get()?;
+        Ok(config.oauth2.github.user_info_url)
+    }
+
+    fn create_app_user(&self, oauth2_response: &OAuth2Response) -> Result<User> {
+        let user_info = self.fetch_user_info(&oauth2_response.access_token)?;
         debug!("{user_info:#?}");
 
         let unique_hash = user_info.id;
@@ -85,23 +94,5 @@ impl GitHubUserResponse {
         user.set_auth(oauth2_response)?;
 
         Ok(user)
-    }
-
-    fn fetch_user_info(access_token: &str) -> Result<Self> {
-        let client = reqwest::blocking::Client::new();
-        let response = client
-            .get("https://api.github.com/user")
-            .header(AUTHORIZATION, format!("Bearer {}", access_token))
-            .header(CONTENT_TYPE, "application/json")
-            .header(USER_AGENT, "coko7-aot-2025")
-            .send()?;
-
-        if !response.status().is_success() {
-            bail!("failed to get user: {response:#?}");
-        }
-
-        let res = response.text()?;
-        let res = serde_json::from_str::<Self>(&res)?;
-        Ok(res)
     }
 }

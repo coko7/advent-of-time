@@ -1,32 +1,36 @@
 hostname = "localhost:7878"
 
 [score]
-max_reward = 2025
-exponent = 0.5
+max_reward = 200
+exponent = 0.75
+divider = 1440
 
 [oauth2.discord]
 enabled = true
 authorize_url = "https://discord.com/oauth2/authorize"
 token_url = "https://discord.com/api/oauth2/token"
-client_id = "{{DISCORD_CLIENT_ID}}"
+user_info_url = "https://discord.com/api/v10/users/@me"
+client_id = "{{CLIENT_ID}}"
 redirect_uri = "https://localhost:12345/auth/oauth2-redirect/discord"
-secret = "{{DISCORD_SECRET}}"
+secret = "{{CLIENT_SECRET}}"
 scope = "identify"
 
 [oauth2.github]
 enabled = true
 authorize_url = "https://github.com/login/oauth/authorize"
 token_url = "https://github.com/login/oauth/access_token"
-client_id = "{{GITHUB_CLIENT_ID}}"
+user_info_url = "https://api.github.com/user"
+client_id = "{{CLIENT_ID}}"
 redirect_uri = "https://localhost:12345/auth/oauth2-redirect/github"
-secret = "{{GITHUB_SECRET}}"
+secret = "{{CLIENT_SECRET}}"
 scope = "user"
 
 [oauth2.microsoft]
 enabled = true
 authorize_url = "https://login.microsoftonline.com/common/oauth2/v2.0/authorize"
 token_url = "https://login.microsoftonline.com/common/oauth2/v2.0/token"
-client_id = "{{MICROSOFT_CLIENT_ID}}"
+user_info_url = "https://graph.microsoft.com/v1.0/me"
+client_id = "{{CLIENT_ID}}"
 redirect_uri = "https://localhost:12345/auth/oauth2-redirect/microsoft"
-secret = "{{MICROSOFT_SECRET}}"
+secret = "{{CLIENT_SECRET}}"
 scope = "User.Read offline_access"

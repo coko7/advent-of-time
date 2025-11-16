@@ -1,6 +1,6 @@
 use anyhow::{Context, Result, bail, ensure};
 use chrono::Utc;
-use log::{debug, trace};
+use log::{debug, info, trace};
 use rtfw_http::{
     http::{HttpRequest, HttpResponse, HttpResponseBuilder, response_status_codes::HttpStatusCode},
     router::RoutingData,
@@ -62,18 +62,33 @@ pub fn post_guess(request: &HttpRequest, _routing_data: &RoutingData) -> Result<
     let guess_value = request_data.guess;
     match parse_guess_value(&guess_value) {
         Ok(guess) => {
-            // info!("received guess for day {day}: {guess:?}");
+            info!("received guess for day {day}: {guess:?}");
             let picture = PictureMetaRepository::get_picture(day)?
                 .context("picture should exist this guessed day")?;
 
             ensure!(picture.day() == day);
-            let score = utils::compute_score(&picture, guess)?;
+
+            debug!("guessed time: {:02}:{:02}", guess.0, guess.1);
+            debug!("real time: {}", picture.time_taken);
+
+            let real_time_mins = picture.hours()? * 60 + picture.minutes()?;
+            let guess_time_mins = guess.0 * 60 + guess.1;
+
+            debug!("guessed time: {:02}:{:02}", guess.0, guess.1);
+            debug!("real time: {}", picture.time_taken);
+
+            let diff_mins = (real_time_mins).abs_diff(guess_time_mins);
+            debug!("diff in minutes: {diff_mins}");
+
+            let points = utils::compute_score(&picture, guess)?;
+            debug!("user {} scored {points} points", user.username);
+
             let guess_data = GuessData::new(guess, Utc::now());
             user.guess_data.insert(day, guess_data);
             UserRepository::update_user(user)?;
 
             HttpResponseBuilder::new()
-                .set_json_body(&json!({"points": score}))?
+                .set_json_body(&json!({"points": points}))?
                 .build()
         }
         Err(err) => {

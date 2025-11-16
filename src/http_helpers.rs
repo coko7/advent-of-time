@@ -94,7 +94,7 @@ pub fn get_logged_in_user(request: &HttpRequest) -> Result<Option<User>> {
 
     let refresh_token = user.refresh_token.to_owned().unwrap();
     let oauth2_config = security::get_oauth2_provider_config(&user.oauth_provider)?;
-    let oauth2_res = oauth2::refresh_token(&refresh_token, oauth2_config)?;
+    let oauth2_res = oauth2::refresh_token(&refresh_token, &oauth2_config)?;
     user.set_auth(&oauth2_res)?;
 
     Ok(Some(user))

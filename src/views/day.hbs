@@ -10,7 +10,11 @@
     <body style="text-align: center">
         <header>
             <h1>{{title}}</h1>
-            <h2>Guess today's picture!</h2>
+            {{#if day.guessData}}
+                <h2>Already guessed</h2>
+            {{else}}
+                <h2>Guess today's picture!</h2>
+            {{/if}}
         </header>
 
         <div class="center">

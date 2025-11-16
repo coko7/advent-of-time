@@ -1,7 +1,7 @@
 use anyhow::{Context, Result};
 use chrono::{DateTime, Datelike, FixedOffset, Timelike, Utc};
 use handlebars::Handlebars;
-use log::{debug, warn};
+use log::warn;
 use rand::{SeedableRng, rngs::StdRng, seq::IndexedRandom};
 use regex::Regex;
 use serde::Serialize;
@@ -114,7 +114,7 @@ pub fn render_view<T: Serialize>(name: &str, data: &T) -> Result<String> {
 
 pub fn time_diff_to_points(diff_minutes: u32) -> u32 {
     let config = Config::get().unwrap().score;
-    let ratio = diff_minutes as f64 / (24.0 * 60.0);
+    let ratio = diff_minutes as f64 / (config.divider as f64);
     let result = config.max_reward * (1.0 - ratio.powf(config.exponent));
     result.max(0.0) as u32 // Clamp negative points to zero
 }
@@ -162,15 +162,8 @@ fn is_time_after_6_am_cet(time: DateTime<Utc>) -> bool {
 pub fn compute_score(picture: &Picture, guess: (u32, u32)) -> Result<u32> {
     let real_time_mins = picture.hours()? * 60 + picture.minutes()?;
     let guess_time_mins = guess.0 * 60 + guess.1;
-
-    debug!("guessed time: {:02}:{:02}", guess.0, guess.1);
-    debug!("real time: {}", picture.time_taken);
-
     let diff_mins = (real_time_mins).abs_diff(guess_time_mins);
-    debug!("diff in minutes: {diff_mins}");
-
     let points = time_diff_to_points(diff_mins);
-    debug!("points: {points}");
     Ok(points)
 }
 

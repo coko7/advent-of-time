@@ -12,7 +12,7 @@ pub struct Config {
 
 impl Config {
     pub fn get() -> Result<Config> {
-        let config: Config = toml::from_str(&CONFIG_RAW)?;
+        let config: Config = toml::from_str(CONFIG_RAW)?;
         Ok(config)
     }
 }
@@ -21,6 +21,7 @@ impl Config {
 pub struct ScoreConfig {
     pub max_reward: f64,
     pub exponent: f64,
+    pub divider: u32,
 }
 
 #[derive(Deserialize, Debug)]
@@ -35,6 +36,7 @@ pub struct OAuth2Config {
     pub enabled: bool,
     pub authorize_url: String,
     pub token_url: String,
+    pub user_info_url: String,
     pub client_id: String,
     pub redirect_uri: String,
     pub scope: String,
