@@ -1,0 +1,38 @@
+title = "Advent of Time"
+edition = "Sweden 2025 edition"
+
+[index]
+about = "About"
+profile = "Profile"
+login = "Login"
+logout = "Logout"
+leaderboard = "Leaderboard"
+home = "Home"
+
+[day]
+already_guessed = "Already guessed"
+guess_today = "Guess today's picture!"
+hint_original_date = "Exact date of when this picture was taken"
+hint_location = "Location depicted in the picture"
+hint_your_guess = "Your guess"
+hint_your_points = "Your points"
+check_progress = "Check progress"
+check_point_system = "Check point system"
+submit_text = "Submit"
+login_required = "Please login first in order submit your guess"
+
+[profile]
+day = "Day"
+guess = "Guess"
+points = "Points"
+
+[leaderboard]
+user = "User"
+guesses = "Guesses"
+score = "Score"
+
+[404]
+lost = "Lost"
+
+[messages]
+hello = "Hello, %{name}"

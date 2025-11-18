@@ -23,6 +23,14 @@ pub fn str_to_u64seed(value: &str) -> u64 {
     hasher.finish()
 }
 
+pub fn capitalize(s: &str) -> String {
+    let mut c = s.chars();
+    match c.next() {
+        None => String::new(),
+        Some(f) => f.to_uppercase().collect::<String>() + c.as_str(),
+    }
+}
+
 pub fn generate_username(seed: u64) -> Result<String> {
     let mut rng = StdRng::seed_from_u64(seed);
 

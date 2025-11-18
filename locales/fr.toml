@@ -1,0 +1,12 @@
+title = "Advent of Time"
+edition = "Édition Stockholm 2025"
+
+[index]
+about = "À Propos"
+profile = "Profil"
+login = "Connexion"
+logout = "Se déconnecter"
+leaderboard = "Classement"
+
+[messages]
+hello = "Bonjour, %{name}"

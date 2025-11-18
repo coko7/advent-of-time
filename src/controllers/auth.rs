@@ -1,5 +1,5 @@
 use anyhow::{Context, Result};
-use log::debug;
+use log::{debug, warn};
 use rtfw_http::{
     http::{HttpRequest, HttpResponse, HttpResponseBuilder, response_status_codes::HttpStatusCode},
     router::RoutingData,
@@ -17,7 +17,7 @@ use crate::{
         oauth_user_info_handler::OAuthUserInfoHandler, user::User,
     },
     oauth2, routes, security,
-    utils::{self, Day},
+    utils::{self, Day, capitalize},
 };
 
 pub fn get_login(request: &HttpRequest, _routing_data: &RoutingData) -> Result<HttpResponse> {
@@ -102,11 +102,36 @@ pub fn get_oauth2_login(request: &HttpRequest, routing_data: &RoutingData) -> Re
     }
 }
 
+fn prettify_error(error: &str) -> String {
+    capitalize(error).replace("_", " ")
+}
+
+fn handle_access_token_response_error(request: &HttpRequest) -> Result<HttpResponse> {
+    let error = request.query.get("error").context("error should be set")?;
+    let error_description = request
+        .query
+        .get("error_description")
+        .context("error_description should be set")?;
+
+    warn!("oauth2 authorization response failed: {error} - {error_description}");
+    let data = json!({
+        "error": prettify_error(error),
+        "error_description": error_description.replace("+", " "),
+    });
+
+    let rendered = utils::render_view("oauth2_error", &data)?;
+    HttpResponseBuilder::new().set_html_body(&rendered).build()
+}
+
 fn oauth2_redirect<T: for<'a> Deserialize<'a>>(
     request: &HttpRequest,
     config: &OAuth2Config,
     response_creator: impl OAuthUserInfoHandler<T>,
 ) -> Result<HttpResponse> {
+    if request.query.get("error").is_some() {
+        return handle_access_token_response_error(request);
+    }
+
     let code = request
         .query
         .get("code")

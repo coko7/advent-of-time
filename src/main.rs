@@ -1,5 +1,6 @@
-use log::{LevelFilter, info};
+use log::{LevelFilter, error, info};
 use rtfw_http::{file_server::FileServer, http::HttpMethod, router::Router, web_server::WebServer};
+use rust_i18n::t;
 
 use crate::database::{
     picture_meta_repository::PictureMetaRepository, user_repository::UserRepository,
@@ -15,6 +16,8 @@ mod oauth2;
 mod routes;
 mod security;
 mod utils;
+
+rust_i18n::i18n!("locales");
 
 fn main() -> anyhow::Result<()> {
     env_logger::Builder::new()
@@ -73,6 +76,7 @@ fn main() -> anyhow::Result<()> {
 
     info!("ROUTER: {:#?}", router);
     info!("server listening on: {}", config.hostname);
+    info!("{}", t!("edition", locale = "en"));
 
     let server = WebServer::new(&config.hostname, router)?;
     server.run()
