@@ -1,4 +1,4 @@
-use anyhow::Result;
+use anyhow::{Context, Result};
 use chrono::{DateTime, TimeZone, Utc};
 use log::trace;
 use rtfw_http::http::{
@@ -13,6 +13,64 @@ use crate::{
 };
 
 pub const BEARER_COOKIE: &str = "aot-bearer";
+
+pub fn get_user_locale(request: &HttpRequest) -> Result<Locale> {
+    let acc_lang_value = request
+        .headers
+        .get("Accept-Language")
+        .map(|h| h.value.to_owned())
+        .unwrap_or(String::new());
+
+    let locale = parse_accept_language_query(&acc_lang_value)?
+        .first()
+        .cloned()
+        .context("there should be one")?;
+
+    Ok(locale)
+}
+
+fn parse_accept_language_query(value: &str) -> Result<Vec<Locale>> {
+    Ok(value
+        .split(',')
+        .map(|v| parse_lang_declaration(v.trim()))
+        .collect::<Vec<_>>())
+}
+
+fn parse_lang_declaration(value: &str) -> Locale {
+    if let Some((lang, _weight)) = value.split_once(';') {
+        Locale::from_language_tag(lang)
+    } else {
+        Locale::from_language_tag(value)
+    }
+}
+
+#[derive(Clone)]
+pub enum Locale {
+    English,
+    French,
+}
+
+impl Locale {
+    pub fn from_language_tag(value: &str) -> Locale {
+        let identifier = if let Some((identifier, _region)) = value.split_once('-') {
+            identifier
+        } else {
+            value
+        };
+
+        match identifier {
+            "fr" => Self::French,
+            _ => Self::English,
+        }
+    }
+
+    pub fn to_str(&self) -> String {
+        match self {
+            Locale::English => "en".to_owned(),
+            Locale::French => "fr".to_owned(),
+        }
+    }
+}
 
 pub fn redirect(location: &str) -> Result<HttpResponse> {
     HttpResponseBuilder::new()

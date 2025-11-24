@@ -3,13 +3,13 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Advent Of Time</title>
+        <title>Advent of Time</title>
         <link rel="stylesheet" type="text/css" href="/main.css">
     </head>
     <body>
         <header>
-            <h1><span class="wheel">⏳</span> Advent Of Time <span class="wheel">🎄</span></h1>
-            <h2>Sweden 2025 edition</h2>
+            <h1><span class="wheel">⏳</span> {{i18n.title}} <span class="wheel">🎄</span></h1>
+            <h2>{{i18n.edition}}</h2>
         </header>
 
         <code id="js-block-detect" style="color: red; background-color: black;">
@@ -22,14 +22,14 @@
 
         <main>
             <ul class="navbar">
-                <li><a href="/about"> About</a></li>
+                <li><a href="/about"> {{i18n.about}}</a></li>
                 {{#if authenticated}}
-                    <li><a href="/auth/me"> Profile</a></li>
-                    <li><a href="/auth/logout">󰍃 Logout</a></li>
+                    <li><a href="/auth/me"> {{i18n.profile}}</a></li>
+                    <li><a href="/auth/logout">󰍃 {{i18n.logout}}</a></li>
                 {{else}}
-                    <li><a href="/auth/login">󰍂 Login</a></li>
+                    <li><a href="/auth/login">󰍂 {{i18n.login}}</a></li>
                 {{/if}}
-                <li><a href="/leaderboard"> Leaderboard</a></li>
+                <li><a href="/leaderboard"> {{i18n.leaderboard}}</a></li>
             </ul>
 
             <div class="days">

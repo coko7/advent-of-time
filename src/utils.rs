@@ -4,12 +4,15 @@ use handlebars::Handlebars;
 use log::warn;
 use rand::{SeedableRng, rngs::StdRng, seq::IndexedRandom};
 use regex::Regex;
+use rtfw_http::http::HttpRequest;
+use rust_i18n::t;
 use serde::Serialize;
 use std::collections::hash_map::DefaultHasher;
 use std::hash::{Hash, Hasher};
 use std::{fs, path::PathBuf};
 
 use crate::config::Config;
+use crate::http_helpers;
 use crate::models::picture::Picture;
 
 pub type Day = u32;
@@ -173,6 +176,15 @@ pub fn compute_score(picture: &Picture, guess: (u32, u32)) -> Result<u32> {
     let diff_mins = (real_time_mins).abs_diff(guess_time_mins);
     let points = time_diff_to_points(diff_mins);
     Ok(points)
+}
+
+fn load_i18n(key: &str, locale: &str) -> Result<String> {
+    Ok(t!(key, locale = locale).to_string())
+}
+
+pub fn load_i18n_for_user(translation_key: &str, request: &HttpRequest) -> Result<String> {
+    let user_locale = http_helpers::get_user_locale(request)?;
+    load_i18n(translation_key, &user_locale.to_str())
 }
 
 #[cfg(test)]
