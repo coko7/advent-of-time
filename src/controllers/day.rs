@@ -129,9 +129,43 @@ fn load_day_view(request: &HttpRequest, day: u32) -> Result<String> {
             original_date: picture_meta.original_date,
             location_hint: picture_meta.location,
             guess_data,
-        }
+        },
+        "i18n": I18n::from_request(request),
     });
 
     let rendered = utils::render_view("day", &data)?;
     Ok(rendered)
+}
+
+#[derive(Serialize)]
+struct I18n {
+    already_guessed: String,
+    guess_today: String,
+    hint_original_date: String,
+    hint_location: String,
+    hint_your_guess: String,
+    hint_your_points: String,
+    check_progress: String,
+    check_point_system: String,
+    submit_text: String,
+    login_required: String,
+}
+
+impl I18n {
+    fn from_request(request: &HttpRequest) -> I18n {
+        I18n {
+            already_guessed: utils::load_i18n_for_user("day.already_guessed", request).unwrap(),
+            guess_today: utils::load_i18n_for_user("day.guess_today", request).unwrap(),
+            hint_original_date: utils::load_i18n_for_user("day.hint_original_date", request)
+                .unwrap(),
+            hint_location: utils::load_i18n_for_user("day.hint_location", request).unwrap(),
+            hint_your_guess: utils::load_i18n_for_user("day.hint_your_guess", request).unwrap(),
+            hint_your_points: utils::load_i18n_for_user("day.hint_your_points", request).unwrap(),
+            check_progress: utils::load_i18n_for_user("day.check_progress", request).unwrap(),
+            check_point_system: utils::load_i18n_for_user("day.check_point_system", request)
+                .unwrap(),
+            submit_text: utils::load_i18n_for_user("day.submit_text", request).unwrap(),
+            login_required: utils::load_i18n_for_user("day.login_required", request).unwrap(),
+        }
+    }
 }

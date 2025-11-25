@@ -5,7 +5,6 @@ use rand::seq::IndexedRandom;
 use rtfw_http::http::response_status_codes::HttpStatusCode;
 use rtfw_http::http::{HttpRequest, HttpResponse, HttpResponseBuilder};
 use rtfw_http::router::RoutingData;
-use rust_i18n::t;
 use serde::Serialize;
 use serde_json::json;
 use std::fs;
@@ -28,22 +27,10 @@ pub fn get_index(request: &HttpRequest, _routing_data: &RoutingData) -> Result<H
         "authenticated": authenticated,
         "greetMsg": greet_msg,
         "days": get_calendar_entries(user.as_ref()),
-        "i18n": get_i18n(request),
+        "i18n": I18n::from_request(request),
     });
     let rendered = utils::render_view("index", &data)?;
     HttpResponseBuilder::new().set_html_body(&rendered).build()
-}
-
-fn get_i18n(request: &HttpRequest) -> I18n {
-    I18n {
-        title: load_i18n_for_user("title", request).unwrap(),
-        edition: load_i18n_for_user("edition", request).unwrap(),
-        about: load_i18n_for_user("index.about", request).unwrap(),
-        profile: load_i18n_for_user("index.profile", request).unwrap(),
-        logout: load_i18n_for_user("index.logout", request).unwrap(),
-        login: load_i18n_for_user("index.login", request).unwrap(),
-        leaderboard: load_i18n_for_user("index.leaderboard", request).unwrap(),
-    }
 }
 
 #[derive(Serialize)]
@@ -55,6 +42,20 @@ struct I18n {
     logout: String,
     login: String,
     leaderboard: String,
+}
+
+impl I18n {
+    fn from_request(request: &HttpRequest) -> I18n {
+        I18n {
+            title: load_i18n_for_user("title", request).unwrap(),
+            edition: load_i18n_for_user("edition", request).unwrap(),
+            about: load_i18n_for_user("index.about", request).unwrap(),
+            profile: load_i18n_for_user("index.profile", request).unwrap(),
+            logout: load_i18n_for_user("index.logout", request).unwrap(),
+            login: load_i18n_for_user("index.login", request).unwrap(),
+            leaderboard: load_i18n_for_user("index.leaderboard", request).unwrap(),
+        }
+    }
 }
 
 #[derive(Serialize)]

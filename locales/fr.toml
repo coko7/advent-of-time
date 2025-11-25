@@ -8,5 +8,30 @@ login = "Connexion"
 logout = "Se déconnecter"
 leaderboard = "Classement"
 
+[day]
+already_guessed = "Déja deviné"
+guess_today = "Devine la photo!"
+hint_original_date = "Exact date of when this picture was taken"
+hint_location = "Location depicted in the picture"
+hint_your_guess = "Votre réponse"
+hint_your_points = "Votre points"
+check_progress = "Voir le score"
+check_point_system = "Calcul du score"
+submit_text = "Valider"
+login_required = "Connectez-vous pour participer"
+
 [messages]
 hello = "Bonjour, %{name}"
+
+[profile]
+title = "Profil"
+day = "Jour"
+guess = "Réponse"
+points = "Points"
+score = "Score"
+
+[leaderboard]
+title = "Classement"
+user = "Joueur"
+guesses = "Jours devinés"
+score = "Score"

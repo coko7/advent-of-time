@@ -19,7 +19,7 @@ pub fn get_user_locale(request: &HttpRequest) -> Result<Locale> {
         .headers
         .get("Accept-Language")
         .map(|h| h.value.to_owned())
-        .unwrap_or(String::new());
+        .unwrap_or_default();
 
     let locale = parse_accept_language_query(&acc_lang_value)?
         .first()

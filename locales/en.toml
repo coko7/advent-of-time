@@ -22,11 +22,14 @@ submit_text = "Submit"
 login_required = "Please login first in order submit your guess"
 
 [profile]
+title = "Profile"
 day = "Day"
 guess = "Guess"
 points = "Points"
+score = "Score"
 
 [leaderboard]
+title = "Leaderboard"
 user = "User"
 guesses = "Guesses"
 score = "Score"

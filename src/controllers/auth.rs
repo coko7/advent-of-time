@@ -56,6 +56,7 @@ pub fn get_me(request: &HttpRequest, _routing_data: &RoutingData) -> Result<Http
         "username": &user.username,
         "days": get_user_guess_days(&user),
         "total_score": user.get_total_score()?,
+        "i18n": I18n::from_request(request),
     });
     let rendered = utils::render_view("profile", &data)?;
     HttpResponseBuilder::new().set_html_body(&rendered).build()
@@ -128,7 +129,7 @@ fn oauth2_redirect<T: for<'a> Deserialize<'a>>(
     config: &OAuth2Config,
     response_creator: impl OAuthUserInfoHandler<T>,
 ) -> Result<HttpResponse> {
-    if request.query.get("error").is_some() {
+    if request.query.contains_key("error") {
         return handle_access_token_response_error(request);
     }
 
@@ -185,4 +186,25 @@ pub fn get_discord_oauth2_redirect(
 ) -> Result<HttpResponse> {
     let config = security::get_oauth2_provider_config("discord")?;
     oauth2_redirect(request, &config, DiscordUserInfoHandler {})
+}
+
+#[derive(Serialize)]
+struct I18n {
+    title: String,
+    day: String,
+    guess: String,
+    points: String,
+    score: String,
+}
+
+impl I18n {
+    fn from_request(request: &HttpRequest) -> I18n {
+        I18n {
+            title: utils::load_i18n_for_user("profile.title", request).unwrap(),
+            day: utils::load_i18n_for_user("profile.day", request).unwrap(),
+            guess: utils::load_i18n_for_user("profile.guess", request).unwrap(),
+            points: utils::load_i18n_for_user("profile.points", request).unwrap(),
+            score: utils::load_i18n_for_user("profile.score", request).unwrap(),
+        }
+    }
 }

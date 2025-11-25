@@ -3,13 +3,13 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>AOT | Profile</title>
+        <title>AOT | {{i18n.title}}</title>
         <link rel="stylesheet" type="text/css" href="/main.css">
         <link rel="stylesheet" type="text/css" href="/profile.css">
     </head>
     <body style="text-align: center">
         <header>
-            <h1>Profile</h1>
+            <h1>{{i18n.title}}</h1>
             <h2>{{username}}</h2>
         </header>
 
@@ -17,9 +17,9 @@
             <table>
 
                 <tr>
-                    <th>Day</th>
-                    <th>Guess</th>
-                    <th>Points</th>
+                    <th>{{i18n.day}}</th>
+                    <th>{{i18n.guess}}</th>
+                    <th>{{i18n.points}}</th>
                 </tr>
 
                 {{#each days}}
@@ -35,7 +35,7 @@
                     </tr>
                 {{/each}}
             </table>
-            <p>Score: {{total_score}} ⭐</p>
+            <p>{{i18n.score}}: {{total_score}} ⭐</p>
         </div>
 
         <br/>

@@ -1,11 +1,9 @@
-use log::{LevelFilter, error, info};
-use rtfw_http::{file_server::FileServer, http::HttpMethod, router::Router, web_server::WebServer};
-use rust_i18n::t;
-
 use crate::database::{
     picture_meta_repository::PictureMetaRepository, user_repository::UserRepository,
 };
 use config::Config;
+use log::{LevelFilter, info};
+use rtfw_http::{file_server::FileServer, http::HttpMethod, router::Router, web_server::WebServer};
 
 mod config;
 mod controllers;
@@ -76,7 +74,6 @@ fn main() -> anyhow::Result<()> {
 
     info!("ROUTER: {:#?}", router);
     info!("server listening on: {}", config.hostname);
-    info!("{}", t!("edition", locale = "en"));
 
     let server = WebServer::new(&config.hostname, router)?;
     server.run()

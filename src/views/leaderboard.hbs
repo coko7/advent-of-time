@@ -3,21 +3,21 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>AOT | Leaderboard</title>
+        <title>AOT | {{i18n.title}}</title>
         <link rel="stylesheet" type="text/css" href="/main.css">
         <link rel="stylesheet" type="text/css" href="/leaderboard.css">
     </head>
     <body style="text-align: center">
         <header>
-            <h1>Leaderboard</h1>
+            <h1>{{i18n.title}}</h1>
         </header>
 
         <div class="center">
             <table>
                 <tr>
-                    <th>User</th>
-                    <th>Guesses</th>
-                    <th>Score</th>
+                    <th>{{i18n.user}}</th>
+                    <th>{{i18n.guesses}}</th>
+                    <th>{{i18n.score}}</th>
                 </tr>
 
                 {{#each users}}

@@ -3,17 +3,17 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>AOT | {{title}}</title>
+        <title>AOT | {{i18n.title}}</title>
         <link rel="stylesheet" type="text/css" href="/main.css">
         <link rel="stylesheet" type="text/css" href="/day.css">
     </head>
     <body style="text-align: center">
         <header>
-            <h1>{{title}}</h1>
+            <h1>{{i18n.title}}</h1>
             {{#if day.guessData}}
-                <h2>Already guessed</h2>
+                <h2>{{i18n.already_guessed}}</h2>
             {{else}}
-                <h2>Guess today's picture!</h2>
+                <h2>{{i18n.guess_today}}</h2>
             {{/if}}
         </header>
 
@@ -21,31 +21,31 @@
             <input type="hidden" name="day-token" value="{{day.id}}">
             <img width="500" src="{{day.imgSrc}}" alt="{{day.imgAlt}}">
             <div class="hints">
-                <p title="Exact date of when this picture was taken"> {{day.originalDate}}</p>
-                <p title="Location depicted in the picture"> {{day.locationHint}}</p>
+                <p title="{{i18n.hint_original_date}}"> {{day.originalDate}}</p>
+                <p title="{{i18n.hint_location}}"> {{day.locationHint}}</p>
             </div>
 
             {{#if authenticated}}
                 {{#if day.guessData}}
                     <div class="my-guess">
-                        <p title="Your guess"> {{day.guessData.time}}</p>
-                        <p title="Your points"> {{day.guessData.points}}</p>
+                        <p title="{{i18n.hint_your_guess}}"> {{day.guessData.time}}</p>
+                        <p title="{{i18n.hint_your_points}}"> {{day.guessData.points}}</p>
                     </div>
-                    <p><a href="/auth/me"> Check progress </a></p>
+                    <p><a href="/auth/me"> {{i18n.check_progress}} </a></p>
                 {{else}}
                     <form id="guess-daily-picture">
                         <p>
-                            <label for="time-guess">Your guess:</label>
+                            <label for="time-guess">{{i18n.hint_your_guess}}:</label>
                             <input id="time-guess" type="time" name="time-guess" type="text" />
                         </p>
-                        <button type="submit">Submit</button>
+                        <button type="submit">{{i18n.submit_text}}</button>
                     </form>
                 {{/if}}
             {{else}}
-                <p>Please <a href="/auth/login">login</a> first in order submit your guess</p>
+                <p><a href="/auth/login">{{i18n.login_required}}</a></p>
             {{/if}}
 
-            <p><a href="/about#faq-point-system"> Check point system </a></p>
+            <p><a href="/about#faq-point-system"> {{i18n.check_point_system}} </a></p>
         </div>
 
         <a id="link-go-home" href="/">/home </a>
