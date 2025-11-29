@@ -29,7 +29,7 @@ document.addEventListener("DOMContentLoaded", function () {
       .then((data) => {
         // const time = getTimeLabel();
         const points = data.points;
-        alert(`you got ${points} points`);
+        alert(`${points} points!`);
         globalThis.location.reload();
       })
       .catch((error) => {

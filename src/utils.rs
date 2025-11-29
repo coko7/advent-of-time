@@ -81,12 +81,11 @@ pub fn is_day_valid(day: u32) -> bool {
 
     let now = Utc::now();
     let now_day = now.day();
-    let _month = now.month();
+    let month = now.month();
 
-    warn!("make sure to re-enable the december check");
-    // if month != 12 {
-    //     return false;
-    // }
+    if month != 12 {
+        return false;
+    }
 
     if day > now_day {
         return false;
@@ -154,6 +153,13 @@ pub fn get_current_day() -> Day {
 }
 
 pub fn is_picture_released(utc_now: DateTime<Utc>, picture_day: Day) -> bool {
+    let now = Utc::now();
+    let month = now.month();
+
+    if month != 12 {
+        return false;
+    }
+
     if picture_day > utc_now.day() {
         false
     } else if picture_day < utc_now.day() {

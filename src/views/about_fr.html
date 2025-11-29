@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>AOT | À propos</title>
+        <link rel="stylesheet" type="text/css" href="/main.css">
+        <link rel="stylesheet" type="text/css" href="/about.css">
+    </head>
+    <body style="text-align: center">
+        <header>
+            <h1>À propos</h1>
+        </header>
+
+        <main>
+            <div class="faq-section">
+                <h2>📷 Le Jeu</h2>
+                <p>
+                    L'<b>Advent of Time</b>, ou <i>"Devine quelle heure il est à Stockholm"</i> est un jeu qui se déroule du 1er au 25 décembre. <br/>
+                    Chaque jour, une nouvelle photo sera débloquée. Ce sera une photo d'un endroit en Suède. <br/>
+                    Le but du jeu c'est de deviner l'heure exacte à laquelle la photo a été prise (HH:mm). <br/>
+                    Plus le temps supposé est proche de l'heure réelle sur la photo, plus tu gagneras de points. <br/>
+                </p>
+            </div>
+
+            <div class="faq-section">
+                <h2>🖼️ Les photos</h2>
+                <p>
+                    Chaque nouvelle photo sera débloquée à 6h00 (CET / UTC+1) <i>(inutile d'essayer de deviner avant)</i>.<br/>
+                    Toutes les photos ont été prises à Stockholm <i>(et peut-être d'autres endroits en Suède).</i> <br/>
+                    La date originale ainsi qu'un indice sur l'emplacement seront indiqués sous chaque photo.
+                </p>
+            </div>
+
+            <div class="faq-section">
+                <h2>🤔 Deviner l'heure</h2>
+                <p>
+                    Pour deviner, il te faut choisir un créneau horaire (HH:mm) en utilisant le formulaire la photo. <br/>
+                    Tu recevras des points en fonction de la proximité entre l'heure saisie et l'heure réelle à laquelle la photo a été prise. <br/>
+                    Pour en savoir plus sur comment les points sont attribués, jette un coup d'œil au <a href="#faq-point-system">💯 Calcul du score</a>.
+                </p>
+            </div>
+
+            <div class="faq-section" id="faq-point-system">
+                <h2>💯 Calcul du score</h2>
+                <p> 
+                    Le score pour chaque saisie est calculé en se basant sur la différence entre l'heure supposée et l'heure réelle à laquelle la photo a été prise. <br/>
+                    La formule suivante est utilisée pour le calcul:
+                </p>
+                <!-- LaTeX: $$\text{points} = \text{max_points} \times \left( 1 - \left( \frac{\text{diff}}{\text{divider}} \right)^{\text{exponent}} \right)$$-->
+                <p><img id="score-formula" src="/static/images/score_formula.svg" /></p>
+                <p>Où :</p>
+                <ul>
+                    <li><b>max_points :</b> le nombre maximum de points qu'il est possible d'avoir</li>
+                    <li><b>diff :</b> la différence en minutes entre l'heure réelle et l'heure supposée</li>
+                    <li><b>divider :</b> le nombre total de minutes dans une journée</li>
+                    <li><b>exponent :</b> un nombre magique pour rendre les choses moins linéaires</li>
+                </ul>
+                <div>
+                    <span><b>⚠️ Choses importantes à noter :</b></span>
+                    <p>
+                        Si l'heure réelle de la photo est 01:00 et que tu devines 23:00, ce sera considéré comme une différence de 22 heures (pas 2 heures!).<br/>
+                        Garde bien ça en tête avant de soumettre ton temps.
+                    </p>
+                </div>
+            </div>
+
+            <div class="faq-section">
+                <h2>🎁 Qu'y a-t-il à gagner?</h2>
+                <p>J'avoue j'y ai pas réfléchi... Si le jeu marche bien, je vais réfléchir à un prix pour le gagnant.</p>
+            </div>
+
+            <div class="faq-section">
+                <h2>🚀 Faut combien d'ordinateurs quantiques pour faire tourner ce site?</h2>
+                <p>
+                    Aucun. <br/>
+                    C'est juste du HTML (+<a href="https://handlebarsjs.com/">Handlebars</a>), du CSS <i>et un chouïa de JavaScript</i>.<br/>
+                    Pas de framework particulier. Pas de React, d'Angular ou je ne sais quelle autre usine à gaz. <br/>
+                    Tout le contenu est servi par un serveur Web écrit en <a href="https://rust-lang.org/">Rust</a>.<br/>
+                    Tout le code source de l'application web est disponible <a href="https://github.com/Coko7/advent-of-time">ici</a>.<br/>
+                    Pour ce qui est du serveur Web, c'est une implémentation <b>maison</b> <s><i>et non sécurisée</i></s> de HTTP 1.1: <a href="https://github.com/RTFW-rs/rtfw-http-rs">RTFW-http-rs</a><br/>
+                    Pour le reverse-proxy, j'ai sélectionné <a href="https://caddyserver.com/">Caddy</a> pour sa rapidité et le fait qu'il soit facile à configurer.<br/>
+                </p>
+            </div>
+
+            <div class="faq-section">
+                <h2>💀 Est-ce qu'on peut faire planter le site?</h2>
+                <p>
+                    Ça devrait pas être trop dur. <br/>
+                    Étant donné que <a href="https://github.com/RTFW-rs/rtfw-http-rs">RTFW-http-rs</a> est probablement (la/l'une) des implémentations HTTP les plus catastrophiques en matière de sécurité.<br/>
+                    Cecei dit, ça m'arrangerait pas mal si vous pouviez y aller mollo avec cette instance.<br>
+                    Je peux pas garantir de pouvoir remettre le site en ligne immédiatement si il crash et çà pourrait gâcher l'expérience des autres joueurs.<br/>
+                </p>
+            </div>
+
+            <div class="faq-section">
+                <h2>✨ Inspirations</h2>
+                <p>
+                    Je me suis beaucoup inspiré de l'<a href="https://adventofcode.com/">Advent of Code</a> en termes d'interface et d'expérience utilisateur. <br/>
+                    Je recommande vraiment d'y jeter un coup d'œil si t'aimes la programmation et les puzzles.
+                </p>
+            </div>
+        </main>
+
+        <a id="link-go-home" href="/">/home </a>
+    </body>
+</html>

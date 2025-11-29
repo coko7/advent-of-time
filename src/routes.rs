@@ -80,8 +80,13 @@ fn get_calendar_entries(user: Option<&User>) -> Vec<CalendarEntry> {
         .collect()
 }
 
-pub fn get_about(_request: &HttpRequest, _routing_data: &RoutingData) -> Result<HttpResponse> {
-    let body = utils::load_view("about")?;
+pub fn get_about(request: &HttpRequest, _routing_data: &RoutingData) -> Result<HttpResponse> {
+    let user_locale = http_helpers::get_user_locale(request)?;
+    let view_name = match user_locale {
+        http_helpers::Locale::French => "about_fr",
+        _ => "about",
+    };
+    let body = utils::load_view(view_name)?;
     HttpResponseBuilder::new().set_html_body(&body).build()
 }
 
