@@ -1,3 +1,5 @@
+use std::cmp;
+
 use anyhow::{Context, Result};
 use log::{debug, warn};
 use rtfw_http::{
@@ -71,7 +73,7 @@ struct UserGuessDay {
 }
 
 fn get_user_guess_days(user: &User) -> Vec<UserGuessDay> {
-    let current_day = utils::get_current_day();
+    let current_day = cmp::min(25, utils::get_current_day());
     (1..=current_day)
         .map(|d| {
             user.guess_data.get(&d).map_or(
