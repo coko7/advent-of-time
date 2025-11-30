@@ -8,6 +8,27 @@
     --important-color: #f38ba8;
 }
 
+#daily-pic {
+    max-width: 100%;
+    /* Default for mobile/small screens */
+    height: auto;
+    display: block;
+}
+
+@media (min-width: 768px) {
+    #daily-pic {
+        max-width: 600px;
+        /* Tablet and up */
+    }
+}
+
+@media (min-width: 992px) {
+    #daily-pic {
+        max-width: 800px;
+        /* Desktop */
+    }
+}
+
 .hints,
 .my-guess {
     display: flex;

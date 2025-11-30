@@ -62,7 +62,6 @@ pub fn get_day_picture(_request: &HttpRequest, routing_data: &RoutingData) -> Re
             .build();
     }
 
-    error!("TODO: make sure to remove EXIF from those images");
     let picture = PictureMetaRepository::get_picture(day)?.context("should exist")?;
     let picture_path = picture.get_full_path();
     // let time_component = utils::extract_time_from_image(&img.path);
