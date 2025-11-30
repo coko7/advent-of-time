@@ -7,6 +7,8 @@ You get points based on how well your perform.
 
 The webapp relies on the [rtfw-http-rs](https://github.com/RTFW-rs/rtfw-http-rs) HTTP server.
 
+A live version of this webapp can be found at [aot.coko7.fr](https://aot.coko7.fr)
+
 ## Configuration
 
 Use [config.toml](./config.toml) to configure things like the hostname, OAuth2, etc.
