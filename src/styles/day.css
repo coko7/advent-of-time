@@ -29,6 +29,29 @@
     }
 }
 
+@media (min-width: 992px) {
+    #daily-pic {
+        max-width: 800px;
+        /* Desktop */
+    }
+}
+
+@media (min-width: 1920px) {
+    #daily-pic {
+        max-width: 1200px;
+    }
+
+    /* 2K screens */
+}
+
+@media (min-width: 2560px) {
+    #daily-pic {
+        max-width: 1600px;
+    }
+
+    /* 4K screens */
+}
+
 .hints,
 .my-guess {
     display: flex;
