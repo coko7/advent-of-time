@@ -21,11 +21,13 @@
                 </tr>
 
                 {{#each users}}
-                    <tr>
-                        <td>{{this.username}}</td>
-                        <td>{{this.guesses}} / {{@root.total_days}}</td>
-                        <td>{{this.score}} ⭐</td>
-                    </tr>
+                    {{#unless this.hidden}}
+                        <tr>
+                            <td>{{this.username}}</td>
+                            <td>{{this.guesses}} / {{@root.total_days}}</td>
+                            <td>{{this.score}} ⭐</td>
+                        </tr>
+                    {{/unless}}
                 {{/each}}
             </table>
         </div>

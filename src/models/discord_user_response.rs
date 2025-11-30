@@ -53,6 +53,7 @@ impl OAuthUserInfoHandler<DiscordUserResponse> for DiscordUserInfoHandler {
             access_token_expire_at: None,
             refresh_token: None,
             oauth_provider: "discord".to_string(),
+            hidden: false,
         };
         user.set_auth(oauth2_response)?;
 

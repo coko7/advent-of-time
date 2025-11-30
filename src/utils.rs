@@ -1,7 +1,6 @@
 use anyhow::{Context, Result};
 use chrono::{DateTime, Datelike, FixedOffset, Timelike, Utc};
 use handlebars::Handlebars;
-use log::warn;
 use rand::{SeedableRng, rngs::StdRng, seq::IndexedRandom};
 use regex::Regex;
 use rtfw_http::http::HttpRequest;

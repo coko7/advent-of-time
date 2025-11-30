@@ -19,6 +19,7 @@ pub struct User {
     pub access_token_expire_at: Option<DateTime<Utc>>,
     pub refresh_token: Option<String>,
     pub oauth_provider: String,
+    pub hidden: bool,
 }
 
 impl User {

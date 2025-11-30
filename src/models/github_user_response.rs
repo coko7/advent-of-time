@@ -90,6 +90,7 @@ impl OAuthUserInfoHandler<GitHubUserResponse> for GitHubUserInfoHandler {
             access_token_expire_at: None,
             refresh_token: None,
             oauth_provider: "github".to_string(),
+            hidden: false,
         };
         user.set_auth(oauth2_response)?;
 
