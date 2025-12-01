@@ -4,7 +4,7 @@ json_file="data/picures-generated-$(date +%Y%m%d_%H%M%S).json"
 echo '[]' > "$json_file"
 
 pictures=$(fd . -e jpg data/raw/)
-id=0
+id=1
 
 for picture in $pictures; do
     filename=$(basename "$picture")

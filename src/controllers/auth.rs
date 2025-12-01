@@ -1,13 +1,13 @@
-use std::cmp;
-
 use anyhow::{Context, Result};
 use log::{debug, warn};
 use rtfw_http::{
     http::{HttpRequest, HttpResponse, HttpResponseBuilder, response_status_codes::HttpStatusCode},
     router::RoutingData,
 };
+use rust_i18n::t;
 use serde::{Deserialize, Serialize};
 use serde_json::json;
+use std::cmp;
 
 use crate::{
     config::OAuth2Config,
@@ -27,8 +27,12 @@ pub fn get_login(request: &HttpRequest, _routing_data: &RoutingData) -> Result<H
         return redirect("/auth/me");
     }
 
-    let body = utils::load_view("login")?;
-    HttpResponseBuilder::new().set_html_body(&body).build()
+    let data = json!({
+        "i18n": LoginI18n::from_request(request).unwrap(),
+    });
+
+    let rendered = utils::render_view("login", &data)?;
+    HttpResponseBuilder::new().set_html_body(&rendered).build()
 }
 
 pub fn get_logout(request: &HttpRequest, _routing_data: &RoutingData) -> Result<HttpResponse> {
@@ -58,7 +62,7 @@ pub fn get_me(request: &HttpRequest, _routing_data: &RoutingData) -> Result<Http
         "username": &user.username,
         "days": get_user_guess_days(&user),
         "total_score": user.get_total_score()?,
-        "i18n": I18n::from_request(request),
+        "i18n": ProfileI18n::from_request(request).unwrap(),
     });
     let rendered = utils::render_view("profile", &data)?;
     HttpResponseBuilder::new().set_html_body(&rendered).build()
@@ -191,7 +195,7 @@ pub fn get_discord_oauth2_redirect(
 }
 
 #[derive(Serialize)]
-struct I18n {
+struct ProfileI18n {
     title: String,
     day: String,
     guess: String,
@@ -199,14 +203,31 @@ struct I18n {
     score: String,
 }
 
-impl I18n {
-    fn from_request(request: &HttpRequest) -> I18n {
-        I18n {
-            title: utils::load_i18n_for_user("profile.title", request).unwrap(),
-            day: utils::load_i18n_for_user("profile.day", request).unwrap(),
-            guess: utils::load_i18n_for_user("profile.guess", request).unwrap(),
-            points: utils::load_i18n_for_user("profile.points", request).unwrap(),
-            score: utils::load_i18n_for_user("profile.score", request).unwrap(),
-        }
+impl ProfileI18n {
+    fn from_request(request: &HttpRequest) -> Result<ProfileI18n> {
+        let user_locale = http_helpers::get_user_locale(request)?.to_str();
+        Ok(ProfileI18n {
+            title: t!("profile.title", locale = user_locale).to_string(),
+            day: t!("profile.day", locale = user_locale).to_string(),
+            guess: t!("profile.guess", locale = user_locale).to_string(),
+            points: t!("profile.points", locale = user_locale).to_string(),
+            score: t!("profile.score", locale = user_locale).to_string(),
+        })
+    }
+}
+
+#[derive(Serialize)]
+struct LoginI18n {
+    title: String,
+    login_with: String,
+}
+
+impl LoginI18n {
+    fn from_request(request: &HttpRequest) -> Result<LoginI18n> {
+        let user_locale = http_helpers::get_user_locale(request)?.to_str();
+        Ok(LoginI18n {
+            title: t!("auth.title", locale = user_locale).to_string(),
+            login_with: t!("auth.login_with", locale = user_locale).to_string(),
+        })
     }
 }

@@ -3,11 +3,12 @@ use rtfw_http::{
     http::{HttpRequest, HttpResponse, HttpResponseBuilder},
     router::RoutingData,
 };
+use rust_i18n::t;
 use serde::Serialize;
 use serde_json::json;
 use std::cmp;
 
-use crate::{database::user_repository::UserRepository, models::user::User, utils};
+use crate::{database::user_repository::UserRepository, http_helpers, models::user::User, utils};
 
 #[derive(Debug, Serialize)]
 struct LeaderboardUserEntry {
@@ -37,7 +38,7 @@ pub fn get_leaderboard(request: &HttpRequest, _routing_data: &RoutingData) -> Re
     let data = json!({
         "total_days": total_days,
         "users": get_leaderboard_users(&users),
-        "i18n": I18n::from_request(request)
+        "i18n": I18n::from_request(request).unwrap()
     });
     let rendered = utils::render_view("leaderboard", &data)?;
     HttpResponseBuilder::new().set_html_body(&rendered).build()
@@ -49,15 +50,20 @@ struct I18n {
     user: String,
     guesses: String,
     score: String,
+    text_max_score: String,
+    check_point_system: String,
 }
 
 impl I18n {
-    fn from_request(request: &HttpRequest) -> I18n {
-        I18n {
-            title: utils::load_i18n_for_user("leaderboard.title", request).unwrap(),
-            user: utils::load_i18n_for_user("leaderboard.user", request).unwrap(),
-            guesses: utils::load_i18n_for_user("leaderboard.guesses", request).unwrap(),
-            score: utils::load_i18n_for_user("leaderboard.score", request).unwrap(),
-        }
+    fn from_request(request: &HttpRequest) -> Result<I18n> {
+        let user_locale = http_helpers::get_user_locale(request)?.to_str();
+        Ok(I18n {
+            title: t!("leaderboard.title", locale = user_locale).to_string(),
+            user: t!("leaderboard.user", locale = user_locale).to_string(),
+            guesses: t!("leaderboard.guesses", locale = user_locale).to_string(),
+            score: t!("leaderboard.score", locale = user_locale).to_string(),
+            text_max_score: t!("leaderboard.text_max_score", locale = user_locale).to_string(),
+            check_point_system: t!("day.check_point_system", locale = user_locale).to_string(),
+        })
     }
 }

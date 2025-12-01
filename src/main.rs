@@ -2,7 +2,7 @@ use crate::database::{
     picture_meta_repository::PictureMetaRepository, user_repository::UserRepository,
 };
 use config::Config;
-use log::{LevelFilter, info};
+use log::{LevelFilter, info, warn};
 use rtfw_http::{file_server::FileServer, http::HttpMethod, router::Router, web_server::WebServer};
 
 mod config;
@@ -74,6 +74,16 @@ fn main() -> anyhow::Result<()> {
 
     info!("ROUTER: {:#?}", router);
     info!("server listening on: {}", config.hostname);
+
+    if config.dev_mode {
+        let msg = "
+======================================================
+
+DEV MODE is enabled, make sure to turn it off on Prod!
+
+======================================================";
+        warn!("{msg}");
+    }
 
     let server = WebServer::new(&config.hostname, router)?;
     server.run()

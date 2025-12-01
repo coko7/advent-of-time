@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>AOT | {{i18n.title}}</title>
+        <link rel="stylesheet" type="text/css" href="/main.css">
+    </head>
+    <body style="text-align: center">
+        <main class="center">
+            <header>
+                <h1>{{i18n.title}}</h1>
+            </header>
+
+            <p>{{i18n.login_with}}:</p>
+            <div>
+                <p>
+                    <a href="/auth/oauth2?idp=discord"> Discord</a>
+                </p>
+                <p>
+                    <a href="/auth/oauth2?idp=github"> GitHub</a>
+                </p>
+                <p>
+                    <a href="/auth/oauth2?idp=microsoft"> Microsoft</a>
+                </p>
+                <!-- <p> -->
+                <!--     <a href="/auth/oauth2?idp=google"> Login With Google</a> -->
+                <!-- </p> -->
+            </div>
+        </main>
+
+        <br/>
+        <a id="link-go-home" href="/">/home </a>
+    </body>
+</html>

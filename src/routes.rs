@@ -5,12 +5,13 @@ use rand::seq::IndexedRandom;
 use rtfw_http::http::response_status_codes::HttpStatusCode;
 use rtfw_http::http::{HttpRequest, HttpResponse, HttpResponseBuilder};
 use rtfw_http::router::RoutingData;
+use rust_i18n::t;
 use serde::Serialize;
 use serde_json::json;
 use std::fs;
 
 use crate::models::user::User;
-use crate::utils::{Day, load_i18n_for_user};
+use crate::utils::Day;
 use crate::{http_helpers, utils};
 
 pub fn get_index(request: &HttpRequest, _routing_data: &RoutingData) -> Result<HttpResponse> {
@@ -27,7 +28,7 @@ pub fn get_index(request: &HttpRequest, _routing_data: &RoutingData) -> Result<H
         "authenticated": authenticated,
         "greetMsg": greet_msg,
         "days": get_calendar_entries(user.as_ref()),
-        "i18n": I18n::from_request(request),
+        "i18n": I18n::from_request(request).unwrap(),
     });
     let rendered = utils::render_view("index", &data)?;
     HttpResponseBuilder::new().set_html_body(&rendered).build()
@@ -45,16 +46,17 @@ struct I18n {
 }
 
 impl I18n {
-    fn from_request(request: &HttpRequest) -> I18n {
-        I18n {
-            title: load_i18n_for_user("title", request).unwrap(),
-            edition: load_i18n_for_user("edition", request).unwrap(),
-            about: load_i18n_for_user("index.about", request).unwrap(),
-            profile: load_i18n_for_user("index.profile", request).unwrap(),
-            logout: load_i18n_for_user("index.logout", request).unwrap(),
-            login: load_i18n_for_user("index.login", request).unwrap(),
-            leaderboard: load_i18n_for_user("index.leaderboard", request).unwrap(),
-        }
+    fn from_request(request: &HttpRequest) -> Result<I18n> {
+        let user_locale = http_helpers::get_user_locale(request)?.to_str();
+        Ok(I18n {
+            title: t!("title", locale = user_locale).to_string(),
+            edition: t!("edition", locale = user_locale).to_string(),
+            about: t!("index.about", locale = user_locale).to_string(),
+            profile: t!("index.profile", locale = user_locale).to_string(),
+            logout: t!("index.logout", locale = user_locale).to_string(),
+            login: t!("index.login", locale = user_locale).to_string(),
+            leaderboard: t!("index.leaderboard", locale = user_locale).to_string(),
+        })
     }
 }
 

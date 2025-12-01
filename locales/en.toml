@@ -19,7 +19,7 @@ hint_your_points = "Your points"
 check_progress = "Check progress"
 check_point_system = "Check point system"
 submit_text = "Submit"
-login_required = "Please login first in order submit your guess"
+login_required = "Please login in order to submit your guess"
 
 [profile]
 title = "Profile"
@@ -28,14 +28,16 @@ guess = "Guess"
 points = "Points"
 score = "Score"
 
+[auth]
+title = "Login"
+login_with = "Login with"
+
 [leaderboard]
 title = "Leaderboard"
 user = "User"
 guesses = "Guesses"
 score = "Score"
+text_max_score = "Each picture is worth a maximum of <b>200</b> ⭐ <br/>The maximum final score is: <b>5,000 ⭐</b>"
 
 [404]
 lost = "Lost"
-
-[messages]
-hello = "Hello, %{name}"

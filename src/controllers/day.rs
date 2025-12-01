@@ -1,9 +1,10 @@
 use anyhow::{Context, Result};
-use log::{debug, error};
+use log::debug;
 use rtfw_http::{
     http::{HttpRequest, HttpResponse, HttpResponseBuilder, response_status_codes::HttpStatusCode},
     router::RoutingData,
 };
+use rust_i18n::t;
 use serde::Serialize;
 use serde_json::json;
 use std::fs;
@@ -129,7 +130,7 @@ fn load_day_view(request: &HttpRequest, day: u32) -> Result<String> {
             location_hint: picture_meta.location,
             guess_data,
         },
-        "i18n": I18n::from_request(request),
+        "i18n": I18n::from_request(request).unwrap(),
     });
 
     let rendered = utils::render_view("day", &data)?;
@@ -151,20 +152,19 @@ struct I18n {
 }
 
 impl I18n {
-    fn from_request(request: &HttpRequest) -> I18n {
-        I18n {
-            already_guessed: utils::load_i18n_for_user("day.already_guessed", request).unwrap(),
-            guess_today: utils::load_i18n_for_user("day.guess_today", request).unwrap(),
-            hint_original_date: utils::load_i18n_for_user("day.hint_original_date", request)
-                .unwrap(),
-            hint_location: utils::load_i18n_for_user("day.hint_location", request).unwrap(),
-            hint_your_guess: utils::load_i18n_for_user("day.hint_your_guess", request).unwrap(),
-            hint_your_points: utils::load_i18n_for_user("day.hint_your_points", request).unwrap(),
-            check_progress: utils::load_i18n_for_user("day.check_progress", request).unwrap(),
-            check_point_system: utils::load_i18n_for_user("day.check_point_system", request)
-                .unwrap(),
-            submit_text: utils::load_i18n_for_user("day.submit_text", request).unwrap(),
-            login_required: utils::load_i18n_for_user("day.login_required", request).unwrap(),
-        }
+    fn from_request(request: &HttpRequest) -> Result<I18n> {
+        let user_locale = http_helpers::get_user_locale(request)?.to_str();
+        Ok(I18n {
+            already_guessed: t!("day.already_guessed", locale = user_locale).to_string(),
+            guess_today: t!("day.guess_today", locale = user_locale).to_string(),
+            hint_original_date: t!("day.hint_original_date", locale = user_locale).to_string(),
+            hint_location: t!("day.hint_location", locale = user_locale).to_string(),
+            hint_your_guess: t!("day.hint_your_guess", locale = user_locale).to_string(),
+            hint_your_points: t!("day.hint_your_points", locale = user_locale).to_string(),
+            check_progress: t!("day.check_progress", locale = user_locale).to_string(),
+            check_point_system: t!("day.check_point_system", locale = user_locale).to_string(),
+            submit_text: t!("day.submit_text", locale = user_locale).to_string(),
+            login_required: t!("day.login_required", locale = user_locale).to_string(),
+        })
     }
 }

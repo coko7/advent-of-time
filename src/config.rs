@@ -6,6 +6,7 @@ pub const CONFIG_RAW: &str = include_str!("../config.toml");
 #[derive(Deserialize)]
 pub struct Config {
     pub hostname: String,
+    pub dev_mode: bool,
     pub oauth2: OAuth2Providers,
     pub score: ScoreConfig,
 }

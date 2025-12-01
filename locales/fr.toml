@@ -7,6 +7,7 @@ profile = "Profil"
 login = "Connexion"
 logout = "Se déconnecter"
 leaderboard = "Classement"
+home = "Accueil"
 
 [day]
 already_guessed = "Déja deviné"
@@ -20,9 +21,6 @@ check_point_system = "Calcul du score"
 submit_text = "Valider"
 login_required = "Connectez-vous pour participer"
 
-[messages]
-hello = "Bonjour, %{name}"
-
 [profile]
 title = "Profil"
 day = "Jour"
@@ -30,8 +28,16 @@ guess = "Réponse"
 points = "Points"
 score = "Score"
 
+[auth]
+title = "Authentification"
+login_with = "Se connecter avec"
+
 [leaderboard]
 title = "Classement"
 user = "Joueur"
 guesses = "Jours devinés"
 score = "Score"
+text_max_score = "Chaque photo peut rapporter un maximum de <b>200</b> ⭐ <br/>Le score maximal est donc: <b>5 000 ⭐</b>"
+
+[404]
+lost = "Perdu"
