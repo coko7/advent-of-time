@@ -20,34 +20,12 @@
     font-family: "0xProto Nerd Font";
 }
 
-main {
-    text-align: center;
-}
-
-main>.navbar {
-    display: flex;
-    flex-direction: row;
-    justify-items: center;
-    align-items: center;
-    align-content: center;
-    justify-content: center;
-}
-
-.navbar {
-    margin: 2em;
-}
-
-.navbar>li>a {
-    padding: 0.25em;
-    margin: 0em 0.5em;
-}
-
 body {
     background-color: var(--background-color);
     color: var(--text-color);
 }
 
-div.center {
+.center {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -81,28 +59,8 @@ a:hover {
 
 }
 
-span.wheel {
-    font-size: 40px;
-    display: inline-block;
-    color: #C694FF;
-    cursor: pointer;
-    transition: transform 0.2s;
-}
-
-span.wheel:hover {
-    animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-    100% {
-        transform: rotate(360deg);
-    }
-}
-
-#greeting {
+#go-home {
     text-align: center;
-    font-size: 2em;
-    font-style: italic;
 }
 
 a#link-go-home {
@@ -136,11 +94,6 @@ input[type="file"]::file-selector-button,
     transition: 0.1s all;
     border-radius: 10px;
     font-size: 1em;
-}
-
-.day-link.guessed {
-    color: var(--sub-header-color);
-    border: 1px solid var(--sub-header-color);
 }
 
 button:disabled {
@@ -180,14 +133,6 @@ ul {
 }
 
 @media screen and (max-width: 650px) {
-    ul#file-list>li {
-        min-width: 350px !important;
-    }
-
-    ul#file-list>li>span.file-upload-date {
-        display: none;
-    }
-
     textarea {
         max-width: 350px;
     }
@@ -199,144 +144,4 @@ ul {
 
 img {
     border: 2px solid var(--accent-color);
-}
-
-input[type="file"]::file-selector-button {
-    font-size: 1.2em;
-}
-
-ul#file-list {
-    display: flex;
-    flex-direction: column;
-    flex-wrap: wrap;
-    align-items: center;
-    padding-left: 0;
-}
-
-ul#file-list>li {
-    min-width: 600px;
-    max-width: 1200px;
-    margin: 0.5em 0;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: flex-start;
-    border: 2px solid var(--accent-color);
-    padding: 1em;
-    border-radius: 10px;
-}
-
-ul#file-list>li>span.file-name {
-    text-align: left;
-    flex-grow: 2;
-}
-
-ul#file-list>li>button {
-    width: auto;
-    padding: 0 0.5em;
-    margin: 0 0.25em;
-    border: none;
-    background-color: var(--background-color);
-    color: var(--text-color);
-    font-size: 1.2em;
-}
-
-ul#file-list>li>button.delete-file:hover {
-    color: var(--important-color) !important;
-}
-
-ul#file-list>li>button:hover {
-    color: var(--accent-color) !important;
-}
-
-ul#file-list>li>span.file-upload-date {
-    justify-self: flex-end;
-}
-
-/* ul#file-list>li>a { */
-/*     display: flex; */
-/*     flex: 1 1 0px; */
-/*     border: 2px solid var(--accent-color); */
-/*     padding: 1em; */
-/*     border-radius: 10px; */
-/* } */
-
-p#status {
-    color: var(--header-color);
-}
-
-form#file-upload-form {
-    display: flex;
-    flex-direction: column;
-    text-align: center;
-    max-width: 700px;
-    padding: 2em;
-    border-radius: 10px;
-    border: 2px dashed var(--header-color);
-}
-
-form#file-upload-form>input {
-    margin: 1em 0;
-}
-
-img.profile {
-    max-width: 400px;
-    border: 2px solid var(--accent-color);
-    border-radius: 10px;
-}
-
-div.user-info {
-    text-align: left;
-}
-
-div.user-info span {
-    color: var(--accent-color);
-}
-
-div.faq-section {
-    justify-content: center;
-    justify-items: center;
-    align-items: center;
-    text-align: left;
-}
-
-a.day-link {
-    display: inline-block;
-    width: 2em;
-    height: 2em;
-}
-
-a.day-link.disabled {
-    background-color: transparent;
-    color: gray;
-    opacity: 0.25;
-    pointer-events: none;
-}
-
-.days {
-    margin: auto;
-    justify-content: center;
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    margin-top: 8em;
-    /* 5 boxes + 4 gaps */
-    width: calc(6 * 60px);
-}
-
-.days a {
-    flex: 0 0 30px;
-    /* display: inline-block; */
-    line-height: 30px;
-    text-align: center;
-    padding: 1em;
-    border: 1px solid var(--accent-color);
-}
-
-.faq-section {
-    margin: 2em 0;
-}
-
-.faq-section h2 {
-    color: var(--sub-header-color)
 }

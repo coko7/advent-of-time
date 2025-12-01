@@ -8,25 +8,10 @@
     --important-color: #f38ba8;
 }
 
-table {
-    font-family: arial, sans-serif;
-    border-collapse: collapse;
-}
-
-td,
-th {
-    border: 1px solid var(--surface-color);
+main {
+    margin: 0;
+    padding: 0;
     text-align: left;
-    padding: 8px;
-}
-
-th {
-    /* text-align: center; */
-    color: var(--accent-color);
-}
-
-tr:nth-child(even) {
-    /* background-color: var(--sub-header-color); */
 }
 
 ul {
@@ -38,4 +23,12 @@ ul {
     max-width: 500px;
     width: 100%;
     height: auto;
+}
+
+.faq-section {
+    margin: 2em 0;
+}
+
+.faq-section h2 {
+    color: var(--sub-header-color)
 }
