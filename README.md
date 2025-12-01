@@ -21,3 +21,19 @@ cargo run
 ```
 This should start the server on the specific hostname you configured.
 The default is: http://127.0.0.1:7878
+
+## Reverse-proxy configuration
+
+Via Caddy:
+```Caddyfile
+aot.coko7.fr {
+    reverse_proxy localhost:7878
+
+    # Cache font in user browser to prevent re-downloading each time
+    @font path /static/fonts/0xProto/0xProtoNerdFont-Regular.ttf
+
+    header @font {
+        Cache-Control "public, max-age=31536000, immutable"
+    }
+}
+```
