@@ -21,31 +21,32 @@ table tr>td:first-child::before {
 
 table tr:nth-child(2)>td:nth-child(2) {
     background: linear-gradient(90deg,
-            /* gold */
-            #d4af37,
-            /* light gold */
-            #f7d774,
-            /* pink */
-            #ff87c7,
-            /* hot pink-red */
-            #ff4f70,
-            /* deep red */
-            #d41414);
+            /* sharp gold */
+            #e6c045,
+            /* bright punchy gold highlight */
+            #ffd86b,
+            /* retro-punk aqua (cyan neon) */
+            #00f7ff,
+            /* deeper electric aqua */
+            #00c8ff,
+            /* neon magenta/pink */
+            #ff39c6,
+            /* hot neon pink */
+            #ff0099);
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
 
     text-shadow:
         /* gold glow */
-        0 0 6px rgba(255, 200, 100, 0.6),
-        /* pink glow */
-        0 0 10px rgba(255, 105, 180, 0.5),
-        /* red glow */
-        0 0 14px rgba(255, 50, 50, 0.4);
+        0 0 6px rgba(255, 230, 150, 0.6),
+        /* aqua neon */
+        0 0 10px rgba(0, 255, 255, 0.55),
+        /* neon pink */
+        0 0 16px rgba(255, 0, 170, 0.55);
 }
 
 table tr:nth-child(2)>td:nth-child(2)::before {
-
     font-size: 20px;
     background: linear-gradient(135deg, #FFD700 0%, #FFED4E 25%, #C5A028 50%, #FFD700 75%, #FFED4E 100%);
     -webkit-background-clip: text;
@@ -55,6 +56,13 @@ table tr:nth-child(2)>td:nth-child(2)::before {
     text-shadow: none;
 }
 
+table tr:nth-child(3)>td:nth-child(2) {
+    background: linear-gradient(135deg, #E8E8E8 0%, #FFFFFF 25%, #9E9E9E 50%, #E8E8E8 75%, #FFFFFF 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
 table tr:nth-child(3)>td:nth-child(2)::before {
     font-size: 20px;
     background: linear-gradient(135deg, #E8E8E8 0%, #FFFFFF 25%, #9E9E9E 50%, #E8E8E8 75%, #FFFFFF 100%);
@@ -62,6 +70,13 @@ table tr:nth-child(3)>td:nth-child(2)::before {
     -webkit-text-fill-color: transparent;
     background-clip: text;
     content: " ";
+}
+
+table tr:nth-child(4)>td:nth-child(2) {
+    background: linear-gradient(135deg, #CD7F32 0%, #E6A157 25%, #8B5A2B 50%, #CD7F32 75%, #E6A157 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
 }
 
 table tr:nth-child(4)>td:nth-child(2)::before {
