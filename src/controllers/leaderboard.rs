@@ -12,6 +12,7 @@ use crate::{database::user_repository::UserRepository, http_helpers, models::use
 
 #[derive(Debug, Serialize)]
 struct LeaderboardUserEntry {
+    pub rank: String,
     pub username: String,
     pub guesses: usize,
     pub score: u32,
@@ -21,17 +22,23 @@ struct LeaderboardUserEntry {
 fn get_leaderboard_users(users: &[User]) -> Vec<LeaderboardUserEntry> {
     users
         .iter()
-        .map(|u| LeaderboardUserEntry {
-            username: u.username.to_owned(),
-            guesses: u.guess_data.len(),
-            hidden: u.hidden,
-            score: u.get_total_score().unwrap(),
+        .enumerate()
+        .map(|(rank, user)| LeaderboardUserEntry {
+            rank: (rank + 1).to_string(),
+            username: user.username.to_owned(),
+            guesses: user.guess_data.len(),
+            hidden: user.hidden,
+            score: user.get_total_score().unwrap(),
         })
         .collect::<Vec<_>>()
 }
 
 pub fn get_leaderboard(request: &HttpRequest, _routing_data: &RoutingData) -> Result<HttpResponse> {
-    let mut users = UserRepository::get_all_users()?;
+    let mut users = UserRepository::get_all_users()?
+        .iter()
+        .filter(|u| !u.hidden)
+        .cloned()
+        .collect::<Vec<_>>();
     users.sort_by_key(|u| cmp::Reverse(u.get_total_score().unwrap()));
 
     let total_days = utils::get_current_day();
@@ -47,6 +54,7 @@ pub fn get_leaderboard(request: &HttpRequest, _routing_data: &RoutingData) -> Re
 #[derive(Serialize)]
 struct I18n {
     title: String,
+    rank: String,
     user: String,
     guesses: String,
     score: String,
@@ -59,6 +67,7 @@ impl I18n {
         let user_locale = http_helpers::get_user_locale(request)?.to_str();
         Ok(I18n {
             title: t!("leaderboard.title", locale = user_locale).to_string(),
+            rank: t!("leaderboard.rank", locale = user_locale).to_string(),
             user: t!("leaderboard.user", locale = user_locale).to_string(),
             guesses: t!("leaderboard.guesses", locale = user_locale).to_string(),
             score: t!("leaderboard.score", locale = user_locale).to_string(),

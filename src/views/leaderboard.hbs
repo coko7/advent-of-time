@@ -16,6 +16,7 @@
             <p>{{{i18n.text_max_score}}}</p>
             <table>
                 <tr>
+                    <th>{{i18n.rank}}</th>
                     <th>{{i18n.user}}</th>
                     <th>{{i18n.guesses}}</th>
                     <th>{{i18n.score}}</th>
@@ -24,6 +25,7 @@
                 {{#each users}}
                     {{#unless this.hidden}}
                         <tr>
+                            <td>{{this.rank}}</td>
                             <td>{{this.username}}</td>
                             <td>{{this.guesses}} / {{@root.total_days}}</td>
                             <td>{{this.score}} ⭐</td>
