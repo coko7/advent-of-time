@@ -7,7 +7,6 @@ use rtfw_http::{
 use rust_i18n::t;
 use serde::{Deserialize, Serialize};
 use serde_json::json;
-use std::cmp;
 
 use crate::{
     config::OAuth2Config,
@@ -16,10 +15,10 @@ use crate::{
     models::{
         discord_user_response::DiscordUserInfoHandler, github_user_response::GitHubUserInfoHandler,
         microsoft_user_response::MicrosoftUserInfoHandler,
-        oauth_user_info_handler::OAuthUserInfoHandler, user::User,
+        oauth_user_info_handler::OAuthUserInfoHandler,
     },
     oauth2, routes, security,
-    utils::{self, Day, capitalize},
+    utils::{self, capitalize},
 };
 
 pub fn get_login(request: &HttpRequest, _routing_data: &RoutingData) -> Result<HttpResponse> {
@@ -28,7 +27,7 @@ pub fn get_login(request: &HttpRequest, _routing_data: &RoutingData) -> Result<H
     }
 
     let data = json!({
-        "i18n": LoginI18n::from_request(request).unwrap(),
+        "i18n": I18n::from_request(request).unwrap(),
     });
 
     let rendered = utils::render_view("login", &data)?;
@@ -50,52 +49,6 @@ pub fn get_logout(request: &HttpRequest, _routing_data: &RoutingData) -> Result<
         .set_cookie(clear_bearer_cookie)
         .set_header("Location", "/")
         .build()
-}
-
-pub fn get_me(request: &HttpRequest, _routing_data: &RoutingData) -> Result<HttpResponse> {
-    let user = match http_helpers::get_logged_in_user(request)? {
-        Some(user) => user,
-        None => return redirect("/auth/login"),
-    };
-
-    let data = json!({
-        "username": &user.username,
-        "days": get_user_guess_days(&user),
-        "total_score": user.get_total_score()?,
-        "i18n": ProfileI18n::from_request(request).unwrap(),
-    });
-    let rendered = utils::render_view("profile", &data)?;
-    HttpResponseBuilder::new().set_html_body(&rendered).build()
-}
-
-#[derive(Debug, Serialize)]
-struct UserGuessDay {
-    pub day: Day,
-    pub guessed: bool,
-    pub time: String,
-    pub points: u32,
-}
-
-fn get_user_guess_days(user: &User) -> Vec<UserGuessDay> {
-    let current_day = cmp::min(25, utils::get_current_day());
-    (1..=current_day)
-        .map(|d| {
-            user.guess_data.get(&d).map_or(
-                UserGuessDay {
-                    day: d,
-                    guessed: false,
-                    time: String::new(),
-                    points: 0,
-                },
-                |guess| UserGuessDay {
-                    day: d,
-                    guessed: true,
-                    time: guess.time(),
-                    points: user.get_points(d).unwrap(),
-                },
-            )
-        })
-        .collect()
 }
 
 pub fn get_oauth2_login(request: &HttpRequest, routing_data: &RoutingData) -> Result<HttpResponse> {
@@ -195,37 +148,15 @@ pub fn get_discord_oauth2_redirect(
 }
 
 #[derive(Serialize)]
-struct ProfileI18n {
-    title: String,
-    day: String,
-    guess: String,
-    points: String,
-    score: String,
-}
-
-impl ProfileI18n {
-    fn from_request(request: &HttpRequest) -> Result<ProfileI18n> {
-        let user_locale = http_helpers::get_user_locale(request)?.to_str();
-        Ok(ProfileI18n {
-            title: t!("profile.title", locale = user_locale).to_string(),
-            day: t!("profile.day", locale = user_locale).to_string(),
-            guess: t!("profile.guess", locale = user_locale).to_string(),
-            points: t!("profile.points", locale = user_locale).to_string(),
-            score: t!("profile.score", locale = user_locale).to_string(),
-        })
-    }
-}
-
-#[derive(Serialize)]
-struct LoginI18n {
+struct I18n {
     title: String,
     login_with: String,
 }
 
-impl LoginI18n {
-    fn from_request(request: &HttpRequest) -> Result<LoginI18n> {
+impl I18n {
+    fn from_request(request: &HttpRequest) -> Result<I18n> {
         let user_locale = http_helpers::get_user_locale(request)?.to_str();
-        Ok(LoginI18n {
+        Ok(I18n {
             title: t!("auth.title", locale = user_locale).to_string(),
             login_with: t!("auth.login_with", locale = user_locale).to_string(),
         })

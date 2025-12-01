@@ -97,7 +97,7 @@ th {
 
 th {
     /* text-align: center; */
-    color: var(--accent-color);
+    color: var(--sub-header-color)
 }
 
 tr:nth-child(even) {

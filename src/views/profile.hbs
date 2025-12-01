@@ -10,12 +10,15 @@
     <body style="text-align: center">
         <header>
             <h1>{{i18n.title}}</h1>
-            <h2>{{username}}</h2>
         </header>
 
         <div class="center">
-            <table>
+           <article id="profile">
+                <p id="username"><span>{{i18n.generated_username}}:</span> {{username}}</p>
+                <p id="account"><span>{{i18n.account}}:</span> {{account_name}}</p>
+            </article>
 
+            <table>
                 <tr>
                     <th>{{i18n.day}}</th>
                     <th>{{i18n.guess}}</th>
@@ -24,7 +27,7 @@
 
                 {{#each days}}
                     <tr>
-                        <td><a href="/day/{{this.day}}">Day {{this.day}}</a></td>
+                        <td><a href="/day/{{this.day}}"> {{this.day}}</a></td>
                         {{#if this.guessed}}
                             <td>{{this.time}}</td>
                             <td>{{this.points}} ⭐</td>

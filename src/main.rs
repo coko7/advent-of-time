@@ -62,7 +62,7 @@ fn main() -> anyhow::Result<()> {
             "/auth/oauth2-redirect/github",
             controllers::auth::get_github_oauth2_redirect,
         )?
-        .get("/auth/me", controllers::auth::get_me)?
+        .get("/auth/me", controllers::profile::get_me)?
         .get("/leaderboard", controllers::leaderboard::get_leaderboard)?
         // day
         .get("/day/:id", controllers::day::get_single_day)?
