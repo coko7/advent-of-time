@@ -89,9 +89,10 @@ pub struct DayDto {
     pub id: Day,
     pub img_src: String,
     pub img_alt: String,
-    pub original_date: String,
+    pub date_hint: String,
     pub location_hint: Option<String>,
     pub guess_data: Option<GuessDataDto>,
+    pub real_time: Option<String>,
 }
 
 #[derive(Serialize, Debug)]
@@ -119,6 +120,12 @@ fn load_day_view(request: &HttpRequest, day: u32) -> Result<String> {
         _ => None,
     };
 
+    let solution_time = if guess_data.is_some() {
+        Some(picture_meta.time_taken.clone())
+    } else {
+        None
+    };
+
     let data = json!({
         "title": &format!("Day {day}"),
         "authenticated": authenticated,
@@ -126,9 +133,10 @@ fn load_day_view(request: &HttpRequest, day: u32) -> Result<String> {
             id: day,
             img_src: day_img_src,
             img_alt: format!("Image for day {day}"),
-            original_date: picture_meta.original_date,
+            date_hint: picture_meta.original_date,
             location_hint: picture_meta.location,
             guess_data,
+            real_time: solution_time,
         },
         "i18n": I18n::from_request(request).unwrap(),
     });
@@ -143,6 +151,7 @@ struct I18n {
     guess_today: String,
     hint_original_date: String,
     hint_location: String,
+    hint_real_time: String,
     hint_your_guess: String,
     hint_your_points: String,
     check_progress: String,
@@ -159,6 +168,7 @@ impl I18n {
             guess_today: t!("day.guess_today", locale = user_locale).to_string(),
             hint_original_date: t!("day.hint_original_date", locale = user_locale).to_string(),
             hint_location: t!("day.hint_location", locale = user_locale).to_string(),
+            hint_real_time: t!("day.hint_real_time", locale = user_locale).to_string(),
             hint_your_guess: t!("day.hint_your_guess", locale = user_locale).to_string(),
             hint_your_points: t!("day.hint_your_points", locale = user_locale).to_string(),
             check_progress: t!("day.check_progress", locale = user_locale).to_string(),

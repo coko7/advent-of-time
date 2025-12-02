@@ -9,6 +9,7 @@ use serde_json::json;
 use std::cmp;
 
 use crate::{
+    database::picture_meta_repository::PictureMetaRepository,
     http_helpers,
     models::user::User,
     utils::{self, Day},
@@ -36,6 +37,7 @@ struct UserGuessDay {
     pub day: Day,
     pub guessed: bool,
     pub time: String,
+    pub real_time: Option<String>,
     pub points: u32,
 }
 
@@ -48,12 +50,19 @@ fn get_user_guess_days(user: &User) -> Vec<UserGuessDay> {
                     day: d,
                     guessed: false,
                     time: String::new(),
+                    real_time: None,
                     points: 0,
                 },
                 |guess| UserGuessDay {
                     day: d,
                     guessed: true,
                     time: guess.time(),
+                    real_time: Some(
+                        PictureMetaRepository::get_picture(d)
+                            .expect("pic repo should be accessible")
+                            .expect(&format!("there should be a pic for this day: {d}"))
+                            .time_taken,
+                    ),
                     points: user.get_points(d).unwrap(),
                 },
             )
@@ -69,6 +78,7 @@ struct I18n {
     account: String,
     day: String,
     guess: String,
+    real_time: String,
     points: String,
     score: String,
 }
@@ -83,6 +93,7 @@ impl I18n {
             account: t!("profile.account", locale = user_locale).to_string(),
             day: t!("profile.day", locale = user_locale).to_string(),
             guess: t!("profile.guess", locale = user_locale).to_string(),
+            real_time: t!("profile.real_time", locale = user_locale).to_string(),
             points: t!("profile.points", locale = user_locale).to_string(),
             score: t!("profile.score", locale = user_locale).to_string(),
         })

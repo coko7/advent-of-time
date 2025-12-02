@@ -43,6 +43,7 @@ struct I18n {
     logout: String,
     login: String,
     leaderboard: String,
+    next_unlock: String,
 }
 
 impl I18n {
@@ -56,6 +57,7 @@ impl I18n {
             logout: t!("index.logout", locale = user_locale).to_string(),
             login: t!("index.login", locale = user_locale).to_string(),
             leaderboard: t!("index.leaderboard", locale = user_locale).to_string(),
+            next_unlock: t!("index.next_unlock", locale = user_locale).to_string(),
         })
     }
 }

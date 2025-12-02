@@ -21,18 +21,23 @@
             <table>
                 <tr>
                     <th>{{i18n.day}}</th>
+                    <th>{{i18n.real_time}}</th>
                     <th>{{i18n.guess}}</th>
                     <th>{{i18n.points}}</th>
                 </tr>
 
                 {{#each days}}
                     <tr>
-                        <td><a href="/day/{{this.day}}"> {{this.day}}</a></td>
+                        <td>
+                            <a href="/day/{{this.day}}"> {{this.day}}</a>
+                        </td>
                         {{#if this.guessed}}
+                            <td>{{this.real_time}}</td>
                             <td>{{this.time}}</td>
                             <td>{{this.points}} ⭐</td>
                         {{else}}
                             <td>-</td>
+                            <td></td>
                             <td>0 ⚫</td>
                         {{/if}}
                     </tr>

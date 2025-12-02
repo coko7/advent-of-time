@@ -21,15 +21,18 @@
             <input type="hidden" name="day-token" value="{{day.id}}">
             <img id="daily-pic" src="{{day.imgSrc}}" alt="{{day.imgAlt}}">
             <div class="hints">
-                <p title="{{i18n.hint_original_date}}"> {{day.originalDate}}</p>
+                <p title="{{i18n.hint_original_date}}"> {{day.dateHint}}</p>
+                {{#if day.realTime}}
+                    <p id="real-time" title="{{i18n.hint_real_time}}"> {{day.realTime}}</p>
+                {{/if}}
                 <p title="{{i18n.hint_location}}"> {{day.locationHint}}</p>
             </div>
 
             {{#if authenticated}}
                 {{#if day.guessData}}
                     <div class="my-guess">
-                        <p title="{{i18n.hint_your_guess}}"> {{day.guessData.time}}</p>
-                        <p title="{{i18n.hint_your_points}}"> {{day.guessData.points}}</p>
+                        <p id="guessed-time" title="{{i18n.hint_your_guess}}"> {{day.guessData.time}}</p>
+                        <p id="user-points" title="{{i18n.hint_your_points}}"> {{day.guessData.points}}</p>
                     </div>
                     <p><a href="/auth/me"> {{i18n.check_progress}} </a></p>
                 {{else}}

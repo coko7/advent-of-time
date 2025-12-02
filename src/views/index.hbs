@@ -33,6 +33,10 @@
                 <li><a href="/leaderboard"> {{i18n.leaderboard}}</a></li>
             </ul>
 
+            <div id="unlock-time-text">
+                <p>{{i18n.next_unlock}} <span id="time-left"></span></p>
+            </div>
+
             <div class="days">
                 {{#each days}}
                     {{#if this.released}}

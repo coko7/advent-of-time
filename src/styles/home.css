@@ -63,13 +63,21 @@ a.day-link.disabled {
     border: 1px solid var(--sub-header-color);
 }
 
+#unlock-time-text {
+    margin: 4em 0;
+}
+
+#unlock-time-text span {
+    font-weight: bold;
+    color: var(--sub-header-color);
+}
+
 .days {
     margin: auto;
     justify-content: center;
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
-    margin-top: 8em;
     /* 5 boxes + 4 gaps */
     width: calc(6 * 60px);
 }
