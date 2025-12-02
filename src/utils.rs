@@ -159,10 +159,7 @@ pub fn is_picture_released(utc_now: DateTime<Utc>, picture_day: Day) -> bool {
         return true;
     }
 
-    let now = Utc::now();
-    let month = now.month();
-
-    if month != 12 {
+    if utc_now.month() != 12 {
         return false;
     }
 

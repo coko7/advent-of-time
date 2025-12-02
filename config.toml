@@ -1,4 +1,5 @@
 hostname = "localhost:7878"
+dev_mode = false
 
 [score]
 max_reward = 200
