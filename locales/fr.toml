@@ -1,5 +1,6 @@
 title = "Advent of Time"
 edition = "Édition Stockholm 2025"
+check_point_system = "Calcul du score"
 
 [index]
 about = "À Propos"
@@ -19,7 +20,6 @@ hint_location = "Indice de localisation"
 hint_your_guess = "Votre réponse"
 hint_your_points = "Votre points"
 check_progress = "Voir le score"
-check_point_system = "Calcul du score"
 submit_text = "Valider"
 login_required = "Connectez-vous pour participer"
 

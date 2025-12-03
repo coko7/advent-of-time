@@ -72,7 +72,7 @@ impl I18n {
             guesses: t!("leaderboard.guesses", locale = user_locale).to_string(),
             score: t!("leaderboard.score", locale = user_locale).to_string(),
             text_max_score: t!("leaderboard.text_max_score", locale = user_locale).to_string(),
-            check_point_system: t!("day.check_point_system", locale = user_locale).to_string(),
+            check_point_system: t!("check_point_system", locale = user_locale).to_string(),
         })
     }
 }

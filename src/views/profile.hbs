@@ -18,6 +18,8 @@
                 <p id="account"><span>{{i18n.account}}:</span> {{account_name}}</p>
             </article>
 
+            <p><a href="/about#faq-point-system"> {{i18n.check_point_system}} </a></p>
+
             <table>
                 <tr>
                     <th>{{i18n.day}}</th>
@@ -36,8 +38,8 @@
                             <td>{{this.time}}</td>
                             <td>{{this.points}} ⭐</td>
                         {{else}}
-                            <td>-</td>
                             <td></td>
+                            <td>-</td>
                             <td>0 ⚫</td>
                         {{/if}}
                     </tr>

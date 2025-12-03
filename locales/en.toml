@@ -1,5 +1,6 @@
 title = "Advent of Time"
 edition = "Sweden 2025 edition"
+check_point_system = "Check point system"
 
 [index]
 about = "About"
@@ -19,7 +20,6 @@ hint_location = "Location hint"
 hint_your_guess = "Your guess"
 hint_your_points = "Your points"
 check_progress = "Check progress"
-check_point_system = "Check point system"
 submit_text = "Submit"
 login_required = "Please login in order to submit your guess"
 

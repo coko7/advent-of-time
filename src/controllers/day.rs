@@ -172,7 +172,7 @@ impl I18n {
             hint_your_guess: t!("day.hint_your_guess", locale = user_locale).to_string(),
             hint_your_points: t!("day.hint_your_points", locale = user_locale).to_string(),
             check_progress: t!("day.check_progress", locale = user_locale).to_string(),
-            check_point_system: t!("day.check_point_system", locale = user_locale).to_string(),
+            check_point_system: t!("check_point_system", locale = user_locale).to_string(),
             submit_text: t!("day.submit_text", locale = user_locale).to_string(),
             login_required: t!("day.login_required", locale = user_locale).to_string(),
         })

@@ -81,6 +81,7 @@ struct I18n {
     real_time: String,
     points: String,
     score: String,
+    check_point_system: String,
 }
 
 impl I18n {
@@ -96,6 +97,7 @@ impl I18n {
             real_time: t!("profile.real_time", locale = user_locale).to_string(),
             points: t!("profile.points", locale = user_locale).to_string(),
             score: t!("profile.score", locale = user_locale).to_string(),
+            check_point_system: t!("check_point_system", locale = user_locale).to_string(),
         })
     }
 }
