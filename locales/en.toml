@@ -44,6 +44,7 @@ rank = "Rank"
 user = "User"
 guesses = "Guesses"
 score = "Score"
+accuracy = "Accuracy"
 text_max_score = "Each picture is worth a maximum of <b>200</b> ⭐ <br/>The maximum final score is: <b>5,000 ⭐</b>"
 
 [404]

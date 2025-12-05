@@ -16,6 +16,7 @@ struct LeaderboardUserEntry {
     pub username: String,
     pub guesses: usize,
     pub score: u32,
+    pub accuracy: u32,
     pub hidden: bool,
 }
 
@@ -23,12 +24,16 @@ fn get_leaderboard_users(users: &[User]) -> Vec<LeaderboardUserEntry> {
     users
         .iter()
         .enumerate()
-        .map(|(rank, user)| LeaderboardUserEntry {
-            rank: (rank + 1).to_string(),
-            username: user.username.to_owned(),
-            guesses: user.guess_data.len(),
-            hidden: user.hidden,
-            score: user.get_total_score().unwrap(),
+        .map(|(rank, user)| {
+            let score = user.get_total_score().unwrap();
+            LeaderboardUserEntry {
+                rank: (rank + 1).to_string(),
+                username: user.username.to_owned(),
+                guesses: user.guess_data.len(),
+                hidden: user.hidden,
+                accuracy: score / user.guess_data.len() as u32,
+                score,
+            }
         })
         .collect::<Vec<_>>()
 }
@@ -58,6 +63,7 @@ struct I18n {
     user: String,
     guesses: String,
     score: String,
+    accuracy: String,
     text_max_score: String,
     check_point_system: String,
 }
@@ -71,6 +77,7 @@ impl I18n {
             user: t!("leaderboard.user", locale = user_locale).to_string(),
             guesses: t!("leaderboard.guesses", locale = user_locale).to_string(),
             score: t!("leaderboard.score", locale = user_locale).to_string(),
+            accuracy: t!("leaderboard.accuracy", locale = user_locale).to_string(),
             text_max_score: t!("leaderboard.text_max_score", locale = user_locale).to_string(),
             check_point_system: t!("check_point_system", locale = user_locale).to_string(),
         })

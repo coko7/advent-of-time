@@ -23,6 +23,7 @@
                     <th>{{i18n.user}}</th>
                     <th>{{i18n.guesses}}</th>
                     <th>{{i18n.score}}</th>
+                    <th>{{i18n.accuracy}}</th>
                 </tr>
 
                 {{#each users}}
@@ -32,6 +33,7 @@
                             <td>{{this.username}}</td>
                             <td>{{this.guesses}}</td>
                             <td>{{this.score}} </td>
+                            <td>{{this.accuracy}} 󰣉</td>
                         </tr>
                     {{/unless}}
                 {{/each}}
