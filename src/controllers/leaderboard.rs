@@ -16,7 +16,7 @@ struct LeaderboardUserEntry {
     pub username: String,
     pub guesses: usize,
     pub score: u32,
-    pub accuracy: u32,
+    pub accuracy: Option<u32>,
     pub hidden: bool,
 }
 
@@ -26,13 +26,20 @@ fn get_leaderboard_users(users: &[User]) -> Vec<LeaderboardUserEntry> {
         .enumerate()
         .map(|(rank, user)| {
             let score = user.get_total_score().unwrap();
+            let guesses = user.guess_data.len();
+            let accuracy = if guesses > 0 {
+                Some(score / guesses as u32)
+            } else {
+                None
+            };
+
             LeaderboardUserEntry {
                 rank: (rank + 1).to_string(),
                 username: user.username.to_owned(),
-                guesses: user.guess_data.len(),
-                hidden: user.hidden,
-                accuracy: score / user.guess_data.len() as u32,
+                guesses,
+                accuracy,
                 score,
+                hidden: user.hidden || guesses == 0,
             }
         })
         .collect::<Vec<_>>()
