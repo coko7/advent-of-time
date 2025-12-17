@@ -21,7 +21,6 @@
                 <input type="checkbox" id="chk-show-hidden-players" name="chk-show-hidden-players" value="show-hidden-players">
                 <label for="chk-show-hidden-players">{{i18n.show_hidden_players}}</label><br>
             </p>
-            
             <table>
                 <tr>
                     <th>{{i18n.rank}}</th>
@@ -33,11 +32,11 @@
 
                 {{#each users}}
                     <tr {{#if this.hidden}}class="hidden"{{/if}}>
-                        <td>{{this.rank}}</td>
-                        <td>{{this.username}}</td>
-                        <td>{{this.guesses}} </td>
-                        <td>{{this.score}} </td>
-                        <td>{{this.accuracy}} 󰣉</td>
+                        <td class="rank">{{this.rank}}</td>
+                        <td class="username">{{this.username}}</td>
+                        <td class="guesses">{{this.guesses}} </td>
+                        <td class="score">{{this.score}} </td>
+                        <td class="accuracy">{{this.accuracy}} 󰣉</td>
                     </tr>
                 {{/each}}
             </table>
