@@ -46,6 +46,7 @@ guesses = "Jours devinés"
 score = "Score"
 accuracy = "Précision"
 text_max_score = "Chaque photo peut rapporter un maximum de <b>200</b> ⭐ <br/>Le score maximal est donc: <b>5 000 ⭐</b>"
+show_hidden_players = "Afficher tous les joueurs"
 
 [404]
 lost = "Perdu"

@@ -48,7 +48,6 @@ fn get_leaderboard_users(users: &[User]) -> Vec<LeaderboardUserEntry> {
 pub fn get_leaderboard(request: &HttpRequest, _routing_data: &RoutingData) -> Result<HttpResponse> {
     let mut users = UserRepository::get_all_users()?
         .iter()
-        .filter(|u| !u.hidden)
         .cloned()
         .collect::<Vec<_>>();
     users.sort_by_key(|u| cmp::Reverse(u.get_total_score().unwrap()));
@@ -73,6 +72,7 @@ struct I18n {
     accuracy: String,
     text_max_score: String,
     check_point_system: String,
+    show_hidden_players: String,
 }
 
 impl I18n {
@@ -87,6 +87,8 @@ impl I18n {
             accuracy: t!("leaderboard.accuracy", locale = user_locale).to_string(),
             text_max_score: t!("leaderboard.text_max_score", locale = user_locale).to_string(),
             check_point_system: t!("check_point_system", locale = user_locale).to_string(),
+            show_hidden_players: t!("leaderboard.show_hidden_players", locale = user_locale)
+                .to_string(),
         })
     }
 }
