@@ -26,7 +26,7 @@ table tr>td {
     /* background-clip: text; */
 }
 
-table tr:nth-child(2)>td:nth-child(2) {
+table tr.rank-1>td:nth-child(2) {
     background: linear-gradient(90deg,
             /* sharp gold */
             #e6c045,
@@ -53,14 +53,14 @@ table tr:nth-child(2)>td:nth-child(2) {
         0 0 16px rgba(255, 0, 170, 0.55);
 }
 
-table tr:nth-child(2)>td {
+table tr.rank-1>td {
     background: linear-gradient(135deg, #FFD700 0%, #FFED4E 25%, #C5A028 50%, #FFD700 75%, #FFED4E 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
 }
 
-table tr:nth-child(2)>td:nth-child(2)::before {
+table tr.rank-1>td:nth-child(2)::before {
     font-size: 20px;
     background: linear-gradient(135deg, #FFD700 0%, #FFED4E 25%, #C5A028 50%, #FFD700 75%, #FFED4E 100%);
     -webkit-background-clip: text;
@@ -70,7 +70,7 @@ table tr:nth-child(2)>td:nth-child(2)::before {
     text-shadow: none;
 }
 
-table tr:nth-child(3)>td {
+table tr.rank-2>td {
     background: linear-gradient(135deg, #98a1ac 0%, #d0d5d7 25%, #808fa5 50%, #98a1ac 75%, #d0d5d7 100%);
     /* background: linear-gradient(135deg, #E8E8E8 0%, #FFFFFF 25%, #9E9E9E 50%, #E8E8E8 75%, #FFFFFF 100%); */
     -webkit-background-clip: text;
@@ -78,7 +78,7 @@ table tr:nth-child(3)>td {
     background-clip: text;
 }
 
-table tr:nth-child(3)>td:nth-child(2)::before {
+table tr.rank-2>td:nth-child(2)::before {
     font-size: 20px;
     background: linear-gradient(135deg, #98a1ac 0%, #d0d5d7 25%, #808fa5 50%, #98a1ac 75%, #d0d5d7 100%);
     /* background: linear-gradient(135deg, #E8E8E8 0%, #FFFFFF 25%, #9E9E9E 50%, #E8E8E8 75%, #FFFFFF 100%); */
@@ -88,14 +88,14 @@ table tr:nth-child(3)>td:nth-child(2)::before {
     content: " ";
 }
 
-table tr:nth-child(4)>td {
+table tr.rank-3>td {
     background: linear-gradient(135deg, #CD7F32 0%, #E6A157 25%, #8B5A2B 50%, #CD7F32 75%, #E6A157 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
 }
 
-table tr:nth-child(4)>td:nth-child(2)::before {
+table tr.rank-3>td:nth-child(2)::before {
     font-size: 20px;
     background: linear-gradient(135deg, #CD7F32 0%, #E6A157 25%, #8B5A2B 50%, #CD7F32 75%, #E6A157 100%);
     -webkit-background-clip: text;

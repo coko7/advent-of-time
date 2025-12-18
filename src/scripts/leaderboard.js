@@ -5,11 +5,14 @@ document.addEventListener("DOMContentLoaded", function () {
   function toggleHiddenPlayers() {
     const showHidden = checkboxShowHidden.checked;
     let index = 1;
+
     playerRows.forEach((playerRow) => {
+      removeClassesStartingWith(playerRow, "rank-");
       const isHiddenPlayer = playerRow.classList.contains("hidden");
       if (!isHiddenPlayer || showHidden) {
         playerRow.style.display = "";
         const rankCell = playerRow.querySelector("td.rank");
+        playerRow.classList.add(`rank-${index}`);
         if (rankCell) rankCell.textContent = index++;
       } else {
         playerRow.style.display = "none";
@@ -20,3 +23,11 @@ document.addEventListener("DOMContentLoaded", function () {
   checkboxShowHidden.addEventListener("change", toggleHiddenPlayers);
   toggleHiddenPlayers(); // Initial state
 });
+
+function removeClassesStartingWith(element, prefix) {
+  const classes = element.className.split(" ");
+  const filteredClasses = classes.filter(
+    (className) => !className.startsWith(prefix),
+  );
+  element.className = filteredClasses.join(" ");
+}
