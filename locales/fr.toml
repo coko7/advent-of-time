@@ -10,6 +10,8 @@ logout = "Se déconnecter"
 leaderboard = "Classement"
 home = "Accueil"
 next_unlock = "Temps restant avant la prochaine photo:"
+game_ends_soon_text = "Le jeu prendra fin le 25 Décembre à 23:59 (CET / UTC+1).<br/>Après ça, les scores finaux seront gelés."
+game_over_text = "Le jeu est terminé ! Merci d'avoir joué à cette édition de l'AOT !<br/>Félicitations au gagant de cette année:"
 
 [day]
 already_guessed = "Déja deviné"

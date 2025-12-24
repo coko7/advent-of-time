@@ -46,10 +46,7 @@ fn get_leaderboard_users(users: &[User]) -> Vec<LeaderboardUserEntry> {
 }
 
 pub fn get_leaderboard(request: &HttpRequest, _routing_data: &RoutingData) -> Result<HttpResponse> {
-    let mut users = UserRepository::get_all_users()?
-        .iter()
-        .cloned()
-        .collect::<Vec<_>>();
+    let mut users = UserRepository::get_all_users()?.to_vec();
     users.sort_by_key(|u| cmp::Reverse(u.get_total_score().unwrap()));
 
     let total_days = utils::get_current_day();

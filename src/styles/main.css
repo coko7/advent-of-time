@@ -145,3 +145,46 @@ ul {
 img {
     border: 2px solid var(--accent-color);
 }
+
+#important-game-msg {
+    color: var(--important-color);
+    text-align: center;
+}
+
+#winner-span {
+    font-size: 1.5rem;
+    background: linear-gradient(90deg,
+            /* sharp gold */
+            #e6c045,
+            /* bright punchy gold highlight */
+            #ffd86b,
+            /* retro-punk aqua (cyan neon) */
+            #00f7ff,
+            /* deeper electric aqua */
+            #00c8ff,
+            /* neon magenta/pink */
+            #ff39c6,
+            /* hot neon pink */
+            #ff0099);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+
+    text-shadow:
+        /* gold glow */
+        0 0 6px rgba(255, 230, 150, 0.6),
+        /* aqua neon */
+        0 0 10px rgba(0, 255, 255, 0.55),
+        /* neon pink */
+        0 0 16px rgba(255, 0, 170, 0.55);
+}
+
+#winner-span::before {
+    font-size: 1.5rem;
+    background: linear-gradient(135deg, #FFD700 0%, #FFED4E 25%, #C5A028 50%, #FFD700 75%, #FFED4E 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    content: " ";
+    text-shadow: none;
+}

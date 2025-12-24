@@ -22,12 +22,27 @@ pub fn get_index(request: &HttpRequest, _routing_data: &RoutingData) -> Result<H
         None => "World".to_string(),
     };
 
+    let game_ended = utils::is_game_over();
+    let game_ends_soon = !game_ended && utils::get_days_remaining() <= 5;
+
+    let winner = if game_ended {
+        utils::get_ranked_players_sorted()?
+            .first()
+            .cloned()
+            .map(|u| u.username)
+    } else {
+        None
+    };
+
     let greet_msg = format!("Hello {}!", name);
 
     let data = json!({
         "authenticated": authenticated,
         "greetMsg": greet_msg,
         "days": get_calendar_entries(user.as_ref()),
+        "gameEnded": game_ended,
+        "gameEndsSoon": game_ends_soon,
+        "winnerName": winner,
         "i18n": I18n::from_request(request).unwrap(),
     });
     let rendered = utils::render_view("index", &data)?;
@@ -44,6 +59,8 @@ struct I18n {
     login: String,
     leaderboard: String,
     next_unlock: String,
+    game_ends_soon_text: String,
+    game_over_text: String,
 }
 
 impl I18n {
@@ -58,6 +75,8 @@ impl I18n {
             login: t!("index.login", locale = user_locale).to_string(),
             leaderboard: t!("index.leaderboard", locale = user_locale).to_string(),
             next_unlock: t!("index.next_unlock", locale = user_locale).to_string(),
+            game_ends_soon_text: t!("index.game_ends_soon_text", locale = user_locale).to_string(),
+            game_over_text: t!("index.game_over_text", locale = user_locale).to_string(),
         })
     }
 }

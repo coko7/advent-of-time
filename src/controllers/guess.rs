@@ -22,6 +22,10 @@ pub struct SubmitGuessRequest {
 }
 
 pub fn post_guess(request: &HttpRequest, _routing_data: &RoutingData) -> Result<HttpResponse> {
+    if utils::is_game_over() {
+        return bad_request_msg("The game has ended!");
+    }
+
     let mut user = match http_helpers::get_logged_in_user(request)? {
         Some(user) => user,
         None => {

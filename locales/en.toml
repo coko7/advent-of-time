@@ -10,6 +10,8 @@ logout = "Logout"
 leaderboard = "Leaderboard"
 home = "Home"
 next_unlock = "Next picture unlocks in"
+game_ends_soon_text = "The game will end on December 25th, 11:59 p.m (CET / UTC+1).<br/>After this time, the final scores will be frozen."
+game_over_text = "The game has ended! Thank you for playing this year's edition!<br/>Congrats to this year's top player:"
 
 [day]
 already_guessed = "Already guessed"

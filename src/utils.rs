@@ -4,12 +4,15 @@ use handlebars::Handlebars;
 use rand::{SeedableRng, rngs::StdRng, seq::IndexedRandom};
 use regex::Regex;
 use serde::Serialize;
+use std::cmp;
 use std::collections::hash_map::DefaultHasher;
 use std::hash::{Hash, Hasher};
 use std::{fs, path::PathBuf};
 
 use crate::config::Config;
+use crate::database::user_repository::UserRepository;
 use crate::models::picture::Picture;
+use crate::models::user::User;
 
 pub type Day = u32;
 
@@ -146,6 +149,25 @@ pub fn guess_order_to_bonus(order: u32) -> u32 {
         };
 
     bonus as u32
+}
+
+pub(crate) fn get_ranked_players_sorted() -> Result<Vec<User>> {
+    let mut ranked_users: Vec<_> = UserRepository::get_all_users()?
+        .iter()
+        .filter(|u| !u.hidden)
+        .cloned()
+        .collect();
+    ranked_users.sort_by_key(|u| cmp::Reverse(u.get_total_score().unwrap()));
+    Ok(ranked_users)
+}
+
+pub(crate) fn is_game_over() -> bool {
+    get_days_remaining() < 0
+}
+
+pub(crate) fn get_days_remaining() -> i32 {
+    let today = get_current_day();
+    (25 - today).try_into().unwrap()
 }
 
 pub fn get_current_day() -> Day {

@@ -1,4 +1,4 @@
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", function() {
   const checkboxShowHidden = document.querySelector("#chk-show-hidden-players");
   const playerRows = document.querySelectorAll("tr");
 

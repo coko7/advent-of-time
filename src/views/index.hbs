@@ -21,6 +21,24 @@
 
         <p id="greeting">{{greetMsg}}</p>
 
+        {{#if gameEndsSoon}}
+            <div id="important-game-msg">
+                <span style="font-size: 1rem;">⭐</span>
+                <span style="font-size: 1.5rem;">❄️</span>
+                <span style="font-size: 2rem;">⚠️</span>
+                <span style="font-size: 1.5rem;">❄️</span>
+                <span style="font-size: 1rem;">⭐</span>
+                <p>{{{i18n.game_ends_soon_text}}}</p>
+            </div>
+        {{/if}}
+
+        {{#if gameEnded}}
+            <div id="important-game-msg">
+                <p>{{{i18n.game_over_text}}}</p>
+                <p><span id="winner-span">{{winnerName}}</span></p>
+            </div>
+        {{/if}}
+
         <main>
             <ul class="navbar">
                 <li><a href="/about"> {{i18n.about}}</a></li>
@@ -33,9 +51,11 @@
                 <li><a href="/leaderboard"> {{i18n.leaderboard}}</a></li>
             </ul>
 
-            <div id="unlock-time-text">
-                <p>{{i18n.next_unlock}} <span id="time-left"></span></p>
-            </div>
+            {{#unless gameEnded }}
+                <div id="unlock-time-text">
+                    <p>{{i18n.next_unlock}} <span id="time-left"></span></p>
+                </div>
+            {{/unless}}
 
             <div class="days">
                 {{#each days}}

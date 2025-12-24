@@ -60,7 +60,7 @@ fn get_user_guess_days(user: &User) -> Vec<UserGuessDay> {
                     real_time: Some(
                         PictureMetaRepository::get_picture(d)
                             .expect("pic repo should be accessible")
-                            .expect(&format!("there should be a pic for this day: {d}"))
+                            .unwrap_or_else(|| panic!("there should be a pic for this day: {d}"))
                             .time_taken,
                     ),
                     points: user.get_points(d).unwrap(),
