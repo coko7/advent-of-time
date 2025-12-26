@@ -167,7 +167,7 @@ pub(crate) fn is_game_over() -> bool {
 
 pub(crate) fn get_days_remaining() -> i32 {
     let today = get_current_day();
-    (25 - today).try_into().unwrap()
+    25 - today as i32
 }
 
 pub fn get_current_day() -> Day {
